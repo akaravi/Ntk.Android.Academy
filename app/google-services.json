@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "537176210605",
+    "firebase_url": "https://ntk-android-cms.firebaseio.com",
+    "project_id": "ntk-android-cms",
+    "storage_bucket": "ntk-android-cms.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:537176210605:android:ec240a8c1aed8232",
+        "android_client_info": {
+          "package_name": "ntk.android.academy.APPNTK"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "537176210605-vt74ug5o6a6vg3mvdvk4bupqfgbq4c08.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOJFJoVmPtLurC4WpAeBggIoaF62-wAn4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
