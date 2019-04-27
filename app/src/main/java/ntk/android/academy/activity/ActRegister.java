@@ -50,6 +50,7 @@ import ntk.android.academy.utill.FontManager;
 import ntk.base.api.core.interfase.ICore;
 import ntk.base.api.core.model.CoreUserRegisterByMobileRequest;
 import ntk.base.api.core.model.CoreUserRegisterByMobileResponse;
+import ntk.base.api.core.model.CoreUserResponse;
 import ntk.base.api.core.model.MainCoreResponse;
 import ntk.base.api.utill.RetrofitManager;
 
@@ -131,17 +132,17 @@ public class ActRegister extends AppCompatActivity {
             request.Mobile = PhoneNumber;
             request.Code = Txt.getText().toString();
 
-            Observable<CoreUserRegisterByMobileResponse> observable = iCore.RegisterWithMobile(headers, request);
+            Observable<CoreUserResponse> observable = iCore.RegisterWithMobile(headers, request);
             observable.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<CoreUserRegisterByMobileResponse>() {
+                    .subscribe(new Observer<CoreUserResponse>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onNext(CoreUserRegisterByMobileResponse response) {
+                        public void onNext(CoreUserResponse response) {
                             Loading.setVisibility(View.GONE);
                             EasyPreference.with(ActRegister.this).addString("register", "1");
                             findViewById(R.id.cardActRegister).setVisibility(View.VISIBLE);
@@ -181,17 +182,17 @@ public class ActRegister extends AppCompatActivity {
             PhoneNumber = Txt.getText().toString();
             request.Mobile = PhoneNumber;
 
-            Observable<CoreUserRegisterByMobileResponse> observable = iCore.RegisterWithMobile(headers, request);
+            Observable<CoreUserResponse> observable = iCore.RegisterWithMobile(headers, request);
             observable.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<CoreUserRegisterByMobileResponse>() {
+                    .subscribe(new Observer<CoreUserResponse>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onNext(CoreUserRegisterByMobileResponse response) {
+                        public void onNext(CoreUserResponse response) {
                             Loading.setVisibility(View.GONE);
                             findViewById(R.id.cardActRegister).setVisibility(View.VISIBLE);
                             InputFilter[] filterArray = new InputFilter[1];

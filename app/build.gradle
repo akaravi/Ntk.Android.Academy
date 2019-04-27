@@ -91,6 +91,6 @@ dependencies {
     implementation 'gun0912.ted:tedpermission-rx2:2.2.2'
 
     //implementation 'com.github.mehrdadsafari:Ntk.Android.base:0.6.41'
-    implementation 'com.github.akaravi:ntk.android.base:0.0.2'
+    implementation 'com.github.akaravi:ntk.android.base:0.0.4'
 }
 apply plugin: 'com.google.gms.google-services'
