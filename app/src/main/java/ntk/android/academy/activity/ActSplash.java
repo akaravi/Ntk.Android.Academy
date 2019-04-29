@@ -75,7 +75,7 @@ public class ActSplash extends AppCompatActivity {
             } else {
                 new Handler().postDelayed(() -> {
                     Loading.setVisibility(View.GONE);
-                    startActivity(new Intent(ActSplash.this, ActMain.class));
+                    startActivity(new Intent(ActSplash.this, ActRegister.class));
                     finish();
                 }, 3000);
             }
@@ -112,7 +112,7 @@ public class ActSplash extends AppCompatActivity {
                             } else {
                                 new Handler().postDelayed(() -> {
                                     Loading.setVisibility(View.GONE);
-                                    startActivity(new Intent(ActSplash.this, ActIntro.class));
+                                    startActivity(new Intent(ActSplash.this, ActRegister.class));
                                     finish();
                                 }, 3000);
                             }

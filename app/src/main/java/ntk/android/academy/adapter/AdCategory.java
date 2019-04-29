@@ -73,7 +73,7 @@ public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
 
             }
         });
-        if (arrayList.get(position).Children==null) {
+        if (arrayList.get(position).Children.size() == 0) {
             holder.ImgDrop.setVisibility(View.GONE);
         }
         holder.Img.setOnClickListener(view -> {

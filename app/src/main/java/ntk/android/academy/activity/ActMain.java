@@ -103,7 +103,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
 
         navigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         navigation.setCurrentItem(1);
-        navigation.setTitleTextSize( 20, 18);
+        navigation.setTitleTextSize( 18, 16);
         navigation.setTitleTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         navigation.setAccentColor(Color.parseColor("#f04d4d"));
         navigation.setInactiveColor(Color.parseColor("#030303"));
