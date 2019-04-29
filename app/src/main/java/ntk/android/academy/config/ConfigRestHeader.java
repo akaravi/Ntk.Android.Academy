@@ -27,8 +27,7 @@ public class ConfigRestHeader {
         headers.put("Country", context.getResources().getConfiguration().locale.getDisplayCountry());
         headers.put("Language", context.getResources().getConfiguration().locale.getLanguage());
         headers.put("SimCard", manager.getSimOperatorName());
-//        headers.put("PackageName", BuildConfig.APPLICATION_ID);
-        headers.put("PackageName", "ntk.android.academy.app10");
+        headers.put("PackageName", BuildConfig.APPLICATION_ID);
         headers.put("AppBuildVer", String.valueOf(BuildConfig.VERSION_CODE));
         headers.put("AppSourceVer", BuildConfig.VERSION_NAME);
         String NotId = FirebaseInstanceId.getInstance().getToken();
