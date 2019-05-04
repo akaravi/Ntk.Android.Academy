@@ -254,7 +254,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
     private void CheckUpdate() {
         String st = EasyPreference.with(this).getString("configapp", "");
         Main mcr = new Gson().fromJson(st, Main.class);
-        if (mcr.AppVersion > BuildConfig.VERSION_CODE && BuildConfig.VERSION_CODE >1) {
+        if (mcr.AppVersion > BuildConfig.VERSION_CODE && BuildConfig.APPLICATION_ID.indexOf(".APPNTK") <0) {
             if (mcr.AppForceUpdate) {
                 UpdateFore();
             } else {
