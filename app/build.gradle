@@ -6,7 +6,7 @@ android {
         applicationId "ntk.android.academy.APPNTK"//change for packagename for api
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 1//Build Version NTK
+        versionCode 3//Build Version NTK
         versionName "1.0"//Splash Version Lable
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables {
