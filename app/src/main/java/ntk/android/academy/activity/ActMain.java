@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -65,7 +66,7 @@ import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.EasyPreference;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.core.interfase.ICore;
-import ntk.base.api.core.model.Item;
+import ntk.base.api.core.model.Main;
 import ntk.base.api.core.model.MainCoreResponse;
 import ntk.base.api.utill.RetrofitManager;
 
@@ -252,8 +253,8 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
 
     private void CheckUpdate() {
         String st = EasyPreference.with(this).getString("configapp", "");
-        Item mcr = new Gson().fromJson(st, Item.class);
-        if (mcr.AppVersion > (int) Double.parseDouble(BuildConfig.VERSION_NAME)) {
+        Main mcr = new Gson().fromJson(st, Main.class);
+        if (mcr.AppVersion > BuildConfig.VERSION_CODE) {
             if (mcr.AppForceUpdate) {
                 UpdateFore();
             } else {
@@ -264,7 +265,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
 
     private void Update() {
         String st = EasyPreference.with(this).getString("configapp", "");
-        Item mcr = new Gson().fromJson(st, Item.class);
+        Main mcr = new Gson().fromJson(st, Main.class);
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(true);
@@ -292,7 +293,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
 
     private void UpdateFore() {
         String st = EasyPreference.with(this).getString("configapp", "");
-        Item mcr = new Gson().fromJson(st, Item.class);
+        Main mcr = new Gson().fromJson(st, Main.class);
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(false);

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -725,4 +726,10 @@ public class ActDetail extends AppCompatActivity {
                 });
     }
 
+    @OnClick(R.id.imgShareActDetail)
+    public void ClickShare() {
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(model.Item.Source));
+        startActivity(i);
+    }
 }
