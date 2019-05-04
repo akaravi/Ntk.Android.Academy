@@ -1,13 +1,23 @@
 package ntk.android.academy.activity;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
@@ -21,15 +31,25 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import es.dmoral.toasty.Toasty;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.Academy;
+import ntk.android.academy.BuildConfig;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.AdFragment;
 import ntk.android.academy.adapter.AdPager;
 import ntk.android.academy.adapter.drawer.AdDrawer;
 import ntk.android.academy.adapter.toolbar.AdToobar;
+import ntk.android.academy.config.ConfigRestHeader;
+import ntk.android.academy.config.ConfigStaticValue;
 import ntk.android.academy.event.toolbar.EVHamberMenuClick;
 import ntk.android.academy.event.toolbar.EVSearchClick;
 import ntk.android.academy.fragment.FrBmi;
@@ -40,7 +60,14 @@ import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigation;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigationItem;
 import ntk.android.academy.model.theme.Theme;
 import ntk.android.academy.model.theme.Toolbar;
+import ntk.android.academy.room.RoomDb;
+import ntk.android.academy.utill.AppUtill;
+import ntk.android.academy.utill.EasyPreference;
 import ntk.android.academy.utill.FontManager;
+import ntk.base.api.core.interfase.ICore;
+import ntk.base.api.core.model.Item;
+import ntk.base.api.core.model.MainCoreResponse;
+import ntk.base.api.utill.RetrofitManager;
 
 public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
 
@@ -103,7 +130,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
 
         navigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         navigation.setCurrentItem(1);
-        navigation.setTitleTextSize( 18, 16);
+        navigation.setTitleTextSize(18, 16);
         navigation.setTitleTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         navigation.setAccentColor(Color.parseColor("#f04d4d"));
         navigation.setInactiveColor(Color.parseColor("#030303"));
@@ -146,6 +173,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+        HandelData();
     }
 
     @Override
@@ -187,4 +215,111 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
         }
         return false;
     }
+
+    private void HandelData() {
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager manager = new RetrofitManager(this);
+            ICore iCore = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(ICore.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+            Observable<MainCoreResponse> observable = iCore.GetResponseMain(headers);
+            observable.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<MainCoreResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(MainCoreResponse mainCoreResponse) {
+                            EasyPreference.with(ActMain.this).addString("configapp", new Gson().toJson(mainCoreResponse.Item));
+                            CheckUpdate();
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            CheckUpdate();
+        }
+    }
+
+    private void CheckUpdate() {
+        String st = EasyPreference.with(this).getString("configapp", "");
+        Item mcr = new Gson().fromJson(st, Item.class);
+        if (mcr.AppVersion > (int) Double.parseDouble(BuildConfig.VERSION_NAME)) {
+            if (mcr.AppForceUpdate) {
+                UpdateFore();
+            } else {
+                Update();
+            }
+        }
+    }
+
+    private void Update() {
+        String st = EasyPreference.with(this).getString("configapp", "");
+        Item mcr = new Gson().fromJson(st, Item.class);
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCanceledOnTouchOutside(true);
+        Window window = dialog.getWindow();
+        window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        dialog.setContentView(R.layout.dialog_permission);
+        ((TextView) dialog.findViewById(R.id.lbl1PernissionDialog)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        ((TextView) dialog.findViewById(R.id.lbl1PernissionDialog)).setText("توجه");
+        ((TextView) dialog.findViewById(R.id.lbl2PernissionDialog)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        ((TextView) dialog.findViewById(R.id.lbl2PernissionDialog)).setText("نسخه جدید اپلیکیشن اومده دوست داری آبدیت بشه؟؟");
+        Button Ok = (Button) dialog.findViewById(R.id.btnOkPermissionDialog);
+        Ok.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        Ok.setOnClickListener(view1 -> {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(mcr.AppUrl));
+            startActivity(i);
+            dialog.dismiss();
+        });
+        Button Cancel = (Button) dialog.findViewById(R.id.btnCancelPermissionDialog);
+        Cancel.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        Cancel.setOnClickListener(view12 -> dialog.dismiss());
+        dialog.show();
+    }
+
+    private void UpdateFore() {
+        String st = EasyPreference.with(this).getString("configapp", "");
+        Item mcr = new Gson().fromJson(st, Item.class);
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCanceledOnTouchOutside(false);
+        Window window = dialog.getWindow();
+        window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+        window.setGravity(Gravity.CENTER);
+        dialog.setContentView(R.layout.dialog_update);
+        ((TextView) dialog.findViewById(R.id.lbl1PernissionDialogUpdate)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        ((TextView) dialog.findViewById(R.id.lbl1PernissionDialogUpdate)).setText("توجه");
+        ((TextView) dialog.findViewById(R.id.lbl2PernissionDialogUpdate)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        ((TextView) dialog.findViewById(R.id.lbl2PernissionDialogUpdate)).setText("نسخه جدید اپلیکیشن اومده حتما باید آبدیت بشه");
+        Button Ok = (Button) dialog.findViewById(R.id.btnOkPermissionDialogUpdate);
+        Ok.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        Ok.setOnClickListener(view1 -> {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(mcr.AppUrl));
+            startActivity(i);
+            dialog.dismiss();
+        });
+        dialog.setOnKeyListener((dialog1, keyCode, event) -> {
+            switch (event.getAction()) {
+                case KeyEvent.ACTION_DOWN:
+                    finish();
+            }
+            return true;
+        });
+        dialog.show();
+    }
+
 }

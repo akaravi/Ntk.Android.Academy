@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
@@ -46,6 +47,7 @@ import ntk.android.academy.R;
 import ntk.android.academy.activity.ActAbout;
 import ntk.android.academy.activity.ActFaq;
 import ntk.android.academy.activity.ActInbox;
+import ntk.android.academy.activity.ActIntro;
 import ntk.android.academy.activity.ActNews;
 import ntk.android.academy.activity.ActPooling;
 import ntk.android.academy.activity.ActSupport;
@@ -124,6 +126,9 @@ public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
                 case 9:
                     ClickQuestion();
                     break;
+                case 10:
+                    ClickIntro();
+                    break;
             }
         });
     }
@@ -149,6 +154,17 @@ public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
             ButterKnife.bind(this, view);
             Lbls.get(0).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
             Lbls.get(1).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+        }
+    }
+
+    private void ClickIntro() {
+        Bundle bundle = new Bundle();
+        bundle.putInt("Help", 1);
+        Intent intent = new Intent(context, ActIntro.class);
+        intent.putExtra("Help", bundle);
+        context.startActivity(intent);
+        if (Drawer != null) {
+            Drawer.closeMenu(true);
         }
     }
 

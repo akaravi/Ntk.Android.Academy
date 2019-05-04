@@ -78,6 +78,7 @@ public class Academy extends MultiDexApplication {
         childs.add(new DrawerChild(7, 2, "تماس با ما", "https://image.flaticon.com/icons/png/512/13/13936.png"));
         childs.add(new DrawerChild(8, 2, "بازخورد", "https://image.flaticon.com/icons/png/512/87/87702.png"));
         childs.add(new DrawerChild(9, 2, "پرسش های متداول", "https://image.flaticon.com/icons/png/512/43/43392.png"));
+        childs.add(new DrawerChild(10, 2, "راهنما", "http://cdn.onlinewebfonts.com/svg/img_137547.png"));
         drawer.Child = childs;
 
 //        HmberMenu
@@ -138,12 +139,12 @@ public class Academy extends MultiDexApplication {
 
         List<ThemeChildConfig> config_horizental_menu_one = new ArrayList<>();
         config_horizental_menu_one.add(new ThemeChildConfig(1, "آخرین دستورات آشپزی", null, "#000000", "15", null, null, null));
-        config_horizental_menu_one.add(new ThemeChildConfig(2, "لیست کامل", null, "#ff0000", "15", null, "ArticleContentList", new Gson().toJson(content_list)));
+        config_horizental_menu_one.add(new ThemeChildConfig(2, "بیشتر", null, "#ff0000", "15", null, "ArticleContentList", new Gson().toJson(content_list)));
         themeChildren.add(new ThemeChild(4, 1, "ArticleContentList", null, config_horizental_menu_one, new Gson().toJson(content_list)));
 
         List<ThemeChildConfig> config_horizental_menu_t = new ArrayList<>();
         config_horizental_menu_t.add(new ThemeChildConfig(1, "جدید ترین کلیپ های آشپزی", null, "#000000", "15", null, null, null));
-        config_horizental_menu_t.add(new ThemeChildConfig(2, "لیست کامل", null, "#ff0000", "15", null, "ArticleContentList", new Gson().toJson(content_list)));
+        config_horizental_menu_t.add(new ThemeChildConfig(2, "بیشتر", null, "#ff0000", "15", null, "ArticleContentList", new Gson().toJson(content_list)));
         themeChildren.add(new ThemeChild(4, 1, "ArticleContentList", null, config_horizental_menu_t, new Gson().toJson(content_list)));
 
         List<ThemeChildConfig> configs_iamge = new ArrayList<>();
@@ -153,7 +154,7 @@ public class Academy extends MultiDexApplication {
 
         List<ThemeChildConfig> config_horizental_menu = new ArrayList<>();
         config_horizental_menu.add(new ThemeChildConfig(1, "مجبوب ترین دستورات ما", null, "#000000", "15", null, null, null));
-        config_horizental_menu.add(new ThemeChildConfig(2, "لیست کامل", null, "#ff0000", "15", null, "ArticleContentList", new Gson().toJson(content_list)));
+        config_horizental_menu.add(new ThemeChildConfig(2, "بیشتر", null, "#ff0000", "15", null, "ArticleContentList", new Gson().toJson(content_list)));
         themeChildren.add(new ThemeChild(4, 1, "ArticleContentList", null, config_horizental_menu, new Gson().toJson(content_list)));
 
         List<ThemeChildConfig> configs_slider = new ArrayList<>();
@@ -169,37 +170,6 @@ public class Academy extends MultiDexApplication {
         confige_core_four_button.add(new ThemeChildConfig(4, "مشاور تغذیه", "#ff00ff", "#ff0000", "15", null, "ArticleContentList", new Gson().toJson(content_list)));
         themeChildren.add(new ThemeChild(3, 2, "CoreButton", confige_core_four_button, null, null));
 
-
-        ArticleContentListRequest content_list_2 = new ArticleContentListRequest();
-        content_list_2.SortType = NTKUtill.Descnding_Sort;
-        content_list_2.SortColumn = "Id";
-        List<Filters> filters_2 = new ArrayList<>();
-        Filters f_2 = new Filters();
-        f_2.IntValue1 = Long.parseLong("20185");
-        f_2.PropertyName = "LinkCategoryId";
-        filters_2.add(f_2);
-        content_list_2.filters = filters_2;
-
-        List<ThemeChildConfig> config_horizental_menu_two = new ArrayList<>();
-        config_horizental_menu_two.add(new ThemeChildConfig(1, "دستورات ارسالی کاربران", null, "#000000", "15", null, null, null));
-        config_horizental_menu_two.add(new ThemeChildConfig(2, "لیست کامل", null, "#ff0000", "15", null, "ArticleContentList", new Gson().toJson(content_list_2)));
-        themeChildren.add(new ThemeChild(4, 1, "ArticleContentList", null, config_horizental_menu_two, new Gson().toJson(content_list_2)));
-
-
-        ArticleContentListRequest content_list_3 = new ArticleContentListRequest();
-        content_list_3.SortType = NTKUtill.Descnding_Sort;
-        content_list_3.SortColumn = "Id";
-        List<Filters> filters_3 = new ArrayList<>();
-        Filters f_3 = new Filters();
-        f_3.IntValue1 = Long.parseLong("20189");
-        f_3.PropertyName = "LinkCategoryId";
-        filters_3.add(f_3);
-        content_list_3.filters = filters_3;
-
-        List<ThemeChildConfig> config_horizental_menu_three = new ArrayList<>();
-        config_horizental_menu_three.add(new ThemeChildConfig(1, "عکس های ارسالی", null, "#000000", "15", null, null, null));
-        config_horizental_menu_three.add(new ThemeChildConfig(2, "لیست کامل", null, "#ff0000", "15", null, "ArticleContentList", new Gson().toJson(content_list_3)));
-        themeChildren.add(new ThemeChild(6, 1, "ArticleContentList", null, config_horizental_menu_three, new Gson().toJson(content_list_3)));
 
 
         Theme theme = new Theme();

@@ -43,8 +43,10 @@ public class ActIntro extends AppCompatActivity {
     @BindView(R.id.imgPhotoActIntro)
     ImageView Img;
 
-    private ApplicationIntroResponse Intro;
+    private ApplicationIntroResponse Intro = new ApplicationIntroResponse();
     private int CountIntro = 0;
+
+    public int Help = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,6 +57,11 @@ public class ActIntro extends AppCompatActivity {
     }
 
     private void init() {
+        Bundle bundle = getIntent().getBundleExtra("Help");
+        if (bundle != null) {
+            Help = bundle.getInt("Help");
+        }
+
         Lbls.get(0).setTypeface(FontManager.GetTypeface(this, FontManager.IranSansBold));
         Lbls.get(1).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Lbls.get(2).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
@@ -74,8 +81,9 @@ public class ActIntro extends AppCompatActivity {
                     @Override
                     public void onNext(ApplicationIntroResponse response) {
                         if (response.ListItems.size() != 0) {
+                            Intro.ListItems = response.ListItems;
                             HandelIntro();
-                        }else {
+                        } else {
                             EasyPreference.with(ActIntro.this).addBoolean("Intro", true);
                             new Handler().postDelayed(() -> {
                                 startActivity(new Intent(ActIntro.this, ActRegister.class));
@@ -116,7 +124,7 @@ public class ActIntro extends AppCompatActivity {
 
     @OnClick(R.id.btnAfterActIntro)
     public void ClickAfter() {
-        if (CountIntro < Intro.ListItems.size()) {
+        if (CountIntro < (Intro.ListItems.size() - 1)) {
             CountIntro = CountIntro + 1;
             findViewById(R.id.btnBeforeActIntro).setVisibility(View.VISIBLE);
             HandelIntro();
@@ -124,11 +132,15 @@ public class ActIntro extends AppCompatActivity {
                 Lbls.get(2).setText("شروع");
             }
         } else {
-            EasyPreference.with(this).addBoolean("Intro", true);
-            new Handler().postDelayed(() -> {
-                startActivity(new Intent(ActIntro.this, ActRegister.class));
+            if (Help == 0) {
+                EasyPreference.with(this).addBoolean("Intro", true);
+                new Handler().postDelayed(() -> {
+                    startActivity(new Intent(ActIntro.this, ActRegister.class));
+                    finish();
+                }, 3000);
+            } else {
                 finish();
-            }, 3000);
+            }
         }
     }
 }
