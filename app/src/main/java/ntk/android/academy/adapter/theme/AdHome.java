@@ -58,8 +58,8 @@ public class AdHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context context;
     private List<ArticleTag> tags = new ArrayList<>();
     private AdTag adTag;
-    private Map<Integer , List<ArticleContent>> map_articles = new HashMap<>();
-    private Map<Integer , AdArticle> map_adapter = new HashMap<>();
+    private Map<Integer, List<ArticleContent>> map_articles = new HashMap<>();
+    private Map<Integer, AdArticle> map_adapter = new HashMap<>();
 
     private int TotalTag = 0, TotalArticle = 0;
 
@@ -67,12 +67,12 @@ public class AdHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.themes = list;
         this.context = context;
         adTag = new AdTag(context, tags);
-        for (int i= 0 ; i<themes.size() ; i++) {
+        for (int i = 0; i < themes.size(); i++) {
             if (themes.get(i).LayoutName.equals("ArticleContentList")) {
                 List<ArticleContent> contents = new ArrayList<>();
-                map_articles.put(i,contents);
+                map_articles.put(i, contents);
                 AdArticle adArticle = new AdArticle(context, contents);
-                map_adapter.put(i,adArticle);
+                map_adapter.put(i, adArticle);
             }
         }
     }
@@ -253,6 +253,7 @@ public class AdHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void RestArticle(int i, HoArticle hoArticle, int position) {
+        hoArticle.Progress.setVisibility(View.VISIBLE);
         RetrofitManager manager = new RetrofitManager(context);
         IArticle iArticle = manager.getCachedRetrofit(new ConfigStaticValue(context).GetApiBaseUrl()).create(IArticle.class);
         ArticleContentListRequest request = new Gson().fromJson(themes.get(position).LayoutRequest, ArticleContentListRequest.class);
@@ -274,10 +275,12 @@ public class AdHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                         map_adapter.get(position).notifyDataSetChanged();
                         TotalArticle = articleContentResponse.TotalRowCount;
                         hoArticle.RvMenu.setItemViewCacheSize(map_articles.get(position).size());
+                        hoArticle.Progress.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onError(Throwable e) {
+                        hoArticle.Progress.setVisibility(View.GONE);
                     }
 
                     @Override

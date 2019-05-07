@@ -256,12 +256,14 @@ public class ActDetail extends AppCompatActivity {
                     @Override
                     public void onNext(ArticleContentResponse articleContentResponse) {
                         model = articleContentResponse;
-                        SetData(model);
-                        HandelSimilary(Request.Id);
-                        HandelSimilaryCategory(Request.Id);
-                        if (Request.Id > 0) {
-                            HandelDataContentOtherInfo(Request.Id);
-                            HandelDataComment(Request.Id);
+                        if (model.Item != null) {
+                            SetData(model);
+                            HandelSimilary(Request.Id);
+                            HandelSimilaryCategory(Request.Id);
+                            if (Request.Id > 0) {
+                                HandelDataContentOtherInfo(Request.Id);
+                                HandelDataComment(Request.Id);
+                            }
                         }
                         Loading.setVisibility(View.GONE);
                         Page.setVisibility(View.VISIBLE);
