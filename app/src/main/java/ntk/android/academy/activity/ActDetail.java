@@ -219,10 +219,6 @@ public class ActDetail extends AppCompatActivity {
 
                         @Override
                         public void onNext(ArticleContentResponse articleContentResponse) {
-                            if (articleContentResponse.IsSuccess) {
-                            } else {
-                                Toasty.error(ActDetail.this, articleContentResponse.ErrorMessage, Toast.LENGTH_LONG, true).show();
-                            }
                         }
 
                         @Override
