@@ -5,6 +5,7 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -39,6 +40,8 @@ public class Academy extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+
+//
 
         if (!new File(getCacheDir(), "image").exists()) {
             new File(getCacheDir(), "image").mkdirs();
@@ -169,7 +172,6 @@ public class Academy extends MultiDexApplication {
         confige_core_four_button.add(new ThemeChildConfig(3, "موزیک", "#ff00ff", "#ff0000", "15", null, "ArticleContentList", new Gson().toJson(content_list)));
         confige_core_four_button.add(new ThemeChildConfig(4, "مشاور تغذیه", "#ff00ff", "#ff0000", "15", null, "ArticleContentList", new Gson().toJson(content_list)));
         themeChildren.add(new ThemeChild(3, 2, "CoreButton", confige_core_four_button, null, null));
-
 
 
         Theme theme = new Theme();

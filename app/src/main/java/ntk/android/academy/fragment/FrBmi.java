@@ -1,5 +1,6 @@
 package ntk.android.academy.fragment;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -64,6 +65,7 @@ public class FrBmi extends Fragment {
         Img.setImageDrawable(null);
     }
 
+    @SuppressLint("SetTextI18n")
     @OnClick(R.id.BtnBmiFrBmi)
     public void ClickBtn() {
         if(Txts.get(0).getText().toString().isEmpty()) {
@@ -77,23 +79,23 @@ public class FrBmi extends Fragment {
 
             double BMI = (W)/((LM));
             if (BMI<18.5) {
-                Lbl.setText("کمبود وزن");
+                Lbl.setText("کمبود وزن " + "حداقل وزن شما: " + ((int)(LM * 18.5)) + " حداکثر وزن شما: " + ((int)(LM * 24.9)));
                 Lbl.setTextColor(Color.parseColor("#93b4d7"));
                 Img.setImageResource(R.drawable.bmi_1);
             }else if (BMI>=18.5 && BMI<=24.9) {
-                Lbl.setText("وزن نرمال");
+                Lbl.setText( "وزن نرمال " + "حداقل وزن شما: " + ((int)(LM * 18.5)) + " حداکثر وزن شما: " + ((int)(LM * 24.9)));
                 Lbl.setTextColor(Color.parseColor("#8fc69f"));
                 Img.setImageResource(R.drawable.bmi_2);
             }else if (BMI>=25 && BMI<=29.9) {
-                Lbl.setText("اضافه وزن");
+                Lbl.setText("اضافه وزن " + "حداقل وزن شما: " + ((int)(LM * 18.5)) + " حداکثر وزن شما: " + ((int)(LM * 24.9)));
                 Lbl.setTextColor(Color.parseColor("#f9d648"));
                 Img.setImageResource(R.drawable.bmi_3);
             }else if (BMI>=30 && BMI<=34.9) {
-                Lbl.setText("چاق");
+                Lbl.setText("چاق " + "حداقل وزن شما: " + ((int)(LM * 18.5)) + " حداکثر وزن شما: " + ((int)(LM * 24.9)));
                 Lbl.setTextColor(Color.parseColor("#e4985e"));
                 Img.setImageResource(R.drawable.bmi_4);
             }else if (BMI>=35) {
-                Lbl.setText("خیلی چاق");
+                Lbl.setText("خیلی چاق " + "حداقل وزن شما: " + ((int)(LM * 18.5)) + " حداکثر وزن شما: " + ((int)(LM * 24.9)));
                 Lbl.setTextColor(Color.parseColor("#d65c5b"));
                 Img.setImageResource(R.drawable.bmi_5);
             }

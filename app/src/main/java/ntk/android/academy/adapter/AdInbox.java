@@ -56,7 +56,9 @@ public class AdInbox extends RecyclerView.Adapter<AdInbox.ViewHolder> {
         if (arrayList.get(position).IsRead == 0) {
             holder.Lbls.get(0).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans), Typeface.BOLD);
         }
-        ImageLoader.getInstance().displayImage(arrayList.get(position).BigImageSrc, holder.ImgInbox);
+        if (arrayList.get(position).BigImageSrc != null) {
+            ImageLoader.getInstance().displayImage(arrayList.get(position).BigImageSrc, holder.ImgInbox);
+        }
         holder.Root.get(0).setOnClickListener(view -> {
             RoomDb.getRoomDb(context).NotificationDoa().Update(arrayList.get(position));
             if (arrayList.get(position).Content.length() > 15) {
