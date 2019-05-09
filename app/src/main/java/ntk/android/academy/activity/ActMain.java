@@ -66,7 +66,7 @@ import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.EasyPreference;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.core.interfase.ICore;
-import ntk.base.api.core.model.Main;
+import ntk.base.api.core.model.CoreMain;
 import ntk.base.api.core.model.MainCoreResponse;
 import ntk.base.api.utill.RetrofitManager;
 
@@ -253,7 +253,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
 
     private void CheckUpdate() {
         String st = EasyPreference.with(this).getString("configapp", "");
-        Main mcr = new Gson().fromJson(st, Main.class);
+        CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
         if (mcr.AppVersion > BuildConfig.VERSION_CODE && BuildConfig.APPLICATION_ID.indexOf(".APPNTK") <0) {
             if (mcr.AppForceUpdate) {
                 UpdateFore();
@@ -265,7 +265,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
 
     private void Update() {
         String st = EasyPreference.with(this).getString("configapp", "");
-        Main mcr = new Gson().fromJson(st, Main.class);
+        CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(true);
@@ -293,7 +293,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
 
     private void UpdateFore() {
         String st = EasyPreference.with(this).getString("configapp", "");
-        Main mcr = new Gson().fromJson(st, Main.class);
+        CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(false);

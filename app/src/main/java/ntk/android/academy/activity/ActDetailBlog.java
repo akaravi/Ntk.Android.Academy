@@ -2,7 +2,6 @@ package ntk.android.academy.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
@@ -47,18 +45,28 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.academy.adapter.AdArticle;
-import ntk.android.academy.adapter.AdComment;
+import ntk.android.academy.adapter.AdCommentBlog;
 import ntk.android.academy.adapter.AdCommentNews;
-import ntk.android.academy.adapter.AdNews;
-import ntk.android.academy.adapter.AdTab;
+import ntk.android.academy.adapter.AdTabBlog;
 import ntk.android.academy.adapter.AdTabNews;
 import ntk.android.academy.config.ConfigRestHeader;
 import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.event.EvHtmlBody;
+import ntk.android.academy.event.EvHtmlBodyBlog;
 import ntk.android.academy.event.EvHtmlBodyNews;
 import ntk.android.academy.utill.FontManager;
-import ntk.base.api.model.ErrorException;
+import ntk.base.api.blog.interfase.IBlog;
+import ntk.base.api.blog.model.BlogCommentAddRequest;
+import ntk.base.api.blog.model.BlogCommentListRequest;
+import ntk.base.api.blog.model.BlogCommentResponse;
+import ntk.base.api.blog.model.BlogContentFavoriteAddRequest;
+import ntk.base.api.blog.model.BlogContentFavoriteAddResponse;
+import ntk.base.api.blog.model.BlogContentFavoriteRemoveRequest;
+import ntk.base.api.blog.model.BlogContentFavoriteRemoveResponse;
+import ntk.base.api.blog.model.BlogContentOtherInfo;
+import ntk.base.api.blog.model.BlogContentOtherInfoListRequest;
+import ntk.base.api.blog.model.BlogContentOtherInfoListResponse;
+import ntk.base.api.blog.model.BlogContentResponse;
+import ntk.base.api.blog.model.BlogContentViewRequest;
 import ntk.base.api.model.Filters;
 import ntk.base.api.news.interfase.INews;
 import ntk.base.api.news.model.NewsCommentAddRequest;
@@ -75,51 +83,51 @@ import ntk.base.api.news.model.NewsContentResponse;
 import ntk.base.api.news.model.NewsContentViewRequest;
 import ntk.base.api.utill.RetrofitManager;
 
-public class ActDetailNews extends AppCompatActivity {
+public class ActDetailBlog extends AppCompatActivity {
 
-    @BindView(R.id.progressActDetailNews)
+    @BindView(R.id.progressActDetailBlog)
     ProgressBar Progress;
 
-    @BindView(R.id.rowProgressActDetailNews)
+    @BindView(R.id.rowProgressActDetailBlog)
     LinearLayout Loading;
 
-    @BindViews({R.id.lblTitleActDetailNews,
-            R.id.lblNameCommandActDetailNews,
-            R.id.lblKeySeenActDetailNews,
-            R.id.lblValueSeenActDetailNews,
-            R.id.lblCommentActDetailNews,
-            R.id.lblProgressActDetailNews
+    @BindViews({R.id.lblTitleActDetailBlog,
+            R.id.lblNameCommandActDetailBlog,
+            R.id.lblKeySeenActDetailBlog,
+            R.id.lblValueSeenActDetailBlog,
+            R.id.lblCommentActDetailBlog,
+            R.id.lblProgressActDetailBlog
     })
     List<TextView> Lbls;
 
-    @BindView(R.id.imgHeaderActDetailNews)
+    @BindView(R.id.imgHeaderActDetailBlog)
     ImageView ImgHeader;
 
-    @BindView(R.id.WebViewActDetailNews)
+    @BindView(R.id.WebViewActDetailBlog)
     WebView webView;
 
-    @BindView(R.id.recyclerTabActDetailNews)
+    @BindView(R.id.recyclerTabActDetailBlog)
     RecyclerView RvTab;
 
-    @BindView(R.id.recyclerCommentActDetailNews)
+    @BindView(R.id.recyclerCommentActDetailBlog)
     RecyclerView RvComment;
 
-    @BindView(R.id.ratingBarActDetailNews)
+    @BindView(R.id.ratingBarActDetailBlog)
     RatingBar Rate;
 
-    @BindView(R.id.PageActDetailNews)
+    @BindView(R.id.PageActDetailBlog)
     LinearLayout Page;
 
     private String RequestStr;
-    private NewsContentResponse model;
-    private NewsContentOtherInfoResponse Info;
-    private NewsContentViewRequest Request;
+    private BlogContentResponse model;
+    private BlogContentOtherInfoListResponse Info;
+    private BlogContentViewRequest Request;
     private ConfigStaticValue configStaticValue;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_detail_news);
+        setContentView(R.layout.act_detail_blog);
         ButterKnife.bind(this);
         configStaticValue = new ConfigStaticValue(this);
         init();
@@ -135,7 +143,7 @@ public class ActDetailNews extends AppCompatActivity {
         RvTab.setHasFixedSize(true);
         RvTab.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
         RequestStr = getIntent().getExtras().getString("Request");
-        Request = new Gson().fromJson(RequestStr, NewsContentViewRequest.class);
+        Request = new Gson().fromJson(RequestStr, BlogContentViewRequest.class);
         HandelDataContent(Request);
         Loading.setVisibility(View.VISIBLE);
 
@@ -143,7 +151,7 @@ public class ActDetailNews extends AppCompatActivity {
         RvComment.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         Rate.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-            NewsContentViewRequest request = new NewsContentViewRequest();
+            BlogContentViewRequest request = new BlogContentViewRequest();
             request.Id = Request.Id;
             request.ActionClientOrder = 55;
             if (rating == 0.5) {
@@ -176,21 +184,21 @@ public class ActDetailNews extends AppCompatActivity {
             if (rating == 5) {
                 request.ScorePercent = 100;
             }
-            RetrofitManager manager = new RetrofitManager(ActDetailNews.this);
-            INews iNews = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetailNews.this).GetApiBaseUrl()).create(INews.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetailNews.this);
+            RetrofitManager manager = new RetrofitManager(ActDetailBlog.this);
+            IBlog iNews = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetailBlog.this).GetApiBaseUrl()).create(IBlog.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetailBlog.this);
 
-            Observable<NewsContentResponse> Call = iNews.GetContentView(headers, request);
+            Observable<BlogContentResponse> Call = iNews.GetContentView(headers, request);
             Call.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<NewsContentResponse>() {
+                    .subscribe(new Observer<BlogContentResponse>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onNext(NewsContentResponse ContentResponse) {
+                        public void onNext(BlogContentResponse ContentResponse) {
                             if (ContentResponse.IsSuccess) {
                             } else {
                             }
@@ -210,23 +218,23 @@ public class ActDetailNews extends AppCompatActivity {
     }
 
 
-    private void HandelDataContent(NewsContentViewRequest request) {
+    private void HandelDataContent(BlogContentViewRequest request) {
 
         RetrofitManager retro = new RetrofitManager(this);
-        INews iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(INews.class);
+        IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
         Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        Observable<NewsContentResponse> call = iNews.GetContentView(headers, request);
+        Observable<BlogContentResponse> call = iNews.GetContentView(headers, request);
         call.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<NewsContentResponse>() {
+                .subscribe(new Observer<BlogContentResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(NewsContentResponse ContentResponse) {
+                    public void onNext(BlogContentResponse ContentResponse) {
                         model = ContentResponse;
                         SetData(model);
                         if (Request.Id > 0) {
@@ -254,28 +262,28 @@ public class ActDetailNews extends AppCompatActivity {
 
     private void HandelDataComment(long ContentId) {
         List<Filters> filters = new ArrayList<>();
-        NewsCommentListRequest Request = new NewsCommentListRequest();
+        BlogCommentListRequest Request = new BlogCommentListRequest();
         Filters f = new Filters();
         f.PropertyName = "LinkContentId";
         f.IntValue1 = ContentId;
         filters.add(f);
         Request.filters = filters;
         RetrofitManager retro = new RetrofitManager(this);
-        INews iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(INews.class);
+        IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
         Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-        Observable<NewsCommentResponse> call = iNews.GetCommentList(headers, Request);
+        Observable<BlogCommentResponse> call = iNews.GetCommentList(headers, Request);
         call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<NewsCommentResponse>() {
+                .subscribe(new Observer<BlogCommentResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(NewsCommentResponse model) {
+                    public void onNext(BlogCommentResponse model) {
                         if (model.IsSuccess) {
-                            AdCommentNews adapter = new AdCommentNews(ActDetailNews.this, model.ListItems);
+                            AdCommentBlog adapter = new AdCommentBlog(ActDetailBlog.this, model.ListItems);
                             RvComment.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
                         }
@@ -283,7 +291,7 @@ public class ActDetailNews extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Toasty.warning(ActDetailNews.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                     }
 
                     @Override
@@ -296,34 +304,34 @@ public class ActDetailNews extends AppCompatActivity {
     private void HandelDataContentOtherInfo(long ContentId) {
 
         List<Filters> filters = new ArrayList<>();
-        NewsContentOtherInfoRequest Request = new NewsContentOtherInfoRequest();
+        BlogContentOtherInfoListRequest Request = new BlogContentOtherInfoListRequest();
         Filters f = new Filters();
         f.PropertyName = "LinkContentId";
         f.IntValue1 = ContentId;
         filters.add(f);
         Request.filters = filters;
         RetrofitManager retro = new RetrofitManager(this);
-        INews iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(INews.class);
+        IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
         Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
 
-        Observable<NewsContentOtherInfoResponse> call = iNews.GetContentOtherInfoList(headers, Request);
+        Observable<BlogContentOtherInfoListResponse> call = iNews.GetContentOtherInfoList(headers, Request);
         call.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<NewsContentOtherInfoResponse>() {
+                .subscribe(new Observer<BlogContentOtherInfoListResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(NewsContentOtherInfoResponse ContentOtherInfoResponse) {
+                    public void onNext(BlogContentOtherInfoListResponse ContentOtherInfoResponse) {
                         SetDataOtherinfo(ContentOtherInfoResponse);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Toasty.warning(ActDetailNews.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                     }
 
                     @Override
@@ -335,7 +343,7 @@ public class ActDetailNews extends AppCompatActivity {
 
     }
 
-    private void SetDataOtherinfo(NewsContentOtherInfoResponse model) {
+    private void SetDataOtherinfo(BlogContentOtherInfoListResponse model) {
         Info = model;
         if (model.ListItems == null || model.ListItems.size() == 0) {
             findViewById(R.id.RowTimeActDetail).setVisibility(View.GONE);
@@ -343,9 +351,9 @@ public class ActDetailNews extends AppCompatActivity {
             p.weight = 3;
             return;
         }
-        List<NewsContentOtherInfo> Info = new ArrayList<>();
+        List<BlogContentOtherInfo> Info = new ArrayList<>();
 
-        for (NewsContentOtherInfo ai : model.ListItems) {
+        for (BlogContentOtherInfo ai : model.ListItems) {
             switch (ai.TypeId) {
                 case 21:
                     Lbls.get(7).setText(ai.Title);
@@ -373,12 +381,12 @@ public class ActDetailNews extends AppCompatActivity {
                     break;
             }
         }
-        AdTabNews adapter = new AdTabNews(ActDetailNews.this, Info);
+        AdTabBlog adapter = new AdTabBlog(ActDetailBlog.this, Info);
         RvTab.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
 
-    private void SetData(NewsContentResponse model) {
+    private void SetData(BlogContentResponse model) {
         ImageLoader.getInstance().displayImage(model.Item.imageSrc, ImgHeader);
         Lbls.get(0).setText(model.Item.Title);
         Lbls.get(1).setText(model.Item.Title);
@@ -388,13 +396,13 @@ public class ActDetailNews extends AppCompatActivity {
         }
     }
 
-    @OnClick(R.id.imgBackActDetailNews)
+    @OnClick(R.id.imgBackActDetailBlog)
     public void ClickBack() {
         finish();
     }
 
     @Subscribe
-    public void EventHtmlBody(EvHtmlBodyNews event) {
+    public void EventHtmlBody(EvHtmlBodyBlog event) {
         webView.loadDataWithBaseURL("", event.GetMessage(), "text/html", "UTF-8", "");
     }
 
@@ -410,7 +418,7 @@ public class ActDetailNews extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    @OnClick(R.id.imgCommentActDetailNews)
+    @OnClick(R.id.imgCommentActDetailBlog)
     public void ClickCommentAdd() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -436,31 +444,31 @@ public class ActDetailNews extends AppCompatActivity {
 
         Btn.setOnClickListener(v -> {
             if (Txt[0].getText().toString().isEmpty()) {
-                Toast.makeText(ActDetailNews.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ActDetailBlog.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
             } else {
                 if (Txt[1].getText().toString().isEmpty()) {
-                    Toast.makeText(ActDetailNews.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActDetailBlog.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
                 } else {
-                    NewsCommentAddRequest add = new NewsCommentAddRequest();
+                    BlogCommentAddRequest add = new BlogCommentAddRequest();
                     add.Writer = Txt[0].getText().toString();
                     add.Comment = Txt[1].getText().toString();
                     add.LinkContentId = Request.Id;
                     RetrofitManager retro = new RetrofitManager(this);
-                    INews iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(INews.class);
+                    IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
                     Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
 
-                    Observable<NewsCommentResponse> call = iNews.SetComment(headers, add);
+                    Observable<BlogCommentResponse> call = iNews.SetComment(headers, add);
                     call.subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Observer<NewsCommentResponse>() {
+                            .subscribe(new Observer<BlogCommentResponse>() {
                                 @Override
                                 public void onSubscribe(Disposable d) {
 
                                 }
 
                                 @Override
-                                public void onNext(NewsCommentResponse e) {
+                                public void onNext(BlogCommentResponse e) {
                                     if (e.IsSuccess) {
                                         HandelDataComment(Request.Id);
                                         dialog.dismiss();
@@ -469,7 +477,7 @@ public class ActDetailNews extends AppCompatActivity {
 
                                 @Override
                                 public void onError(Throwable e) {
-                                    Toasty.warning(ActDetailNews.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                                    Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                                 }
 
                                 @Override
@@ -485,7 +493,7 @@ public class ActDetailNews extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.imgFavActDetailNews)
+    @OnClick(R.id.imgFavActDetailBlog)
     public void ClickFav() {
         if (model.Item.Favorited){
             Fav();
@@ -496,23 +504,24 @@ public class ActDetailNews extends AppCompatActivity {
 
     private void Fav() {
         RetrofitManager retro = new RetrofitManager(this);
-        INews iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(INews.class);
+        IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
         Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        NewsContentFavoriteAddRequest add = new NewsContentFavoriteAddRequest();
+        BlogContentFavoriteAddRequest add = new BlogContentFavoriteAddRequest();
         add.Id = model.Item.Id;
 
-        Observable<NewsContentFavoriteAddResponse> Call = iNews.SetContentFavoriteAdd(headers, add);
+        Observable<BlogContentFavoriteAddResponse> Call = iNews.SetContentFavoriteAdd(headers, add);
         Call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<NewsContentFavoriteAddResponse>() {
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<BlogContentFavoriteAddResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(NewsContentFavoriteAddResponse e) {
+                    public void onNext(BlogContentFavoriteAddResponse e) {
                         if (e.IsSuccess) {
                             model.Item.Favorited = !model.Item.Favorited;
                             if (model.Item.Favorited) {
@@ -521,14 +530,13 @@ public class ActDetailNews extends AppCompatActivity {
                                 ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
                             }
                         } else {
-                            Toasty.error(ActDetailNews.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                            Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                         }
-
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Toasty.warning(ActDetailNews.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                     }
 
                     @Override
@@ -540,23 +548,23 @@ public class ActDetailNews extends AppCompatActivity {
 
     private void UnFav() {
         RetrofitManager retro = new RetrofitManager(this);
-        INews iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(INews.class);
+        IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
         Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        NewsContentFavoriteRemoveRequest add = new NewsContentFavoriteRemoveRequest();
+       BlogContentFavoriteRemoveRequest add = new BlogContentFavoriteRemoveRequest();
         add.Id = model.Item.Id;
 
-        Observable<NewsContentFavoriteRemoveResponse> Call = iNews.SetContentFavoriteRemove(headers, add);
+        Observable<BlogContentFavoriteRemoveResponse> Call = iNews.SetContentFavoriteRemove(headers, add);
         Call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<NewsContentFavoriteRemoveResponse>() {
+                .subscribe(new Observer<BlogContentFavoriteRemoveResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(NewsContentFavoriteRemoveResponse e) {
+                    public void onNext(BlogContentFavoriteRemoveResponse e) {
                         if (e.IsSuccess) {
                             model.Item.Favorited = !model.Item.Favorited;
                             if (model.Item.Favorited) {
@@ -565,14 +573,14 @@ public class ActDetailNews extends AppCompatActivity {
                                 ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
                             }
                         } else {
-                            Toasty.error(ActDetailNews.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                            Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                         }
 
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Toasty.warning(ActDetailNews.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                     }
 
                     @Override

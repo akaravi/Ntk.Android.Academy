@@ -104,9 +104,6 @@ public class ActDetail extends AppCompatActivity {
     })
     List<TextView> Lbls;
 
-    @BindView(R.id.imgMenuOneActDetail)
-    RoundedImageView Img;
-
     @BindView(R.id.imgHeaderActDetail)
     ImageView ImgHeader;
 
@@ -510,8 +507,6 @@ public class ActDetail extends AppCompatActivity {
         if (model.Item.Favorited) {
             ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
         }
-
-        ImageLoader.getInstance().displayImage("https://dkstatics-public.digikala.com/digikala-adservice-banners/1000000401.jpg", Img);
     }
 
     @OnClick(R.id.imgBackActDetail)

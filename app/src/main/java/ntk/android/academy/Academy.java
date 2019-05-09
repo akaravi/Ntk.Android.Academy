@@ -41,8 +41,6 @@ public class Academy extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
-//
-
         if (!new File(getCacheDir(), "image").exists()) {
             new File(getCacheDir(), "image").mkdirs();
         }
@@ -74,6 +72,7 @@ public class Academy extends MultiDexApplication {
         List<DrawerChild> childs = new ArrayList<>();
         childs.add(new DrawerChild(1, 1, "صندوق پیام", "https://image.flaticon.com/icons/png/512/107/107822.png"));
         childs.add(new DrawerChild(2, 2, "اخبار", "https://image.flaticon.com/icons/png/512/31/31866.png"));
+        childs.add(new DrawerChild(11, 2, "مجلات", "https://cocreatr.typepad.com/.a/6a010534a7bc55970b01156fd9830b970b-800wi"));
         childs.add(new DrawerChild(3, 2, "نظرسنجی", "https://image.flaticon.com/icons/png/512/120/120114.png"));
         childs.add(new DrawerChild(4, 2, "تنظیمات", "https://image.flaticon.com/icons/png/512/57/57047.png"));
         childs.add(new DrawerChild(5, 2, "دعوت از دوستان", "https://image.flaticon.com/icons/png/512/109/109534.png"));

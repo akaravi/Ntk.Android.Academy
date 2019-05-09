@@ -515,14 +515,6 @@
                     android:nestedScrollingEnabled="false"
                     android:scrollbars="none"
                     tools:targetApi="lollipop" />
-
-                <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/imgMenuOneActDetail"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dp"
-                    android:layout_margin="10dp"
-                    android:scaleType="centerCrop"
-                    app:riv_corner_radius="10dip" />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
     </LinearLayout>
