@@ -352,21 +352,18 @@ public class ActDetailNews extends AppCompatActivity {
                     ai.HtmlBody = ai.HtmlBody.replace("<p>", "");
                     ai.HtmlBody = ai.HtmlBody.replace("</p>", "");
                     Lbls.get(6).setText(Html.fromHtml(ai.HtmlBody));
-                    findViewById(R.id.RowTimeActDetail).setVisibility(View.VISIBLE);
                     break;
                 case 22:
                     Lbls.get(9).setText(ai.Title);
                     ai.HtmlBody = ai.HtmlBody.replace("<p>", "");
                     ai.HtmlBody = ai.HtmlBody.replace("</p>", "");
                     Lbls.get(8).setText(Html.fromHtml(ai.HtmlBody));
-                    findViewById(R.id.RowTimeActDetail).setVisibility(View.VISIBLE);
                     break;
                 case 23:
                     Lbls.get(11).setText(ai.Title);
                     ai.HtmlBody = ai.HtmlBody.replace("<p>", "");
                     ai.HtmlBody = ai.HtmlBody.replace("</p>", "");
                     Lbls.get(10).setText(Html.fromHtml(ai.HtmlBody));
-                    findViewById(R.id.RowTimeActDetail).setVisibility(View.VISIBLE);
                     break;
                 default:
                     Info.add(ai);
@@ -384,7 +381,7 @@ public class ActDetailNews extends AppCompatActivity {
         Lbls.get(1).setText(model.Item.Title);
         Lbls.get(3).setText(String.valueOf(model.Item.viewCount));
         if (model.Item.Favorited) {
-            ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
+            ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
         }
     }
 
@@ -516,9 +513,9 @@ public class ActDetailNews extends AppCompatActivity {
                         if (e.IsSuccess) {
                             model.Item.Favorited = !model.Item.Favorited;
                             if (model.Item.Favorited) {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
+                                ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
                             } else {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
+                                ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav);
                             }
                         } else {
                             Toasty.error(ActDetailNews.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
@@ -560,9 +557,9 @@ public class ActDetailNews extends AppCompatActivity {
                         if (e.IsSuccess) {
                             model.Item.Favorited = !model.Item.Favorited;
                             if (model.Item.Favorited) {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
+                                ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
                             } else {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
+                                ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav);
                             }
                         } else {
                             Toasty.error(ActDetailNews.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();

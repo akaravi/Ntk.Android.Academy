@@ -46,15 +46,14 @@ public class PugPush {
         i.setData(Uri.parse(notification.Content));
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         intent = PendingIntent.getActivity(context, 0, i, 0);
-        if (notification.ContentType == 1) {
+        if (notification.ContentType == 0) {
             mBuilder.setSmallIcon(R.drawable.logo)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(notification.Content))
                     .setContentTitle(notification.Title)
-                    .setLargeIcon(ImageLoader.getInstance().loadImageSync(notification.BigImageSrc))
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setContentIntent(intent)
                     .setContentText(notification.Content);
-        } else if (notification.ContentType == 2) {
+        } else if (notification.ContentType == 5) {
             mBuilder.setSmallIcon(R.drawable.logo)
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setContentIntent(intent)
