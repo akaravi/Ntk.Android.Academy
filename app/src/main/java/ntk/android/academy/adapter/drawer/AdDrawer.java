@@ -3,12 +3,8 @@ package ntk.android.academy.adapter.drawer;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -100,7 +96,7 @@ public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
         holder.Lbls.get(0).setText(childs.get(position).Title);
 
         holder.Root.setOnClickListener(v -> {
-            switch (childs.get(position).ID) {
+            switch (childs.get(position).Id) {
                 case 1:
                     ClickInbox();
                     break;

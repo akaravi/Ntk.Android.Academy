@@ -81,6 +81,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
                 android:layoutDirection="rtl"
+                android:isIndicator="true"
                 android:progressDrawable="@drawable/rating_bar_layer"
                 android:rating="3" />
 

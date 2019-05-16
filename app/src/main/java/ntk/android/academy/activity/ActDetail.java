@@ -721,8 +721,12 @@ public class ActDetail extends AppCompatActivity {
 
     @OnClick(R.id.imgShareActDetail)
     public void ClickShare() {
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(model.Item.Source));
-        startActivity(i);
+        if (model.Item.Source.contains("https") || model.Item.Source.contains("http") || model.Item.Source.contains("www")) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(model.Item.Source));
+            startActivity(i);
+        } else {
+            Toasty.warning(this, "این محتوا امکان به اشتراک گذاری ندارد", Toasty.LENGTH_LONG, true).show();
+        }
     }
 }

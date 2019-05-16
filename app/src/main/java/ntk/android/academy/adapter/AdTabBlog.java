@@ -18,10 +18,8 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.event.EvHtmlBody;
 import ntk.android.academy.event.EvHtmlBodyBlog;
-import ntk.android.academy.event.EvHtmlBodyNews;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.blog.model.BlogContentOtherInfo;
-import ntk.base.api.news.model.NewsContentOtherInfo;
 
 public class AdTabBlog extends RecyclerView.Adapter<AdTabBlog.ViewHolder> {
 

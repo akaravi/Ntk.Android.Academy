@@ -2,7 +2,9 @@ package ntk.android.academy.activity;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -52,7 +54,6 @@ import ntk.android.academy.adapter.AdTabNews;
 import ntk.android.academy.config.ConfigRestHeader;
 import ntk.android.academy.config.ConfigStaticValue;
 import ntk.android.academy.event.EvHtmlBodyBlog;
-import ntk.android.academy.event.EvHtmlBodyNews;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.blog.interfase.IBlog;
 import ntk.base.api.blog.model.BlogCommentAddRequest;
@@ -588,6 +589,18 @@ public class ActDetailBlog extends AppCompatActivity {
 
                     }
                 });
+    }
+
+
+    @OnClick(R.id.imgShareActDetailBlog)
+    public void ClickShare() {
+        if (model.Item.Source.contains("https") || model.Item.Source.contains("http") || model.Item.Source.contains("www")) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(model.Item.Source));
+            startActivity(i);
+        } else {
+            Toasty.warning(this, "این محتوا امکان به اشتراک گذاری ندارد", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
 }

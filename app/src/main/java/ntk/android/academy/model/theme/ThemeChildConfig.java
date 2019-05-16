@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class ThemeChildConfig {
 
-    @SerializedName("SortID")
-    public int SortID;
+    @SerializedName("SortId")
+    public int SortId;
 
     @SerializedName("Title")
     public String Title;
@@ -30,7 +30,7 @@ public class ThemeChildConfig {
 
 
     public ThemeChildConfig(int sortID, String title, String color, String FrontColor, String size, String href, String layoutActionRequest, String layoutRequest) {
-        this.SortID = sortID;
+        this.SortId = sortID;
         this.Title = title;
         this.BgColor = color;
         this.FontSize = size;

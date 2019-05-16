@@ -263,7 +263,6 @@ public class ActSendTicket extends AppCompatActivity {
     @SuppressLint("CheckResult")
     @OnClick(R.id.RippleAttachActSendTicket)
     public void ClickAttach() {
-
         TedRx2Permission.with(this)
                 .setPermissions(Manifest.permission.READ_EXTERNAL_STORAGE)
                 .request()

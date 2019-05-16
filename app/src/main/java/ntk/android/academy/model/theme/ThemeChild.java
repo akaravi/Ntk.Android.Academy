@@ -6,8 +6,8 @@ import java.util.List;
 
 public class ThemeChild {
 
-    @SerializedName("SortID")
-    public int SortID;
+    @SerializedName("SortId")
+    public int SortId;
 
     @SerializedName("LayoutTheme")
     public int LayoutTheme;
@@ -25,7 +25,7 @@ public class ThemeChild {
     public String LayoutRequest;
 
     public ThemeChild(int sortID, int layoutTheme, String layoutName, List<ThemeChildConfig> childConfigs , List<ThemeChildConfig> config, String request) {
-        this.SortID = sortID;
+        this.SortId = sortID;
         this.LayoutTheme = layoutTheme;
         this.LayoutName = layoutName;
         this.LayoutChildConfigs = childConfigs;

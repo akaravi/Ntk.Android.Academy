@@ -30,7 +30,6 @@ import ntk.android.academy.config.ConfigStaticValue;
 import ntk.android.academy.utill.EasyPreference;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.application.interfase.IApplication;
-import ntk.base.api.application.model.ApplicationIntro;
 import ntk.base.api.application.model.ApplicationIntroRequest;
 import ntk.base.api.application.model.ApplicationIntroResponse;
 import ntk.base.api.utill.RetrofitManager;
@@ -134,10 +133,8 @@ public class ActIntro extends AppCompatActivity {
         } else {
             if (Help == 0) {
                 EasyPreference.with(this).addBoolean("Intro", true);
-                new Handler().postDelayed(() -> {
-                    startActivity(new Intent(ActIntro.this, ActRegister.class));
-                    finish();
-                }, 3000);
+                startActivity(new Intent(ActIntro.this, ActRegister.class));
+                finish();
             } else {
                 finish();
             }

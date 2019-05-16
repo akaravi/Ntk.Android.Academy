@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -50,15 +51,10 @@ import ntk.android.academy.R;
 import ntk.android.academy.adapter.AdArticle;
 import ntk.android.academy.adapter.AdComment;
 import ntk.android.academy.adapter.AdCommentNews;
-import ntk.android.academy.adapter.AdNews;
-import ntk.android.academy.adapter.AdTab;
 import ntk.android.academy.adapter.AdTabNews;
 import ntk.android.academy.config.ConfigRestHeader;
 import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.event.EvHtmlBody;
-import ntk.android.academy.event.EvHtmlBodyNews;
 import ntk.android.academy.utill.FontManager;
-import ntk.base.api.model.ErrorException;
 import ntk.base.api.model.Filters;
 import ntk.base.api.news.interfase.INews;
 import ntk.base.api.news.model.NewsCommentAddRequest;
@@ -95,8 +91,8 @@ public class ActDetailNews extends AppCompatActivity {
     @BindView(R.id.imgHeaderActDetailNews)
     ImageView ImgHeader;
 
-    @BindView(R.id.WebViewActDetailNews)
-    WebView webView;
+    @BindView(R.id.WebViewBodyActDetailNews)
+    WebView webViewBody;
 
     @BindView(R.id.recyclerTabActDetailNews)
     RecyclerView RvTab;
@@ -131,9 +127,9 @@ public class ActDetailNews extends AppCompatActivity {
             tv.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         }
         Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
-        webView.getSettings().setJavaScriptEnabled(true);
+        webViewBody.getSettings().setJavaScriptEnabled(true);
         RvTab.setHasFixedSize(true);
-        RvTab.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+        RvTab.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         RequestStr = getIntent().getExtras().getString("Request");
         Request = new Gson().fromJson(RequestStr, NewsContentViewRequest.class);
         HandelDataContent(Request);
@@ -211,11 +207,9 @@ public class ActDetailNews extends AppCompatActivity {
 
 
     private void HandelDataContent(NewsContentViewRequest request) {
-
         RetrofitManager retro = new RetrofitManager(this);
         INews iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(INews.class);
         Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-
         Observable<NewsContentResponse> call = iNews.GetContentView(headers, request);
         call.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -383,6 +377,7 @@ public class ActDetailNews extends AppCompatActivity {
         if (model.Item.Favorited) {
             ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
         }
+        webViewBody.loadDataWithBaseURL("", model.Item.Body, "text/html", "UTF-8", "");
     }
 
     @OnClick(R.id.imgBackActDetailNews)
@@ -390,22 +385,6 @@ public class ActDetailNews extends AppCompatActivity {
         finish();
     }
 
-    @Subscribe
-    public void EventHtmlBody(EvHtmlBodyNews event) {
-        webView.loadDataWithBaseURL("", event.GetMessage(), "text/html", "UTF-8", "");
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
 
     @OnClick(R.id.imgCommentActDetailNews)
     public void ClickCommentAdd() {
@@ -484,9 +463,9 @@ public class ActDetailNews extends AppCompatActivity {
 
     @OnClick(R.id.imgFavActDetailNews)
     public void ClickFav() {
-        if (model.Item.Favorited){
+        if (!model.Item.Favorited) {
             Fav();
-        }else{
+        } else {
             UnFav();
         }
     }
@@ -577,6 +556,17 @@ public class ActDetailNews extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    @OnClick(R.id.imgShareActDetailNews)
+    public void ClickShare() {
+        if (model.Item.Source.contains("https") || model.Item.Source.contains("http") || model.Item.Source.contains("www")) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(model.Item.Source));
+            startActivity(i);
+        } else {
+            Toasty.warning(this, "این محتوا امکان به اشتراک گذاری ندارد", Toasty.LENGTH_LONG, true).show();
+        }
     }
 
 }
