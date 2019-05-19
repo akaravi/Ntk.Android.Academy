@@ -16,8 +16,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ActArticleContentList;
-import ntk.android.academy.model.theme.ThemeChildConfig;
 import ntk.android.academy.utill.FontManager;
+import ntk.base.api.model.theme.ThemeChildConfig;
 
 public class AdCoreButtonGrid extends RecyclerView.Adapter<AdCoreButtonGrid.ViewHolder> {
 

@@ -50,10 +50,6 @@ import ntk.android.academy.activity.ActPooling;
 import ntk.android.academy.activity.ActSupport;
 import ntk.android.academy.config.ConfigRestHeader;
 import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.event.toolbar.EVHamberMenuClick;
-import ntk.android.academy.event.toolbar.EVSearchClick;
-import ntk.android.academy.model.theme.DrawerChild;
-import ntk.android.academy.model.theme.Toolbar;
 import ntk.android.academy.room.RoomDb;
 import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.EasyPreference;
@@ -62,6 +58,7 @@ import ntk.base.api.application.interfase.IApplication;
 import ntk.base.api.application.model.ApplicationScoreRequest;
 import ntk.base.api.application.model.ApplicationScoreResponse;
 import ntk.base.api.core.model.CoreMain;
+import ntk.base.api.model.theme.DrawerChild;
 import ntk.base.api.utill.RetrofitManager;
 
 public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {

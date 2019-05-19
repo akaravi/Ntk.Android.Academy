@@ -59,8 +59,6 @@ import ntk.android.academy.fragment.FrFav;
 import ntk.android.academy.fragment.FrHome;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigation;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigationItem;
-import ntk.android.academy.model.theme.Theme;
-import ntk.android.academy.model.theme.Toolbar;
 import ntk.android.academy.room.RoomDb;
 import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.EasyPreference;
@@ -68,6 +66,8 @@ import ntk.android.academy.utill.FontManager;
 import ntk.base.api.core.interfase.ICore;
 import ntk.base.api.core.model.CoreMain;
 import ntk.base.api.core.model.MainCoreResponse;
+import ntk.base.api.model.theme.Theme;
+import ntk.base.api.model.theme.Toolbar;
 import ntk.base.api.utill.RetrofitManager;
 
 public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
@@ -102,7 +102,6 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
     }
 
     private void init() {
-
         drawer.setOnDrawerStateChangeListener(new ElasticDrawer.OnDrawerStateChangeListener() {
             @Override
             public void onDrawerStateChange(int oldState, int newState) {
@@ -114,16 +113,13 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
             public void onDrawerSlide(float openRatio, int offsetPixels) {
             }
         });
-
         navigation.setDefaultBackgroundColor(Color.parseColor("#ffffff"));
         navigation.setBehaviorTranslationEnabled(false);
         navigation.setTitleTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-
         AHBottomNavigationItem BMI = new AHBottomNavigationItem("BMI", R.drawable.ic_one, R.color.colorMenu);
         AHBottomNavigationItem Favorite = new AHBottomNavigationItem("علاقه مندی", R.drawable.ic_two, R.color.colorMenu);
         AHBottomNavigationItem Home = new AHBottomNavigationItem("خانه", R.drawable.ic_three, R.color.colorMenu);
         AHBottomNavigationItem Command = new AHBottomNavigationItem("دستور پخت", R.drawable.ic_five, R.color.colorMenu);
-
         navigation.addItem(Command);
         navigation.addItem(Home);
         navigation.addItem(Favorite);
@@ -131,7 +127,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
 
         navigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         navigation.setCurrentItem(1);
-        navigation.setTitleTextSize(18, 16);
+        navigation.setTitleTextSize(24, 22);
         navigation.setTitleTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         navigation.setAccentColor(Color.parseColor("#f04d4d"));
         navigation.setInactiveColor(Color.parseColor("#030303"));
@@ -151,7 +147,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
     }
 
     private void HandelToolbarDrawer() {
-        Theme theme = new Gson().fromJson(Academy.JsonThemeExmaple, Theme.class);
+        Theme theme = new Gson().fromJson(EasyPreference.with(this).getString("Theme" , ""), Theme.class);
 
         RvToolbar.setHasFixedSize(true);
         RvToolbar.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));

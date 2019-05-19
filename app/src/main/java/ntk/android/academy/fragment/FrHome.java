@@ -24,8 +24,9 @@ import ntk.android.academy.Academy;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.theme.AdHome;
 import ntk.android.academy.library.AnimatedRecyclerView;
-import ntk.android.academy.model.theme.Theme;
+import ntk.android.academy.utill.EasyPreference;
 import ntk.android.academy.utill.FontManager;
+import ntk.base.api.model.theme.Theme;
 
 public class FrHome extends Fragment {
 
@@ -73,7 +74,7 @@ public class FrHome extends Fragment {
     }
 
     private void SetDataHome() {
-        Theme theme = new Gson().fromJson(Academy.JsonThemeExmaple, Theme.class);
+        Theme theme = new Gson().fromJson(EasyPreference.with(getContext()).getString("Theme" , ""), Theme.class);
         AdHome adapter = new AdHome(getContext(), theme.Childs);
         RvHome.setAdapter(adapter);
         adapter.notifyDataSetChanged();
