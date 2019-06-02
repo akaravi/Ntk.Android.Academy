@@ -2,15 +2,26 @@ package ntk.android.academy.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
@@ -38,7 +49,32 @@ public class AdPoolCategory extends RecyclerView.Adapter<AdPoolCategory.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        Log.i("00000", "AdPoolCategory: " + arrayList.get(position) + "");
         holder.LblTitle.setText(arrayList.get(position).Title);
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheOnDisk(true).build();
+        ImageLoader.getInstance().displayImage(arrayList.get(position).imageSrc, holder.img, options, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+
+            }
+
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                holder.progress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                holder.progress.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onLoadingCancelled(String imageUri, View view) {
+
+            }
+        });
+        Log.i("00000", "onBindViewHolder: "+arrayList.get(position).imageSrc+"");
         holder.Root.setOnClickListener(v -> {
             PoolingContentListRequest request = new PoolingContentListRequest();
             List<Filters> filters = new ArrayList<>();
@@ -63,6 +99,12 @@ public class AdPoolCategory extends RecyclerView.Adapter<AdPoolCategory.ViewHold
 
         @BindView(R.id.lblRowRecyclerPooling)
         TextView LblTitle;
+
+        @BindView(R.id.imgRowRecyclerPooling)
+        ImageView img;
+
+        @BindView(R.id.ProgressRecyclerPooling)
+        ProgressBar progress;
 
         @BindView(R.id.rootPooling)
         LinearLayout Root;

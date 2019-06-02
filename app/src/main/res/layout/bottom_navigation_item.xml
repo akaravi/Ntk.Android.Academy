@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/bottom_navigation_item_title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="@dimen/bottom_navigation_margin_bottom"
@@ -29,7 +29,7 @@
         android:gravity="center"
         android:lines="1"
         android:textColor="@color/colorBottomNavigationInactive"
-        android:textSize="@dimen/bottom_navigation_text_size_inactive"
+        android:textSize="@dimen/bottom_navigation_text_size_active"
         tools:text="Label One"/>
 
     <TextView

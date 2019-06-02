@@ -7,6 +7,8 @@ import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,6 +56,7 @@ import ntk.android.academy.adapter.AdTabNews;
 import ntk.android.academy.config.ConfigRestHeader;
 import ntk.android.academy.config.ConfigStaticValue;
 import ntk.android.academy.event.EvHtmlBodyBlog;
+import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.blog.interfase.IBlog;
 import ntk.base.api.blog.model.BlogCommentAddRequest;
@@ -119,6 +122,9 @@ public class ActDetailBlog extends AppCompatActivity {
     @BindView(R.id.PageActDetailBlog)
     LinearLayout Page;
 
+    @BindView(R.id.mainLayoutActDetailBlog)
+    CoordinatorLayout layout;
+
     private String RequestStr;
     private BlogContentResponse model;
     private BlogContentOtherInfoListResponse Info;
@@ -151,46 +157,105 @@ public class ActDetailBlog extends AppCompatActivity {
         RvComment.setHasFixedSize(true);
         RvComment.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
-        Rate.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-            BlogContentViewRequest request = new BlogContentViewRequest();
-            request.Id = Request.Id;
-            request.ActionClientOrder = 55;
-            if (rating == 0.5) {
-                request.ScorePercent = 10;
-            }
-            if (rating == 1) {
-                request.ScorePercent = 20;
-            }
-            if (rating == 1.5) {
-                request.ScorePercent = 30;
-            }
-            if (rating == 2) {
-                request.ScorePercent = 40;
-            }
-            if (rating == 2.5) {
-                request.ScorePercent = 50;
-            }
-            if (rating == 3) {
-                request.ScorePercent = 60;
-            }
-            if (rating == 3.5) {
-                request.ScorePercent = 70;
-            }
-            if (rating == 4) {
-                request.ScorePercent = 80;
-            }
-            if (rating == 4.5) {
-                request.ScorePercent = 90;
-            }
-            if (rating == 5) {
-                request.ScorePercent = 100;
-            }
-            RetrofitManager manager = new RetrofitManager(ActDetailBlog.this);
-            IBlog iNews = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetailBlog.this).GetApiBaseUrl()).create(IBlog.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetailBlog.this);
+        Rate.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (!fromUser) return;
+                if (AppUtill.isNetworkAvailable(ActDetailBlog.this)) {
+                    BlogContentViewRequest request = new BlogContentViewRequest();
+                    request.Id = Request.Id;
+                    request.ActionClientOrder = 55;
+                    if (rating == 0.5) {
+                        request.ScorePercent = 10;
+                    }
+                    if (rating == 1) {
+                        request.ScorePercent = 20;
+                    }
+                    if (rating == 1.5) {
+                        request.ScorePercent = 30;
+                    }
+                    if (rating == 2) {
+                        request.ScorePercent = 40;
+                    }
+                    if (rating == 2.5) {
+                        request.ScorePercent = 50;
+                    }
+                    if (rating == 3) {
+                        request.ScorePercent = 60;
+                    }
+                    if (rating == 3.5) {
+                        request.ScorePercent = 70;
+                    }
+                    if (rating == 4) {
+                        request.ScorePercent = 80;
+                    }
+                    if (rating == 4.5) {
+                        request.ScorePercent = 90;
+                    }
+                    if (rating == 5) {
+                        request.ScorePercent = 100;
+                    }
+                    RetrofitManager manager = new RetrofitManager(ActDetailBlog.this);
+                    IBlog iNews = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetailBlog.this).GetApiBaseUrl()).create(IBlog.class);
+                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetailBlog.this);
 
-            Observable<BlogContentResponse> Call = iNews.GetContentView(headers, request);
-            Call.observeOn(AndroidSchedulers.mainThread())
+                    Observable<BlogContentResponse> Call = iNews.GetContentView(headers, request);
+                    Call.observeOn(AndroidSchedulers.mainThread())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(new Observer<BlogContentResponse>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(BlogContentResponse response) {
+                                    Loading.setVisibility(View.GONE);
+                                    if (response.IsSuccess) {
+                                        Toasty.success(ActDetailBlog.this, "نظر شمابا موفقیت ثبت گردید").show();
+                                    } else {
+                                        Toasty.warning(ActDetailBlog.this, response.ErrorMessage).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Loading.setVisibility(View.GONE);
+                                    Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            init();
+                                        }
+                                    }).show();
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                } else {
+                    Loading.setVisibility(View.GONE);
+                    Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            init();
+                        }
+                    }).show();
+                }
+            }
+        });
+    }
+
+
+    private void HandelDataContent(BlogContentViewRequest request) {
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager retro = new RetrofitManager(this);
+            IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+
+            Observable<BlogContentResponse> call = iNews.GetContentView(headers, request);
+            call.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(new Observer<BlogContentResponse>() {
                         @Override
@@ -200,14 +265,26 @@ public class ActDetailBlog extends AppCompatActivity {
 
                         @Override
                         public void onNext(BlogContentResponse ContentResponse) {
-                            if (ContentResponse.IsSuccess) {
-                            } else {
+                            Loading.setVisibility(View.GONE);
+                            model = ContentResponse;
+                            SetData(model);
+                            if (Request.Id > 0) {
+                                HandelDataContentOtherInfo(Request.Id);
+                                HandelDataComment(Request.Id);
                             }
+                            Loading.setVisibility(View.GONE);
+                            Page.setVisibility(View.VISIBLE);
                         }
 
                         @Override
                         public void onError(Throwable e) {
-
+                            Loading.setVisibility(View.GONE);
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -215,133 +292,115 @@ public class ActDetailBlog extends AppCompatActivity {
 
                         }
                     });
-        });
-    }
-
-
-    private void HandelDataContent(BlogContentViewRequest request) {
-
-        RetrofitManager retro = new RetrofitManager(this);
-        IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-
-        Observable<BlogContentResponse> call = iNews.GetContentView(headers, request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BlogContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(BlogContentResponse ContentResponse) {
-                        model = ContentResponse;
-                        SetData(model);
-                        if (Request.Id > 0) {
-                            HandelDataContentOtherInfo(Request.Id);
-                            HandelDataComment(Request.Id);
-                        }
-                        Loading.setVisibility(View.GONE);
-                        Page.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.i("Log", e.getMessage());
-                        Loading.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     private void HandelDataComment(long ContentId) {
-        List<Filters> filters = new ArrayList<>();
-        BlogCommentListRequest Request = new BlogCommentListRequest();
-        Filters f = new Filters();
-        f.PropertyName = "LinkContentId";
-        f.IntValue1 = ContentId;
-        filters.add(f);
-        Request.filters = filters;
-        RetrofitManager retro = new RetrofitManager(this);
-        IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-        Observable<BlogCommentResponse> call = iNews.GetCommentList(headers, Request);
-        call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BlogCommentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        if (AppUtill.isNetworkAvailable(this)) {
+            List<Filters> filters = new ArrayList<>();
+            BlogCommentListRequest Request = new BlogCommentListRequest();
+            Filters f = new Filters();
+            f.PropertyName = "LinkContentId";
+            f.IntValue1 = ContentId;
+            filters.add(f);
+            Request.filters = filters;
+            RetrofitManager retro = new RetrofitManager(this);
+            IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+            Observable<BlogCommentResponse> call = iNews.GetCommentList(headers, Request);
+            call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<BlogCommentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(BlogCommentResponse model) {
-                        if (model.IsSuccess) {
-                            AdCommentBlog adapter = new AdCommentBlog(ActDetailBlog.this, model.ListItems);
-                            RvComment.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
+                        @Override
+                        public void onNext(BlogCommentResponse model) {
+                            if (model.IsSuccess) {
+                                findViewById(R.id.lblCommentActDetailBlog).setVisibility(View.VISIBLE);
+                                AdCommentBlog adapter = new AdCommentBlog(ActDetailBlog.this, model.ListItems);
+                                RvComment.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                findViewById(R.id.lblCommentActDetailBlog).setVisibility(View.GONE);
+                            }
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onError(Throwable e) {
+                            Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     private void HandelDataContentOtherInfo(long ContentId) {
-
-        List<Filters> filters = new ArrayList<>();
-        BlogContentOtherInfoListRequest Request = new BlogContentOtherInfoListRequest();
-        Filters f = new Filters();
-        f.PropertyName = "LinkContentId";
-        f.IntValue1 = ContentId;
-        filters.add(f);
-        Request.filters = filters;
-        RetrofitManager retro = new RetrofitManager(this);
-        IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-
-
-        Observable<BlogContentOtherInfoListResponse> call = iNews.GetContentOtherInfoList(headers, Request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BlogContentOtherInfoListResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(BlogContentOtherInfoListResponse ContentOtherInfoResponse) {
-                        SetDataOtherinfo(ContentOtherInfoResponse);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        if (AppUtill.isNetworkAvailable(this)) {
+            List<Filters> filters = new ArrayList<>();
+            BlogContentOtherInfoListRequest Request = new BlogContentOtherInfoListRequest();
+            Filters f = new Filters();
+            f.PropertyName = "LinkContentId";
+            f.IntValue1 = ContentId;
+            filters.add(f);
+            Request.filters = filters;
+            RetrofitManager retro = new RetrofitManager(this);
+            IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
 
+            Observable<BlogContentOtherInfoListResponse> call = iNews.GetContentOtherInfoList(headers, Request);
+            call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BlogContentOtherInfoListResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(BlogContentOtherInfoListResponse ContentOtherInfoResponse) {
+                            SetDataOtherinfo(ContentOtherInfoResponse);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     private void SetDataOtherinfo(BlogContentOtherInfoListResponse model) {
@@ -392,6 +451,11 @@ public class ActDetailBlog extends AppCompatActivity {
         Lbls.get(0).setText(model.Item.Title);
         Lbls.get(1).setText(model.Item.Title);
         Lbls.get(3).setText(String.valueOf(model.Item.viewCount));
+        if (model.Item.ScoreSumPercent == 0) {
+            Rate.setRating(0);
+        } else {
+            Rate.setRating((model.Item.ScoreSumPercent / model.Item.ScoreSumClick));
+        }
         if (model.Item.Favorited) {
             ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
         }
@@ -421,174 +485,209 @@ public class ActDetailBlog extends AppCompatActivity {
 
     @OnClick(R.id.imgCommentActDetailBlog)
     public void ClickCommentAdd() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(true);
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
-        dialog.setContentView(R.layout.dialog_comment_add);
+        if (AppUtill.isNetworkAvailable(this)) {
+            final Dialog dialog = new Dialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCanceledOnTouchOutside(true);
+            Window window = dialog.getWindow();
+            window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.CENTER);
+            dialog.setContentView(R.layout.dialog_comment_add);
 
-        TextView Lbl = dialog.findViewById(R.id.lblTitleDialogAddComment);
-        Lbl.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            TextView Lbl = dialog.findViewById(R.id.lblTitleDialogAddComment);
+            Lbl.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
 
-        EditText Txt[] = new EditText[2];
+            EditText Txt[] = new EditText[2];
 
-        Txt[0] = dialog.findViewById(R.id.txtNameDialogAddComment);
-        Txt[0].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Txt[0] = dialog.findViewById(R.id.txtNameDialogAddComment);
+            Txt[0].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
 
-        Txt[1] = dialog.findViewById(R.id.txtContentDialogAddComment);
-        Txt[1].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Txt[1] = dialog.findViewById(R.id.txtContentDialogAddComment);
+            Txt[1].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
 
-        Button Btn = dialog.findViewById(R.id.btnSubmitDialogCommentAdd);
-        Btn.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Button Btn = dialog.findViewById(R.id.btnSubmitDialogCommentAdd);
+            Btn.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
 
-        Btn.setOnClickListener(v -> {
-            if (Txt[0].getText().toString().isEmpty()) {
-                Toast.makeText(ActDetailBlog.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
-            } else {
-                if (Txt[1].getText().toString().isEmpty()) {
+            Btn.setOnClickListener(v -> {
+                if (Txt[0].getText().toString().isEmpty()) {
                     Toast.makeText(ActDetailBlog.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
                 } else {
-                    BlogCommentAddRequest add = new BlogCommentAddRequest();
-                    add.Writer = Txt[0].getText().toString();
-                    add.Comment = Txt[1].getText().toString();
-                    add.LinkContentId = Request.Id;
-                    RetrofitManager retro = new RetrofitManager(this);
-                    IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
-                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+                    if (Txt[1].getText().toString().isEmpty()) {
+                        Toast.makeText(ActDetailBlog.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
+                    } else {
+                        BlogCommentAddRequest add = new BlogCommentAddRequest();
+                        add.Writer = Txt[0].getText().toString();
+                        add.Comment = Txt[1].getText().toString();
+                        add.LinkContentId = Request.Id;
+                        RetrofitManager retro = new RetrofitManager(this);
+                        IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
+                        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
 
-                    Observable<BlogCommentResponse> call = iNews.SetComment(headers, add);
-                    call.subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Observer<BlogCommentResponse>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
+                        Observable<BlogCommentResponse> call = iNews.SetComment(headers, add);
+                        call.subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<BlogCommentResponse>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
 
-                                }
-
-                                @Override
-                                public void onNext(BlogCommentResponse e) {
-                                    if (e.IsSuccess) {
-                                        HandelDataComment(Request.Id);
-                                        dialog.dismiss();
                                     }
-                                }
 
-                                @Override
-                                public void onError(Throwable e) {
-                                    Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                                }
+                                    @Override
+                                    public void onNext(BlogCommentResponse e) {
+                                        if (e.IsSuccess) {
+                                            HandelDataComment(Request.Id);
+                                            dialog.dismiss();
+                                            Toasty.success(ActDetailBlog.this, "نظر شما با موفقیت ثبت شد").show();
+                                        } else {
+                                            Toasty.warning(ActDetailBlog.this, "لطفا مجددا تلاش کنید").show();
+                                        }
+                                    }
 
-                                @Override
-                                public void onComplete() {
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                init();
+                                            }
+                                        }).show();
+                                    }
 
-                                }
-                            });
+                                    @Override
+                                    public void onComplete() {
+
+                                    }
+                                });
+                    }
                 }
-            }
-        });
-
-        dialog.show();
-
+            });
+            dialog.show();
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     @OnClick(R.id.imgFavActDetailBlog)
     public void ClickFav() {
-        if (model.Item.Favorited){
+        if (!model.Item.Favorited) {
             Fav();
-        }else{
+        } else {
             UnFav();
         }
     }
 
     private void Fav() {
-        RetrofitManager retro = new RetrofitManager(this);
-        IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager retro = new RetrofitManager(this);
+            IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        BlogContentFavoriteAddRequest add = new BlogContentFavoriteAddRequest();
-        add.Id = model.Item.Id;
+            BlogContentFavoriteAddRequest add = new BlogContentFavoriteAddRequest();
+            add.Id = model.Item.Id;
 
-        Observable<BlogContentFavoriteAddResponse> Call = iNews.SetContentFavoriteAdd(headers, add);
-        Call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BlogContentFavoriteAddResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<BlogContentFavoriteAddResponse> Call = iNews.SetContentFavoriteAdd(headers, add);
+            Call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<BlogContentFavoriteAddResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(BlogContentFavoriteAddResponse e) {
-                        if (e.IsSuccess) {
-                            model.Item.Favorited = !model.Item.Favorited;
-                            if (model.Item.Favorited) {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
-                            } else {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
-                            }
-                        } else {
-                            Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
+                        @Override
+                        public void onNext(BlogContentFavoriteAddResponse e) {
+                            if (e.IsSuccess) {
+                                Toasty.success(ActDetailBlog.this, "با موفقیت ثبت شد").show();
+                                model.Item.Favorited = !model.Item.Favorited;
+                                if (model.Item.Favorited) {
+                                    ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
+                                } else {
+                                    ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
+                                }
+                            } else {
+                                Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                            }
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onError(Throwable e) {
+                            Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     private void UnFav() {
-        RetrofitManager retro = new RetrofitManager(this);
-        IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager retro = new RetrofitManager(this);
+            IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-       BlogContentFavoriteRemoveRequest add = new BlogContentFavoriteRemoveRequest();
-        add.Id = model.Item.Id;
+            BlogContentFavoriteRemoveRequest add = new BlogContentFavoriteRemoveRequest();
+            add.Id = model.Item.Id;
 
-        Observable<BlogContentFavoriteRemoveResponse> Call = iNews.SetContentFavoriteRemove(headers, add);
-        Call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<BlogContentFavoriteRemoveResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<BlogContentFavoriteRemoveResponse> Call = iNews.SetContentFavoriteRemove(headers, add);
+            Call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<BlogContentFavoriteRemoveResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(BlogContentFavoriteRemoveResponse e) {
-                        if (e.IsSuccess) {
-                            model.Item.Favorited = !model.Item.Favorited;
-                            if (model.Item.Favorited) {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
-                            } else {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
-                            }
-                        } else {
-                            Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                         }
 
-                    }
+                        @Override
+                        public void onNext(BlogContentFavoriteRemoveResponse e) {
+                            if (e.IsSuccess) {
+                                Toasty.success(ActDetailBlog.this, "با موفقیت ثبت شد").show();
+                                model.Item.Favorited = !model.Item.Favorited;
+                                if (model.Item.Favorited) {
+                                    ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
+                                } else {
+                                    ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
+                                }
+                            } else {
+                                Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onError(Throwable e) {
+                            Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
 

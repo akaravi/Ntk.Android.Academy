@@ -44,7 +44,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="15dp"
             android:layout_toStartOf="@id/imgBackActNews"
-            android:text="دستور آشپزی"
+            android:text="اخبار"
             android:textColor="@color/colorMenu"
             tools:ignore="HardcodedText" />
     </RelativeLayout>

@@ -7,6 +7,8 @@ import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.makeramen.roundedimageview.RoundedImageView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
@@ -54,9 +55,9 @@ import ntk.android.academy.adapter.AdTab;
 import ntk.android.academy.config.ConfigRestHeader;
 import ntk.android.academy.config.ConfigStaticValue;
 import ntk.android.academy.event.EvHtmlBody;
+import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.article.interfase.IArticle;
-import ntk.base.api.article.interfase.IArticleGET;
 import ntk.base.api.article.model.ArticleCommentAddRequest;
 import ntk.base.api.article.model.ArticleCommentListRequest;
 import ntk.base.api.article.model.ArticleCommentResponse;
@@ -128,6 +129,10 @@ public class ActDetail extends AppCompatActivity {
     @BindView(R.id.PageActDetail)
     LinearLayout Page;
 
+
+    @BindView(R.id.mainLayoutActDetail)
+    CoordinatorLayout layout;
+
     private String RequestStr;
     private ArticleContentResponse model;
     private ArticleContentOtherInfoResponse Info;
@@ -167,46 +172,106 @@ public class ActDetail extends AppCompatActivity {
         RvSimilarCategory.setHasFixedSize(true);
         RvSimilarCategory.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
 
-        Rate.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-            ArticleContentViewRequest request = new ArticleContentViewRequest();
-            request.Id = Request.Id;
-            request.ActionClientOrder = 55;
-            if (rating == 0.5) {
-                request.ScorePercent = 10;
-            }
-            if (rating == 1) {
-                request.ScorePercent = 20;
-            }
-            if (rating == 1.5) {
-                request.ScorePercent = 30;
-            }
-            if (rating == 2) {
-                request.ScorePercent = 40;
-            }
-            if (rating == 2.5) {
-                request.ScorePercent = 50;
-            }
-            if (rating == 3) {
-                request.ScorePercent = 60;
-            }
-            if (rating == 3.5) {
-                request.ScorePercent = 70;
-            }
-            if (rating == 4) {
-                request.ScorePercent = 80;
-            }
-            if (rating == 4.5) {
-                request.ScorePercent = 90;
-            }
-            if (rating == 5) {
-                request.ScorePercent = 100;
-            }
-            RetrofitManager manager = new RetrofitManager(ActDetail.this);
-            IArticle iArticle = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetail.this).GetApiBaseUrl()).create(IArticle.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetail.this);
+        Rate.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                if (!fromUser) return;
 
-            Observable<ArticleContentResponse> Call = iArticle.GetContentView(headers, request);
-            Call.observeOn(AndroidSchedulers.mainThread())
+                if (AppUtill.isNetworkAvailable(ActDetail.this)) {
+                    ArticleContentViewRequest request = new ArticleContentViewRequest();
+                    request.Id = Request.Id;
+                    request.ActionClientOrder = 55;
+                    if (rating == 0.5) {
+                        request.ScorePercent = 10;
+                    }
+                    if (rating == 1) {
+                        request.ScorePercent = 20;
+                    }
+                    if (rating == 1.5) {
+                        request.ScorePercent = 30;
+                    }
+                    if (rating == 2) {
+                        request.ScorePercent = 40;
+                    }
+                    if (rating == 2.5) {
+                        request.ScorePercent = 50;
+                    }
+                    if (rating == 3) {
+                        request.ScorePercent = 60;
+                    }
+                    if (rating == 3.5) {
+                        request.ScorePercent = 70;
+                    }
+                    if (rating == 4) {
+                        request.ScorePercent = 80;
+                    }
+                    if (rating == 4.5) {
+                        request.ScorePercent = 90;
+                    }
+                    if (rating == 5) {
+                        request.ScorePercent = 100;
+                    }
+                    RetrofitManager manager = new RetrofitManager(ActDetail.this);
+                    IArticle iArticle = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetail.this).GetApiBaseUrl()).create(IArticle.class);
+                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetail.this);
+
+                    Observable<ArticleContentResponse> Call = iArticle.GetContentView(headers, request);
+                    Call.observeOn(AndroidSchedulers.mainThread())
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(new Observer<ArticleContentResponse>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+
+                                }
+
+                                @Override
+                                public void onNext(ArticleContentResponse response) {
+                                    Loading.setVisibility(View.GONE);
+                                    if (response.IsSuccess) {
+                                        Toasty.success(ActDetail.this, "نظر شمابا موفقیت ثبت گردید").show();
+                                    } else {
+                                        Toasty.warning(ActDetail.this, response.ErrorMessage).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+                                    Loading.setVisibility(View.GONE);
+                                    Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            init();
+                                        }
+                                    }).show();
+                                }
+
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                } else {
+                    Loading.setVisibility(View.GONE);
+                    Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            init();
+                        }
+                    }).show();
+                }
+            }
+        });
+    }
+
+
+    private void HandelDataContent(ArticleContentViewRequest request) {
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager retro = new RetrofitManager(this);
+            IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+
+            Observable<ArticleContentResponse> call = iArticle.GetContentView(headers, request);
+            call.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(new Observer<ArticleContentResponse>() {
                         @Override
@@ -216,6 +281,69 @@ public class ActDetail extends AppCompatActivity {
 
                         @Override
                         public void onNext(ArticleContentResponse articleContentResponse) {
+                            model = articleContentResponse;
+                            if (model.Item != null) {
+                                SetData(model);
+                                HandelSimilary(Request.Id);
+                                HandelSimilaryCategory(Request.Id);
+                                if (Request.Id > 0) {
+                                    HandelDataContentOtherInfo(Request.Id);
+                                    HandelDataComment(Request.Id);
+                                }
+                            }
+                            Loading.setVisibility(View.GONE);
+                            Page.setVisibility(View.VISIBLE);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Loading.setVisibility(View.GONE);
+                            Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
+    }
+
+    private void HandelSimilary(long id) {
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager manager = new RetrofitManager(this);
+            IArticle iArticle = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IArticle.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+
+            ArticleContentSimilarListRequest request = new ArticleContentSimilarListRequest();
+            request.LinkContetnId = id;
+
+            Observable<ArticleContentResponse> call = iArticle.GetContentSimilarList(headers, request);
+            call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<ArticleContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(ArticleContentResponse response) {
+                            if (response.ListItems.size() == 0) {
+                                findViewById(R.id.RowSimilaryActDetail).setVisibility(View.GONE);
+                            } else {
+                                AdArticle adapter = new AdArticle(ActDetail.this, response.ListItems);
+                                RvSimilarArticle.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
+                                findViewById(R.id.RowSimilaryActDetail).setVisibility(View.VISIBLE);
+                            }
                         }
 
                         @Override
@@ -228,179 +356,119 @@ public class ActDetail extends AppCompatActivity {
 
                         }
                     });
-        });
-    }
-
-
-    private void HandelDataContent(ArticleContentViewRequest request) {
-        RetrofitManager retro = new RetrofitManager(this);
-        IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-
-        Observable<ArticleContentResponse> call = iArticle.GetContentView(headers, request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<ArticleContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(ArticleContentResponse articleContentResponse) {
-                        model = articleContentResponse;
-                        if (model.Item != null) {
-                            SetData(model);
-                            HandelSimilary(Request.Id);
-                            HandelSimilaryCategory(Request.Id);
-                            if (Request.Id > 0) {
-                                HandelDataContentOtherInfo(Request.Id);
-                                HandelDataComment(Request.Id);
-                            }
-                        }
-                        Loading.setVisibility(View.GONE);
-                        Page.setVisibility(View.VISIBLE);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Loading.setVisibility(View.GONE);
-                        Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
-
-    private void HandelSimilary(long id) {
-        RetrofitManager manager = new RetrofitManager(this);
-        IArticle iArticle = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IArticle.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-
-        ArticleContentSimilarListRequest request = new ArticleContentSimilarListRequest();
-        request.LinkContetnId = id;
-
-        Observable<ArticleContentResponse> call = iArticle.GetContentSimilarList(headers, request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<ArticleContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(ArticleContentResponse response) {
-                        if (response.ListItems.size() == 0) {
-                            findViewById(R.id.RowSimilaryActDetail).setVisibility(View.GONE);
-                        } else {
-                            AdArticle adapter = new AdArticle(ActDetail.this, response.ListItems);
-                            RvSimilarArticle.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-                            findViewById(R.id.RowSimilaryActDetail).setVisibility(View.VISIBLE);
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     private void HandelSimilaryCategory(long id) {
-        RetrofitManager manager = new RetrofitManager(this);
-        IArticle iArticle = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IArticle.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager manager = new RetrofitManager(this);
+            IArticle iArticle = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IArticle.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        ArticleContentCategoryListRequest request = new ArticleContentCategoryListRequest();
-        request.LinkContetnId = id;
+            ArticleContentCategoryListRequest request = new ArticleContentCategoryListRequest();
+            request.LinkContetnId = id;
 
-        Observable<ArticleContentResponse> call = iArticle.GetContentCategoryList(headers, request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<ArticleContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<ArticleContentResponse> call = iArticle.GetContentCategoryList(headers, request);
+            call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<ArticleContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(ArticleContentResponse response) {
-                        if (response.ListItems.size() == 0) {
-                            findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.GONE);
-                        } else {
-                            findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.VISIBLE);
-                            AdArticle adapter = new AdArticle(ActDetail.this, response.ListItems);
-                            RvSimilarCategory.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onNext(ArticleContentResponse response) {
+                            if (response.ListItems.size() == 0) {
+                                findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.GONE);
+                            } else {
+                                findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.VISIBLE);
+                                AdArticle adapter = new AdArticle(ActDetail.this, response.ListItems);
+                                RvSimilarCategory.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
 
-                    }
+                        @Override
+                        public void onError(Throwable e) {
 
-                    @Override
-                    public void onComplete() {
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     private void HandelDataComment(long ContentId) {
-        List<Filters> filters = new ArrayList<>();
-        ArticleCommentListRequest Request = new ArticleCommentListRequest();
-        Filters f = new Filters();
-        f.PropertyName = "LinkContentId";
-        f.IntValue1 = ContentId;
-        filters.add(f);
-        Request.filters = filters;
-        RetrofitManager retro = new RetrofitManager(this);
-        IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-        Observable<ArticleCommentResponse> call = iArticle.GetCommentList(headers, Request);
-        call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ArticleCommentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        if (AppUtill.isNetworkAvailable(this)) {
+            List<Filters> filters = new ArrayList<>();
+            ArticleCommentListRequest Request = new ArticleCommentListRequest();
+            Filters f = new Filters();
+            f.PropertyName = "LinkContentId";
+            f.IntValue1 = ContentId;
+            filters.add(f);
+            Request.filters = filters;
+            RetrofitManager retro = new RetrofitManager(this);
+            IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+            Observable<ArticleCommentResponse> call = iArticle.GetCommentList(headers, Request);
+            call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<ArticleCommentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(ArticleCommentResponse model) {
-                        if (model.IsSuccess) {
-                            if (model.ListItems.size() == 0) {
-                                findViewById(R.id.RowCommentActDetail).setVisibility(View.GONE);
-                            } else {
-                                AdComment adapter = new AdComment(ActDetail.this, model.ListItems);
-                                RvComment.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                                findViewById(R.id.RowCommentActDetail).setVisibility(View.VISIBLE);
+                        @Override
+                        public void onNext(ArticleCommentResponse model) {
+                            if (model.IsSuccess) {
+                                if (model.ListItems.size() == 0) {
+                                    findViewById(R.id.RowCommentActDetail).setVisibility(View.GONE);
+                                } else {
+                                    AdComment adapter = new AdComment(ActDetail.this, model.ListItems);
+                                    RvComment.setAdapter(adapter);
+                                    adapter.notifyDataSetChanged();
+                                    findViewById(R.id.RowCommentActDetail).setVisibility(View.VISIBLE);
+                                }
                             }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onComplete() {
 
-                    }
-                });
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     private void HandelDataContentOtherInfo(long ContentId) {
@@ -549,82 +617,97 @@ public class ActDetail extends AppCompatActivity {
 
     @OnClick(R.id.imgCommentActDetail)
     public void ClickCommentAdd() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(true);
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
-        dialog.setContentView(R.layout.dialog_comment_add);
+        if (AppUtill.isNetworkAvailable(this)) {
+            final Dialog dialog = new Dialog(this);
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialog.setCanceledOnTouchOutside(true);
+            Window window = dialog.getWindow();
+            window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.CENTER);
+            dialog.setContentView(R.layout.dialog_comment_add);
 
-        TextView Lbl = dialog.findViewById(R.id.lblTitleDialogAddComment);
-        Lbl.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            TextView Lbl = dialog.findViewById(R.id.lblTitleDialogAddComment);
+            Lbl.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
 
-        EditText Txt[] = new EditText[2];
+            EditText Txt[] = new EditText[2];
 
-        Txt[0] = dialog.findViewById(R.id.txtNameDialogAddComment);
-        Txt[0].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Txt[0] = dialog.findViewById(R.id.txtNameDialogAddComment);
+            Txt[0].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
 
-        Txt[1] = dialog.findViewById(R.id.txtContentDialogAddComment);
-        Txt[1].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Txt[1] = dialog.findViewById(R.id.txtContentDialogAddComment);
+            Txt[1].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
 
-        Button Btn = dialog.findViewById(R.id.btnSubmitDialogCommentAdd);
-        Btn.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Button Btn = dialog.findViewById(R.id.btnSubmitDialogCommentAdd);
+            Btn.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
 
-        Btn.setOnClickListener(v -> {
-            if (Txt[0].getText().toString().isEmpty()) {
-                Toast.makeText(ActDetail.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
-            } else {
-                if (Txt[1].getText().toString().isEmpty()) {
+            Btn.setOnClickListener(v -> {
+                if (Txt[0].getText().toString().isEmpty()) {
                     Toast.makeText(ActDetail.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
                 } else {
-                    ArticleCommentAddRequest add = new ArticleCommentAddRequest();
-                    add.Writer = Txt[0].getText().toString();
-                    add.Comment = Txt[1].getText().toString();
-                    add.LinkContentId = Request.Id;
-                    RetrofitManager retro = new RetrofitManager(this);
-                    IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
-                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+                    if (Txt[1].getText().toString().isEmpty()) {
+                        Toast.makeText(ActDetail.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
+                    } else {
+                        ArticleCommentAddRequest add = new ArticleCommentAddRequest();
+                        add.Writer = Txt[0].getText().toString();
+                        add.Comment = Txt[1].getText().toString();
+                        add.LinkContentId = Request.Id;
+                        RetrofitManager retro = new RetrofitManager(this);
+                        IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
+                        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
 
-                    Observable<ArticleCommentResponse> call = iArticle.SetComment(headers, add);
-                    call.subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Observer<ErrorException>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
+                        Observable<ArticleCommentResponse> call = iArticle.SetComment(headers, add);
+                        call.subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(new Observer<ErrorException>() {
+                                    @Override
+                                    public void onSubscribe(Disposable d) {
 
-                                }
-
-                                @Override
-                                public void onNext(ErrorException e) {
-                                    if (e.IsSuccess) {
-                                        HandelDataComment(Request.Id);
-                                        dialog.dismiss();
                                     }
-                                }
 
-                                @Override
-                                public void onError(Throwable e) {
-                                    Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                                }
+                                    @Override
+                                    public void onNext(ErrorException e) {
+                                        if (e.IsSuccess) {
+                                            HandelDataComment(Request.Id);
+                                            dialog.dismiss();
+                                            Toasty.success(ActDetail.this, "نظر شما با موفقیت ثبت شد").show();
+                                        } else {
+                                            Toasty.warning(ActDetail.this, "لطفا مجددا تلاش کنید").show();
+                                        }
+                                    }
 
-                                @Override
-                                public void onComplete() {
+                                    @Override
+                                    public void onError(Throwable e) {
+                                        Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                init();
+                                            }
+                                        }).show();
+                                    }
 
-                                }
-                            });
+                                    @Override
+                                    public void onComplete() {
+
+                                    }
+                                });
+                    }
                 }
-            }
-        });
-
-        dialog.show();
-
+            });
+            dialog.show();
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     @OnClick(R.id.imgFavActDetail)
     public void ClickFav() {
-        if (model.Item.Favorited) {
+        if (!model.Item.Favorited) {
             Fav();
         } else {
             UnFav();
@@ -632,91 +715,121 @@ public class ActDetail extends AppCompatActivity {
     }
 
     private void UnFav() {
-        RetrofitManager retro = new RetrofitManager(this);
-        IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager retro = new RetrofitManager(this);
+            IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        ArticleContentFavoriteRemoveRequest add = new ArticleContentFavoriteRemoveRequest();
-        add.Id = model.Item.Id;
+            ArticleContentFavoriteRemoveRequest add = new ArticleContentFavoriteRemoveRequest();
+            add.Id = model.Item.Id;
 
-        Observable<ArticleContentFavoriteRemoveResponse> Call = iArticle.SetContentFavoriteRemove(headers, add);
-        Call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ArticleContentFavoriteRemoveResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<ArticleContentFavoriteRemoveResponse> Call = iArticle.SetContentFavoriteRemove(headers, add);
+            Call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<ArticleContentFavoriteRemoveResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(ArticleContentFavoriteRemoveResponse e) {
-                        if (e.IsSuccess) {
-                            model.Item.Favorited = !model.Item.Favorited;
-                            if (model.Item.Favorited) {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
-                            } else {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
-                            }
-                        } else {
-                            Toasty.error(ActDetail.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                         }
 
-                    }
+                        @Override
+                        public void onNext(ArticleContentFavoriteRemoveResponse e) {
+                            if (e.IsSuccess) {
+                                Toasty.success(ActDetail.this, "با موفقیت ثبت شد").show();
+                                model.Item.Favorited = !model.Item.Favorited;
+                                if (model.Item.Favorited) {
+                                    ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
+                                } else {
+                                    ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
+                                }
+                            } else {
+                                Toasty.error(ActDetail.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onError(Throwable e) {
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     private void Fav() {
-        RetrofitManager retro = new RetrofitManager(this);
-        IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager retro = new RetrofitManager(this);
+            IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        ArticleContentFavoriteAddRequest add = new ArticleContentFavoriteAddRequest();
-        add.Id = model.Item.Id;
+            ArticleContentFavoriteAddRequest add = new ArticleContentFavoriteAddRequest();
+            add.Id = model.Item.Id;
 
-        Observable<ArticleContentFavoriteAddResponse> Call = iArticle.SetContentFavoriteAdd(headers, add);
-        Call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ArticleContentFavoriteAddResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            Observable<ArticleContentFavoriteAddResponse> Call = iArticle.SetContentFavoriteAdd(headers, add);
+            Call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<ArticleContentFavoriteAddResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
-
-                    @Override
-                    public void onNext(ArticleContentFavoriteAddResponse e) {
-                        if (e.IsSuccess) {
-                            model.Item.Favorited = !model.Item.Favorited;
-                            if (model.Item.Favorited) {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
-                            } else {
-                                ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
-                            }
-                        } else {
-                            Toasty.error(ActDetail.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                         }
 
-                    }
+                        @Override
+                        public void onNext(ArticleContentFavoriteAddResponse e) {
+                            if (e.IsSuccess) {
+                                Toasty.success(ActDetail.this, "با موفقیت ثبت شد").show();
+                                model.Item.Favorited = !model.Item.Favorited;
+                                if (model.Item.Favorited) {
+                                    ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
+                                } else {
+                                    ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
+                                }
+                            } else {
+                                Toasty.error(ActDetail.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActDetail.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onError(Throwable e) {
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
     }
 
     @OnClick(R.id.imgShareActDetail)
