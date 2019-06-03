@@ -453,7 +453,7 @@ public class ActDetailNews extends AppCompatActivity {
         } else {
             Rate.setRating((model.Item.ScoreSumPercent / model.Item.ScoreSumClick));
         }
-        webViewBody.loadDataWithBaseURL("", model.Item.Body, "text/html", "UTF-8", "");
+        webViewBody.loadData("<html dir=\"rtl\" lang=\"\"><body>" + model.Item.Body + "</body></html>", "text/html; charset=utf-8", "UTF-8");
     }
 
     @OnClick(R.id.imgBackActDetailNews)

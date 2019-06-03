@@ -600,7 +600,7 @@ public class ActDetail extends AppCompatActivity {
 
     @Subscribe
     public void EventHtmlBody(EvHtmlBody event) {
-        webView.loadDataWithBaseURL("", event.GetMessage(), "text/html", "UTF-8", "");
+        webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + event.GetMessage() + "</body></html>", "text/html; charset=utf-8", "UTF-8");
     }
 
     @Override
@@ -841,5 +841,15 @@ public class ActDetail extends AppCompatActivity {
         } else {
             Toasty.warning(this, "این محتوا امکان به اشتراک گذاری ندارد", Toasty.LENGTH_LONG, true).show();
         }
+    }
+
+    @OnClick(R.id.playActDetail)
+    public void onPlayClick() {
+        Toasty.warning(ActDetail.this, "موردی یافت نشد").show();
+    }
+
+    @OnClick(R.id.calActDetail)
+    public void onCalClick() {
+        Toasty.warning(ActDetail.this, "موردی یافت نشد").show();
     }
 }

@@ -468,7 +468,7 @@ public class ActDetailBlog extends AppCompatActivity {
 
     @Subscribe
     public void EventHtmlBody(EvHtmlBodyBlog event) {
-        webView.loadDataWithBaseURL("", event.GetMessage(), "text/html", "UTF-8", "");
+        webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + event.GetMessage() + "</body></html>", "text/html; charset=utf-8", "UTF-8");
     }
 
     @Override

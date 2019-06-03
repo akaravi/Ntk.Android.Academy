@@ -70,18 +70,18 @@
         <RelativeLayout
             android:id="@+id/BottomRowRecyclerMenu"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:background="#f9f8f8">
 
             <RatingBar
                 android:id="@+id/ratingBarRowRecyclerNews"
                 android:layout_width="wrap_content"
-                android:layout_height="27dp"
+                android:layout_height="19dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="10dp"
-                android:layoutDirection="rtl"
                 android:isIndicator="true"
+                android:layoutDirection="rtl"
                 android:progressDrawable="@drawable/rating_bar_layer"
                 android:rating="3" />
 
