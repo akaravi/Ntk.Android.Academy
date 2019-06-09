@@ -151,7 +151,7 @@
                     <ImageView
                         android:id="@+id/imgHeaderActDetailNews"
                         android:layout_width="match_parent"
-                        android:layout_height="160dp"
+                        android:layout_height="wrap_content"
                         android:contentDescription="@null"
                         android:scaleType="centerCrop" />
 

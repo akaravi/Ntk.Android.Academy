@@ -2,9 +2,7 @@ package ntk.android.academy.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,11 +36,12 @@ public class AdFaq extends RecyclerView.Adapter<AdFaq.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        holder.Web.setTextDirection(View.TEXT_DIRECTION_RTL);
         holder.Lbls.get(0).setText(arrayList.get(position).Question);
         holder.Lbls.get(1).setText(arrayList.get(position).Answer);
         holder.Root.get(0).setOnClickListener(view -> {
             if (holder.Web.getVisibility() == View.GONE) {
-                holder.Web.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).HtmlBody + "</body></html>", "text/html; charset=utf-8", "UTF-8");
+                holder.Web.loadData("<html dir=\"rtl\" lang=\"\"><body>" + arrayList.get(position).Answer + "</body></html>", "text/html; charset=utf-8", "UTF-8");
                 holder.Web.setVisibility(View.VISIBLE);
                 holder.Root.get(1).setVisibility(View.VISIBLE);
             } else {

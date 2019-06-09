@@ -82,12 +82,14 @@ public class AdComment extends RecyclerView.Adapter<AdComment.ViewHolder> {
                             if (model.IsSuccess) {
                                 arrayList.get(position).SumLikeClick = arrayList.get(position).SumLikeClick + 1;
                                 notifyDataSetChanged();
+                            } else {
+                                Toasty.warning(context, "قبلا در به این محتوا رای داده اید", Toasty.LENGTH_LONG, true).show();
                             }
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Toasty.warning(context, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                            Toasty.warning(context, e.getMessage(), Toasty.LENGTH_LONG, true).show();
                         }
 
                         @Override
@@ -118,12 +120,14 @@ public class AdComment extends RecyclerView.Adapter<AdComment.ViewHolder> {
                             if (model.IsSuccess) {
                                 arrayList.get(position).SumDisLikeClick = arrayList.get(position).SumDisLikeClick - 1;
                                 notifyDataSetChanged();
+                            } else {
+                                Toasty.warning(context, "قبلا در به این محتوا رای داده اید", Toasty.LENGTH_LONG, true).show();
                             }
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Toasty.warning(context, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                            Toasty.warning(context, e.getMessage(), Toasty.LENGTH_LONG, true).show();
                         }
 
                         @Override

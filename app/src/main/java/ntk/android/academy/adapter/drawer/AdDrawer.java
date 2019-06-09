@@ -274,8 +274,9 @@ public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
                                 public void onNext(ApplicationScoreResponse applicationScoreResponse) {
                                     if (applicationScoreResponse.IsSuccess) {
                                         dialog.dismiss();
+                                        Toasty.success(context, "با موفقیت ثبت شد", Toast.LENGTH_LONG, true).show();
                                     } else {
-                                        Toasty.error(context, "خظا در دریافت اطلاعات", Toast.LENGTH_LONG, true).show();
+                                        Toasty.warning(context, "مجددا تلاش کنید", Toast.LENGTH_LONG, true).show();
                                     }
                                 }
 

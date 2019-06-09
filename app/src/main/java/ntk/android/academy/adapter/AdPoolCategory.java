@@ -49,7 +49,6 @@ public class AdPoolCategory extends RecyclerView.Adapter<AdPoolCategory.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        Log.i("00000", "AdPoolCategory: " + arrayList.get(position) + "");
         holder.LblTitle.setText(arrayList.get(position).Title);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true).build();
@@ -74,7 +73,6 @@ public class AdPoolCategory extends RecyclerView.Adapter<AdPoolCategory.ViewHold
 
             }
         });
-        Log.i("00000", "onBindViewHolder: "+arrayList.get(position).imageSrc+"");
         holder.Root.setOnClickListener(v -> {
             PoolingContentListRequest request = new PoolingContentListRequest();
             List<Filters> filters = new ArrayList<>();

@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -32,6 +33,7 @@ import ntk.android.academy.config.ConfigRestHeader;
 import ntk.android.academy.config.ConfigStaticValue;
 import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.EndlessRecyclerViewScrollListener;
+import ntk.android.academy.utill.FontManager;
 import ntk.base.api.article.interfase.IArticle;
 import ntk.base.api.ticket.interfase.ITicket;
 import ntk.base.api.ticket.model.TicketingListRequest;
@@ -67,6 +69,7 @@ public class ActSupport extends AppCompatActivity {
     }
 
     private void init() {
+        ((TextView) findViewById(R.id.lblStateActSupport)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Rv.setHasFixedSize(true);
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         Rv.setLayoutManager(manager);
@@ -138,9 +141,14 @@ public class ActSupport extends AppCompatActivity {
 
                     @Override
                     public void onNext(TicketingListResponse model) {
-                        tickets.addAll(model.ListItems);
-                        adapter.notifyDataSetChanged();
-                        TotalTag = model.TotalRowCount;
+                        if (model.ListItems.isEmpty())
+                            findViewById(R.id.lblStateActSupport).setVisibility(View.VISIBLE);
+                        else{
+                            findViewById(R.id.lblStateActSupport).setVisibility(View.GONE);
+                            tickets.addAll(model.ListItems);
+                            adapter.notifyDataSetChanged();
+                            TotalTag = model.TotalRowCount;
+                        }
                     }
 
                     @Override

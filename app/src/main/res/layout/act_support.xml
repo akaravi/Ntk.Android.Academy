@@ -20,6 +20,16 @@
                 android:layout_height="match_parent"
                 android:scrollbars="none" />
 
+            <TextView
+                android:id="@+id/lblStateActSupport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="موردی برای نمایش وجود ندارد"
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
             <android.support.design.widget.FloatingActionButton
                 android:id="@+id/FabFrSupport"
                 android:layout_width="wrap_content"

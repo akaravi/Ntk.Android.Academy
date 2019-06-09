@@ -219,6 +219,11 @@ public class AdHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             AdCoreButtonGrid adapter = new AdCoreButtonGrid(context, themes.get(position).LayoutChildConfigs);
             hoButton.Rv.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+        } else if (themes.get(position).LayoutTheme == 3) {
+            hoButton.Rv.setLayoutManager(new GridLayoutManager(context, 3));
+            AdCoreButtonGrid adapter = new AdCoreButtonGrid(context, themes.get(position).LayoutChildConfigs);
+            hoButton.Rv.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
         }
     }
 
