@@ -448,11 +448,42 @@ public class ActDetailNews extends AppCompatActivity {
         if (model.Item.Favorited) {
             ((ImageView) findViewById(R.id.imgHeartActDetailNews)).setImageResource(R.drawable.ic_fav_full);
         }
-        if (model.Item.ScoreSumPercent == 0) {
-            Rate.setRating(0);
-        } else {
-            Rate.setRating((model.Item.ScoreSumPercent / model.Item.ScoreSumClick));
+        double rating = 5.0;
+        int sumClick = model.Item.ScoreSumClick;
+        if (model.Item.ScoreSumClick == 0) sumClick = 1;
+        switch (model.Item.ScoreSumPercent / sumClick) {
+            case 10:
+                rating = 0.5;
+                break;
+            case 20:
+                rating = 1.0;
+                break;
+            case 30:
+                rating = 1.5;
+                break;
+            case 40:
+                rating = 2.0;
+                break;
+            case 50:
+                rating = 2.5;
+                break;
+            case 60:
+                rating = 3.0;
+                break;
+            case 70:
+                rating = 3.5;
+                break;
+            case 80:
+                rating = 4.0;
+                break;
+            case 90:
+                rating = 4.5;
+                break;
+            case 100:
+                rating = 5.0;
+                break;
         }
+        Rate.setRating((float) rating);
         webViewBody.loadData("<html dir=\"rtl\" lang=\"\"><body>" + model.Item.Body + "</body></html>", "text/html; charset=utf-8", "UTF-8");
     }
 

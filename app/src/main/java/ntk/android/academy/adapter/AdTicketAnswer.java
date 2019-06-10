@@ -8,10 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import java.util.List;
-
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
+import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.ticket.model.TicketingAnswer;
 
@@ -35,8 +35,9 @@ public class AdTicketAnswer extends RecyclerView.Adapter<AdTicketAnswer.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.Lbls.get(1).setText(arrayList.get(position).HtmlBody +"");
+        holder.Lbls.get(2).setText(AppUtill.GregorianToPersian(arrayList.get(position).CreatedDate)+"");
         holder.Lbls.get(3).setText(arrayList.get(position).UpdatedBy+"");
-        holder.Lbls.get(5).setText("#" + arrayList.get(position).CreatedBy);
+        holder.Lbls.get(4).setText("#" + arrayList.get(position).CreatedBy);
     }
 
     @Override

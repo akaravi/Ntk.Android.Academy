@@ -74,8 +74,10 @@ public class AdArticle extends RecyclerView.Adapter<AdArticle.ViewHolder> {
             }
         });
 
-        double rating = 0.0;
-        switch (arrayList.get(position).ScoreSumPercent) {
+        double rating = 5.0;
+        int sumClick = arrayList.get(position).ScoreSumClick;
+        if (arrayList.get(position).ScoreSumClick == 0) sumClick = 1;
+        switch (arrayList.get(position).ScoreSumPercent / sumClick) {
             case 10:
                 rating = 0.5;
                 break;
