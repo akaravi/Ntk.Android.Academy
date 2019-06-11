@@ -70,7 +70,7 @@
         <RelativeLayout
             android:id="@+id/BottomRowRecyclerMenu"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="19dp"
             android:background="#f9f8f8">
 
             <RatingBar
