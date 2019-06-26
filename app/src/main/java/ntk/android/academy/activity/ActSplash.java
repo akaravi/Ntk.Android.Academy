@@ -143,7 +143,6 @@ public class ActSplash extends AppCompatActivity {
     }
 
     private void GetTheme() {
-        Log.i("4587963210258", "GetTheme: ");
         Loading.playAnimation();
         Loading.setVisibility(View.VISIBLE);
         RetrofitManager manager = new RetrofitManager(this);
