@@ -148,8 +148,8 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
     }
 
     private void HandelToolbarDrawer() {
-        Theme theme = new Gson().fromJson(EasyPreference.with(this).getString("Theme" , ""), Theme.class);
-
+        Theme theme = new Gson().fromJson(EasyPreference.with(this).getString("Theme", ""), Theme.class);
+        if (theme == null) return;
         RvToolbar.setHasFixedSize(true);
         RvToolbar.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         List<Toolbar> toolbars = new ArrayList<>();
@@ -251,7 +251,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
     private void CheckUpdate() {
         String st = EasyPreference.with(this).getString("configapp", "");
         CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
-        if (mcr.AppVersion > BuildConfig.VERSION_CODE && BuildConfig.APPLICATION_ID.indexOf(".APPNTK") <0) {
+        if (mcr.AppVersion > BuildConfig.VERSION_CODE && BuildConfig.APPLICATION_ID.indexOf(".APPNTK") < 0) {
             if (mcr.AppForceUpdate) {
                 UpdateFore();
             } else {

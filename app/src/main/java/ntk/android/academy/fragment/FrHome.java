@@ -74,7 +74,8 @@ public class FrHome extends Fragment {
     }
 
     private void SetDataHome() {
-        Theme theme = new Gson().fromJson(EasyPreference.with(getContext()).getString("Theme" , ""), Theme.class);
+        Theme theme = new Gson().fromJson(EasyPreference.with(getContext()).getString("Theme", ""), Theme.class);
+        if (theme == null) return;
         AdHome adapter = new AdHome(getContext(), theme.Childs);
         RvHome.setAdapter(adapter);
         adapter.notifyDataSetChanged();
