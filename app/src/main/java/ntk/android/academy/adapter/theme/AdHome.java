@@ -153,7 +153,7 @@ public class AdHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private void RestCategory(int i, HoTag hoTag, int position) {
         RetrofitManager manager = new RetrofitManager(context);
-        IArticleGET iArticle = manager.getCachedRetrofit(new ConfigStaticValue(context).GetApiBaseUrl()).create(IArticleGET.class);
+        IArticle iArticle = manager.getCachedRetrofit(new ConfigStaticValue(context).GetApiBaseUrl()).create(IArticle.class);
         Map<String, String> headers = new ConfigRestHeader().GetHeaders(context);
 
         ArticleTagRequest request = new Gson().fromJson(themes.get(position).LayoutRequest, ArticleTagRequest.class);
@@ -161,7 +161,7 @@ public class AdHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         request.CurrentPageNumber = i;
         headers.put("body", new Gson().toJson(request));
 
-        Observable<ArticleTagResponse> call = iArticle.GetTagList(headers);
+        Observable<ArticleTagResponse> call = iArticle.GetTagList(headers,request);
         call.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<ArticleTagResponse>() {

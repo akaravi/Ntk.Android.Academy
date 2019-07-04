@@ -89,7 +89,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:12.0.1'
     implementation 'com.airbnb.android:lottie:2.7.0'
     implementation 'gun0912.ted:tedpermission-rx2:2.2.2'
-    implementation 'com.github.akaravi:ntk.android.base:1.0.10'
+    implementation 'com.github.akaravi:ntk.android.base:1.0.12'
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'androidmads.library.qrgenearator:QRGenearator:1.0.3'
 }
