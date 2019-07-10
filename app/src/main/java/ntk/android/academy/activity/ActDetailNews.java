@@ -50,7 +50,9 @@ import ntk.android.academy.adapter.AdTabNews;
 import ntk.android.academy.config.ConfigRestHeader;
 import ntk.android.academy.config.ConfigStaticValue;
 import ntk.android.academy.utill.AppUtill;
+import ntk.android.academy.utill.EasyPreference;
 import ntk.android.academy.utill.FontManager;
+import ntk.base.api.core.model.CoreMain;
 import ntk.base.api.model.Filters;
 import ntk.base.api.news.interfase.INews;
 import ntk.base.api.news.model.NewsCommentAddRequest;
@@ -685,13 +687,17 @@ public class ActDetailNews extends AppCompatActivity {
 
     @OnClick(R.id.imgShareActDetailNews)
     public void ClickShare() {
-        if (model.Item.Source.contains("https") || model.Item.Source.contains("http") || model.Item.Source.contains("www")) {
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(model.Item.Source));
-            startActivity(i);
-        } else {
-            Toasty.warning(this, "این محتوا امکان به اشتراک گذاری ندارد", Toasty.LENGTH_LONG, true).show();
-        }
+        findViewById(R.id.RowTimeActDetail).setVisibility(View.VISIBLE);
+        String st = EasyPreference.with(this).getString("configapp", "");
+        CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(model.Item.Body
+                .replace("<p>","")
+                .replace("</p>",""))+
+                "\n\n\n"+this.getString(R.string.app_name) + "\n" + "لینک دانلود:" + "\n" + mcr.AppUrl);
+        shareIntent.setType("text/txt");
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        this.startActivity(Intent.createChooser(shareIntent, "به اشتراک گزاری با...."));
     }
-
 }

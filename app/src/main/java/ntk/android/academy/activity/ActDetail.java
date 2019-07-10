@@ -3,6 +3,7 @@ package ntk.android.academy.activity;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.zxing.WriterException;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.greenrobot.eventbus.EventBus;
@@ -37,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import androidmads.library.qrgenearator.QRGContents;
+import androidmads.library.qrgenearator.QRGEncoder;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
@@ -55,6 +59,7 @@ import ntk.android.academy.config.ConfigRestHeader;
 import ntk.android.academy.config.ConfigStaticValue;
 import ntk.android.academy.event.EvHtmlBody;
 import ntk.android.academy.utill.AppUtill;
+import ntk.android.academy.utill.EasyPreference;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.article.interfase.IArticle;
 import ntk.base.api.article.model.ArticleCommentAddRequest;
@@ -73,6 +78,7 @@ import ntk.base.api.article.model.ArticleContentSimilarListRequest;
 import ntk.base.api.article.model.ArticleContentViewRequest;
 import ntk.base.api.article.model.ArticleTagRequest;
 import ntk.base.api.article.model.ArticleTagResponse;
+import ntk.base.api.core.model.CoreMain;
 import ntk.base.api.model.ErrorException;
 import ntk.base.api.model.Filters;
 import ntk.base.api.utill.RetrofitManager;
@@ -853,13 +859,18 @@ public class ActDetail extends AppCompatActivity {
 
     @OnClick(R.id.imgShareActDetail)
     public void ClickShare() {
-        if (model.Item.Source.contains("https") || model.Item.Source.contains("http") || model.Item.Source.contains("www")) {
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(model.Item.Source));
-            startActivity(i);
-        } else {
-            Toasty.warning(this, "این محتوا امکان به اشتراک گذاری ندارد", Toasty.LENGTH_LONG, true).show();
-        }
+        findViewById(R.id.RowTimeActDetail).setVisibility(View.VISIBLE);
+        String st = EasyPreference.with(this).getString("configapp", "");
+        CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
+        Intent shareIntent = new Intent();
+        shareIntent.setAction(Intent.ACTION_SEND);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(model.Item.Body
+                        .replace("<p>","")
+                        .replace("</p>",""))+
+                "\n\n\n"+this.getString(R.string.app_name) + "\n" + "لینک دانلود:" + "\n" + mcr.AppUrl);
+        shareIntent.setType("text/txt");
+        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        this.startActivity(Intent.createChooser(shareIntent, "به اشتراک گزاری با...."));
     }
 
     @OnClick(R.id.playActDetail)
