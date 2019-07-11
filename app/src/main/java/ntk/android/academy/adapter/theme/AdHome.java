@@ -3,7 +3,7 @@ package ntk.android.academy.adapter.theme;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.hardware.camera2.TotalCaptureResult;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,19 +38,18 @@ import ntk.android.academy.config.ConfigStaticValue;
 import ntk.android.academy.utill.Constant;
 import ntk.android.academy.utill.EndlessRecyclerViewScrollListener;
 import ntk.base.api.article.interfase.IArticle;
-import ntk.base.api.article.interfase.IArticleGET;
 import ntk.base.api.article.model.ArticleContent;
 import ntk.base.api.article.model.ArticleContentListRequest;
 import ntk.base.api.article.model.ArticleContentResponse;
 import ntk.base.api.article.model.ArticleTag;
 import ntk.base.api.article.model.ArticleTagRequest;
 import ntk.base.api.article.model.ArticleTagResponse;
-import ntk.base.api.model.Filters;
 import ntk.base.api.model.theme.ThemeChild;
 import ntk.base.api.model.theme.ThemeChildConfig;
 import ntk.base.api.utill.RetrofitManager;
 import ss.com.bannerslider.banners.Banner;
 import ss.com.bannerslider.banners.RemoteBanner;
+import ss.com.bannerslider.events.OnBannerClickListener;
 
 public class AdHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -301,6 +300,20 @@ public class AdHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             banners.add(new RemoteBanner(t.Href));
         }
         hoSlider.Slider.setBanners(banners);
+        hoSlider.Slider.setOnBannerClickListener(new OnBannerClickListener() {
+            @Override
+            public void onClick(int p) {
+                if (themes.get(position).LayoutChildConfigs.get(p).ActionName.equals("WebClick")) {
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(themes.get(position).LayoutChildConfigs.get(p).ActionRequest));
+                    context.startActivity(i);
+                }else if (themes.get(position).LayoutChildConfigs.get(p).ActionName.equals("ArticleContentList")) {
+                    Intent intent = new Intent(context, ActArticleContentList.class);
+                    intent.putExtra("Request", themes.get(position).LayoutChildConfigs.get(p).ActionRequest);
+                    context.startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
