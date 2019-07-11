@@ -20,6 +20,7 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ActTicketAnswer;
+import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.model.Filters;
 import ntk.base.api.ticket.model.TicketingAnswerListRequest;
@@ -45,28 +46,27 @@ public class AdTicket extends RecyclerView.Adapter<AdTicket.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.Lbls.get(0).setText(arrayList.get(position).Title);
-        holder.Lbls.get(1).setText(arrayList.get(position).LinkTicketTypeId);
-        holder.Lbls.get(3).setText(arrayList.get(position).DeviceInformation);
+        holder.Lbls.get(2).setText(AppUtill.GregorianToPersian(arrayList.get(position).CreatedDate) + "");
         switch (arrayList.get(position).TicketStatus) {
             case 1:
-                holder.Lbls.get(2).setBackgroundResource(R.drawable.circlegreen);
-                holder.Lbls.get(2).setText("پاسخ داده شد");
+                holder.Lbls.get(1).setBackgroundResource(R.drawable.circlegreen);
+                holder.Lbls.get(1).setText("پاسخ داده شد");
                 break;
             case 2:
-                holder.Lbls.get(2).setBackgroundResource(R.drawable.circlered);
-                holder.Lbls.get(2).setText("در حال رسیدگی");
+                holder.Lbls.get(1).setBackgroundResource(R.drawable.circlered);
+                holder.Lbls.get(1).setText("در حال رسیدگی");
                 break;
             case 3:
-                holder.Lbls.get(2).setBackgroundResource(R.drawable.circle_oranje);
-                holder.Lbls.get(2).setText("انتظار پاسخ");
+                holder.Lbls.get(1).setBackgroundResource(R.drawable.circle_oranje);
+                holder.Lbls.get(1).setText("انتظار پاسخ");
                 break;
             case 4:
-                holder.Lbls.get(2).setBackgroundResource(R.drawable.circle_oranje);
-                holder.Lbls.get(2).setText("پاسخ مشتری");
+                holder.Lbls.get(1).setBackgroundResource(R.drawable.circle_oranje);
+                holder.Lbls.get(1).setText("پاسخ مشتری");
                 break;
             case 5:
-                holder.Lbls.get(2).setBackgroundResource(R.drawable.circle_blue_full);
-                holder.Lbls.get(2).setText("بسته شد");
+                holder.Lbls.get(1).setBackgroundResource(R.drawable.circle_blue_full);
+                holder.Lbls.get(1).setText("بسته شد");
                 break;
         }
         holder.Root.setOnClickListener(v -> {
@@ -79,6 +79,7 @@ public class AdTicket extends RecyclerView.Adapter<AdTicket.ViewHolder> {
             request.filters = filters;
             Intent intent = new Intent(context, ActTicketAnswer.class);
             intent.putExtra("Request", new Gson().toJson(request));
+            intent.putExtra("TicketId", arrayList.get(position).Id);
             context.startActivity(intent);
         });
     }
@@ -91,10 +92,8 @@ public class AdTicket extends RecyclerView.Adapter<AdTicket.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindViews({R.id.lblNameRecyclerTicket,
-                R.id.lblTypeRecyclerTicket,
                 R.id.lblStateRecyclerTicket,
-                R.id.lblDateRecyclerTicket,
-                R.id.lblTypeDepartmanRecyclerTicket})
+                R.id.lblDateRecyclerTicket})
         List<TextView> Lbls;
 
         @BindView(R.id.rootTicket)
@@ -106,8 +105,6 @@ public class AdTicket extends RecyclerView.Adapter<AdTicket.ViewHolder> {
             Lbls.get(0).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
             Lbls.get(1).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
             Lbls.get(2).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-            Lbls.get(3).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-            Lbls.get(4).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
         }
     }
 }

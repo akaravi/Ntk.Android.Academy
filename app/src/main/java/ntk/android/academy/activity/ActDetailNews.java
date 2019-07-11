@@ -687,15 +687,17 @@ public class ActDetailNews extends AppCompatActivity {
 
     @OnClick(R.id.imgShareActDetailNews)
     public void ClickShare() {
-        findViewById(R.id.RowTimeActDetail).setVisibility(View.VISIBLE);
         String st = EasyPreference.with(this).getString("configapp", "");
         CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
-        shareIntent.putExtra(Intent.EXTRA_TEXT, Html.fromHtml(model.Item.Body
-                .replace("<p>","")
-                .replace("</p>",""))+
-                "\n\n\n"+this.getString(R.string.app_name) + "\n" + "لینک دانلود:" + "\n" + mcr.AppUrl);
+        String message = model.Item.Title + "\n" + model.Item.description + "\n";
+        if (model.Item.Body != null) {
+            message = message + Html.fromHtml(model.Item.Body
+                    .replace("<p>", "")
+                    .replace("</p>", ""));
+        }
+        shareIntent.putExtra(Intent.EXTRA_TEXT, message + "\n\n\n" + this.getString(R.string.app_name) + "\n" + "لینک دانلود:" + "\n" + mcr.AppUrl);
         shareIntent.setType("text/txt");
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         this.startActivity(Intent.createChooser(shareIntent, "به اشتراک گزاری با...."));
