@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -228,7 +229,7 @@ public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.app_name) + "\n" + "لینک دانلود:" + "\n" + mcr.AppUrl);
             shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
-            shareIntent.setType("image/jpeg");
+            shareIntent.setType("text/txt");
             shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             context.startActivity(Intent.createChooser(shareIntent, "به اشتراک گزاری با...."));
         });
