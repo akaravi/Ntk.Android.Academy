@@ -8,18 +8,26 @@
     app:cardElevation="0dp">
 
     <LinearLayout
+        android:id="@+id/LayoutRecyclerGridButton"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:gravity="center"
+        android:layout_margin="8dp"
+        android:gravity="center_vertical|left"
         android:orientation="horizontal"
-        android:weightSum="2">
+        android:weightSum="1">
 
-        <Button
-            android:id="@+id/BtnRecyclerGridButton"
+        <ImageView
+            android:id="@+id/ImgRecyclerGridButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
+            android:layout_weight="0.3" />
+
+        <TextView
+            android:id="@+id/TxtRecyclerGridButton"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_weight="0.5"
             android:background="@android:color/transparent"
             android:textColor="@color/colorWhite" />
     </LinearLayout>

@@ -40,14 +40,8 @@ import ntk.base.api.utill.RetrofitManager;
 
 public class ActSplash extends AppCompatActivity {
 
-    @BindView(R.id.AnimationActSplash)
-    LottieAnimationView Loading;
-
     @BindView(R.id.lblVersionActSplash)
     TextView Lbl;
-
-    @BindView(R.id.btnRefreshActSplash)
-    Button BtnRefresh;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,7 +55,6 @@ public class ActSplash extends AppCompatActivity {
     private void init() {
         Lbl.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Lbl.setText("نسخه  " + (int) Float.parseFloat(BuildConfig.VERSION_NAME) + "." + BuildConfig.VERSION_CODE);
-        BtnRefresh.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
     }
 
     @Override
@@ -71,13 +64,11 @@ public class ActSplash extends AppCompatActivity {
         if (!EasyPreference.with(this).getString("configapp", "").isEmpty()) {
             if (EasyPreference.with(this).getBoolean("Intro", false)) {
                 new Handler().postDelayed(() -> {
-                    Loading.setVisibility(View.GONE);
                     startActivity(new Intent(ActSplash.this, ActMain.class));
                     finish();
                 }, 3000);
             } else {
                 new Handler().postDelayed(() -> {
-                    Loading.setVisibility(View.GONE);
                     startActivity(new Intent(ActSplash.this, ActIntro.class));
                     finish();
                 }, 3000);
@@ -104,17 +95,13 @@ public class ActSplash extends AppCompatActivity {
                         @Override
                         public void onNext(MainCoreResponse mainCoreResponse) {
                             EasyPreference.with(ActSplash.this).addString("configapp", new Gson().toJson(mainCoreResponse.Item));
-                            Loading.cancelAnimation();
-                            Loading.setVisibility(View.GONE);
                             if (EasyPreference.with(ActSplash.this).getBoolean("Intro", false)) {
                                 new Handler().postDelayed(() -> {
-                                    Loading.setVisibility(View.GONE);
                                     startActivity(new Intent(ActSplash.this, ActMain.class));
                                     finish();
                                 }, 3000);
                             } else {
                                 new Handler().postDelayed(() -> {
-                                    Loading.setVisibility(View.GONE);
                                     startActivity(new Intent(ActSplash.this, ActIntro.class));
                                     finish();
                                 }, 3000);
@@ -123,9 +110,6 @@ public class ActSplash extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            Loading.cancelAnimation();
-                            Loading.setVisibility(View.GONE);
-                            BtnRefresh.setVisibility(View.VISIBLE);
                             Toasty.warning(ActSplash.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
 
                         }
@@ -136,52 +120,41 @@ public class ActSplash extends AppCompatActivity {
                         }
                     });
         } else {
-            Loading.setVisibility(View.GONE);
-            BtnRefresh.setVisibility(View.VISIBLE);
             Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
         }
     }
 
     private void GetTheme() {
-        Loading.playAnimation();
-        Loading.setVisibility(View.VISIBLE);
-        RetrofitManager manager = new RetrofitManager(this);
-        ICore iCore = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(ICore.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-        Observable<CoreTheme> call = iCore.GetThemeCore(headers);
-        call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<CoreTheme>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager manager = new RetrofitManager(this);
+            ICore iCore = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(ICore.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+            Observable<CoreTheme> call = iCore.GetThemeCore(headers);
+            call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<CoreTheme>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(CoreTheme theme) {
-                        EasyPreference.with(ActSplash.this).addString("Theme", new Gson().toJson(theme.Item.ThemeConfigJson));
-                    }
+                        @Override
+                        public void onNext(CoreTheme theme) {
+                            EasyPreference.with(ActSplash.this).addString("Theme", new Gson().toJson(theme.Item.ThemeConfigJson));
+                        }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Loading.cancelAnimation();
-                        Loading.setVisibility(View.GONE);
-                        BtnRefresh.setVisibility(View.VISIBLE);
-                        Toasty.warning(ActSplash.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            Toasty.warning(ActSplash.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
+                        }
 
-                    @Override
-                    public void onComplete() {
+                        @Override
+                        public void onComplete() {
 
-                    }
-                });
-    }
-
-    @OnClick(R.id.btnRefreshActSplash)
-    public void ClickRefresh() {
-        Loading.playAnimation();
-        Loading.setVisibility(View.VISIBLE);
-        BtnRefresh.setVisibility(View.GONE);
-        HandelData();
+                        }
+                    });
+        } else {
+            Toasty.warning(this, "عدم دسترسی به اینترنت", Toasty.LENGTH_LONG, true).show();
+        }
     }
 }

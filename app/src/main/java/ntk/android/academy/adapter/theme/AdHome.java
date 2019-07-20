@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +37,13 @@ import ntk.android.academy.adapter.theme.holder.HoTag;
 import ntk.android.academy.config.ConfigRestHeader;
 import ntk.android.academy.config.ConfigStaticValue;
 import ntk.android.academy.utill.Constant;
+import ntk.android.academy.utill.EasyPreference;
 import ntk.android.academy.utill.EndlessRecyclerViewScrollListener;
 import ntk.base.api.article.interfase.IArticle;
 import ntk.base.api.article.model.ArticleContent;
 import ntk.base.api.article.model.ArticleContentListRequest;
 import ntk.base.api.article.model.ArticleContentResponse;
+import ntk.base.api.article.model.ArticleContentViewRequest;
 import ntk.base.api.article.model.ArticleTag;
 import ntk.base.api.article.model.ArticleTagRequest;
 import ntk.base.api.article.model.ArticleTagResponse;
@@ -160,7 +163,7 @@ public class AdHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         request.CurrentPageNumber = i;
         headers.put("body", new Gson().toJson(request));
 
-        Observable<ArticleTagResponse> call = iArticle.GetTagList(headers,request);
+        Observable<ArticleTagResponse> call = iArticle.GetTagList(headers, request);
         call.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<ArticleTagResponse>() {
@@ -235,6 +238,18 @@ public class AdHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         hoArticle.Lbls.get(1).setText(themes.get(position).LayoutConfig.get(1).Title);
 
 
+        String RequestStr = EasyPreference.with(context).getString("ArticleContentList", "");
+        if (!RequestStr.equals("")) {
+            Log.i("likfvj", "ConfigArticle: " + RequestStr + "");
+            ArticleContentResponse response = new Gson().fromJson(RequestStr, ArticleContentResponse.class);
+            map_articles.get(position).addAll(response.ListItems);
+            map_adapter.get(position).notifyDataSetChanged();
+            TotalArticle = response.TotalRowCount;
+            hoArticle.RvMenu.setItemViewCacheSize(map_articles.get(position).size());
+            hoArticle.Progress.setVisibility(View.GONE);
+        }
+
+
         hoArticle.Lbls.get(1).setOnClickListener(v -> {
             Intent intent = new Intent(context, ActArticleContentList.class);
             intent.putExtra("Request", themes.get(position).LayoutConfig.get(1).ActionRequest);
@@ -275,6 +290,10 @@ public class AdHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                     @Override
                     public void onNext(ArticleContentResponse articleContentResponse) {
+                        Log.i("likfvj", "ConfigArticle: " + EasyPreference.with(context).addString("ArticleContentList", String.valueOf(articleContentResponse)) + "");
+                        if (!EasyPreference.with(context).getString("ArticleContentList", "").equals("")) {
+                            EasyPreference.with(context).addString("ArticleContentList", new Gson().toJson(articleContentResponse));
+                        }
                         map_articles.get(position).addAll(articleContentResponse.ListItems);
                         map_adapter.get(position).notifyDataSetChanged();
                         TotalArticle = articleContentResponse.TotalRowCount;
@@ -307,7 +326,7 @@ public class AdHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Intent i = new Intent(Intent.ACTION_VIEW);
                     i.setData(Uri.parse(themes.get(position).LayoutChildConfigs.get(p).ActionRequest));
                     context.startActivity(i);
-                }else if (themes.get(position).LayoutChildConfigs.get(p).ActionName.equals("ArticleContentList")) {
+                } else if (themes.get(position).LayoutChildConfigs.get(p).ActionName.equals("ArticleContentList")) {
                     Intent intent = new Intent(context, ActArticleContentList.class);
                     intent.putExtra("Request", themes.get(position).LayoutChildConfigs.get(p).ActionRequest);
                     context.startActivity(intent);
