@@ -22,9 +22,9 @@ import ntk.android.academy.R;
 import ntk.android.academy.activity.ActTicketAnswer;
 import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.FontManager;
-import ntk.base.api.model.Filters;
+import ntk.base.api.baseModel.Filters;
 import ntk.base.api.ticket.model.TicketingAnswerListRequest;
-import ntk.base.api.ticket.model.TicketingTask;
+import ntk.base.api.ticket.entity.TicketingTask;
 
 public class AdTicket extends RecyclerView.Adapter<AdTicket.ViewHolder> {
 

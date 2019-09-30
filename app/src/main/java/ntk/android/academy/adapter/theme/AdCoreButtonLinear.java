@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ActArticleContentList;
 import ntk.android.academy.utill.FontManager;
-import ntk.base.api.model.theme.ThemeChildConfig;
+import ntk.base.api.baseModel.theme.ThemeChildConfig;
 
 public class AdCoreButtonLinear extends RecyclerView.Adapter<AdCoreButtonLinear.ViewHolder> {
 

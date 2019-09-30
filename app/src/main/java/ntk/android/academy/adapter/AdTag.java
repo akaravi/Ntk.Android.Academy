@@ -19,7 +19,7 @@ import ntk.android.academy.R;
 import ntk.android.academy.activity.ActArticleContentList;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.article.model.ArticleContentListRequest;
-import ntk.base.api.article.model.ArticleTag;
+import ntk.base.api.article.entity.ArticleTag;
 
 public class AdTag extends RecyclerView.Adapter<AdTag.ViewHolder> {
 

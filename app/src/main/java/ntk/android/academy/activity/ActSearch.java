@@ -30,7 +30,7 @@ import ntk.android.academy.utill.FontManager;
 import ntk.base.api.article.interfase.IArticle;
 import ntk.base.api.article.model.ArticleContentListRequest;
 import ntk.base.api.article.model.ArticleContentResponse;
-import ntk.base.api.model.Filters;
+import ntk.base.api.baseModel.Filters;
 import ntk.base.api.utill.NTKUtill;
 import ntk.base.api.utill.RetrofitManager;
 

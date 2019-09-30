@@ -53,7 +53,7 @@ import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.file.interfase.IFile;
 import ntk.base.api.ticket.interfase.ITicket;
-import ntk.base.api.ticket.model.TicketingAnswer;
+import ntk.base.api.ticket.entity.TicketingAnswer;
 import ntk.base.api.ticket.model.TicketingAnswerListRequest;
 import ntk.base.api.ticket.model.TicketingAnswerListResponse;
 import ntk.base.api.ticket.model.TicketingAnswerSubmitRequest;

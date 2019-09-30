@@ -30,7 +30,7 @@ import ntk.android.academy.R;
 import ntk.android.academy.activity.ActDetail;
 import ntk.android.academy.event.EvRemoveAttach;
 import ntk.android.academy.utill.FontManager;
-import ntk.base.api.article.model.ArticleContent;
+import ntk.base.api.article.entity.ArticleContent;
 import ntk.base.api.article.model.ArticleContentViewRequest;
 
 public class AdAttach extends RecyclerView.Adapter<AdAttach.ViewHolder> {

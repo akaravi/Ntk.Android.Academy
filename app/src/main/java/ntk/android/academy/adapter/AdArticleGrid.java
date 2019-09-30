@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ActDetail;
 import ntk.android.academy.utill.FontManager;
-import ntk.base.api.article.model.ArticleContent;
+import ntk.base.api.article.entity.ArticleContent;
 import ntk.base.api.article.model.ArticleContentViewRequest;
 
 public class AdArticleGrid extends RecyclerView.Adapter<AdArticleGrid.ViewHolder> {

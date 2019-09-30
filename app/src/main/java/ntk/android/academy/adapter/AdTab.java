@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.event.EvHtmlBody;
 import ntk.android.academy.utill.FontManager;
-import ntk.base.api.article.model.ArticleContentOtherInfo;
+import ntk.base.api.article.entity.ArticleContentOtherInfo;
 
 public class AdTab extends RecyclerView.Adapter<AdTab.ViewHolder> {
 

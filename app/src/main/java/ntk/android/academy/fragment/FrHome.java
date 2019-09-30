@@ -26,7 +26,7 @@ import ntk.android.academy.adapter.theme.AdHome;
 import ntk.android.academy.library.AnimatedRecyclerView;
 import ntk.android.academy.utill.EasyPreference;
 import ntk.android.academy.utill.FontManager;
-import ntk.base.api.model.theme.Theme;
+import ntk.base.api.baseModel.theme.Theme;
 
 public class FrHome extends Fragment {
 

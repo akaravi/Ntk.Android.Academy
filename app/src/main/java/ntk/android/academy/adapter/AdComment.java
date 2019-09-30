@@ -27,7 +27,7 @@ import ntk.android.academy.config.ConfigStaticValue;
 import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.article.interfase.IArticle;
-import ntk.base.api.article.model.ArticleComment;
+import ntk.base.api.article.entity.ArticleComment;
 import ntk.base.api.article.model.ArticleCommentResponse;
 import ntk.base.api.article.model.ArticleCommentViewRequest;
 import ntk.base.api.utill.NTKClientAction;

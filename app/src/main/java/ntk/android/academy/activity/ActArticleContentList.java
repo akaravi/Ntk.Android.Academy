@@ -29,7 +29,7 @@ import ntk.android.academy.config.ConfigStaticValue;
 import ntk.android.academy.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.article.interfase.IArticle;
-import ntk.base.api.article.model.ArticleContent;
+import ntk.base.api.article.entity.ArticleContent;
 import ntk.base.api.article.model.ArticleContentListRequest;
 import ntk.base.api.article.model.ArticleContentResponse;
 import ntk.base.api.utill.RetrofitManager;

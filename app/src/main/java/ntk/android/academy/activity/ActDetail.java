@@ -70,7 +70,7 @@ import ntk.base.api.article.model.ArticleContentFavoriteAddRequest;
 import ntk.base.api.article.model.ArticleContentFavoriteAddResponse;
 import ntk.base.api.article.model.ArticleContentFavoriteRemoveRequest;
 import ntk.base.api.article.model.ArticleContentFavoriteRemoveResponse;
-import ntk.base.api.article.model.ArticleContentOtherInfo;
+import ntk.base.api.article.entity.ArticleContentOtherInfo;
 import ntk.base.api.article.model.ArticleContentOtherInfoRequest;
 import ntk.base.api.article.model.ArticleContentOtherInfoResponse;
 import ntk.base.api.article.model.ArticleContentResponse;
@@ -78,9 +78,9 @@ import ntk.base.api.article.model.ArticleContentSimilarListRequest;
 import ntk.base.api.article.model.ArticleContentViewRequest;
 import ntk.base.api.article.model.ArticleTagRequest;
 import ntk.base.api.article.model.ArticleTagResponse;
-import ntk.base.api.core.model.CoreMain;
-import ntk.base.api.model.ErrorException;
-import ntk.base.api.model.Filters;
+import ntk.base.api.core.entity.CoreMain;
+import ntk.base.api.baseModel.ErrorException;
+import ntk.base.api.baseModel.Filters;
 import ntk.base.api.utill.RetrofitManager;
 
 public class ActDetail extends AppCompatActivity {

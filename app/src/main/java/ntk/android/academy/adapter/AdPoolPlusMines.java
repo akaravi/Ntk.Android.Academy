@@ -28,11 +28,11 @@ import ntk.android.academy.config.ConfigRestHeader;
 import ntk.android.academy.config.ConfigStaticValue;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.pooling.interfase.IPooling;
-import ntk.base.api.pooling.model.PoolingContent;
-import ntk.base.api.pooling.model.PoolingOption;
+import ntk.base.api.pooling.entity.PoolingContent;
+import ntk.base.api.pooling.entity.PoolingOption;
 import ntk.base.api.pooling.model.PoolingSubmitRequest;
 import ntk.base.api.pooling.model.PoolingSubmitResponse;
-import ntk.base.api.pooling.model.PoolingVote;
+import ntk.base.api.pooling.entity.PoolingVote;
 import ntk.base.api.utill.RetrofitManager;
 
 public class AdPoolPlusMines extends RecyclerView.Adapter<AdPoolPlusMines.ViewHolder> {

@@ -65,10 +65,10 @@ import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.EasyPreference;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.core.interfase.ICore;
-import ntk.base.api.core.model.CoreMain;
+import ntk.base.api.core.entity.CoreMain;
 import ntk.base.api.core.model.MainCoreResponse;
-import ntk.base.api.model.theme.Theme;
-import ntk.base.api.model.theme.Toolbar;
+import ntk.base.api.baseModel.theme.Theme;
+import ntk.base.api.baseModel.theme.Toolbar;
 import ntk.base.api.utill.RetrofitManager;
 
 public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {

@@ -27,9 +27,9 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ActArticleContentList;
 import ntk.android.academy.utill.FontManager;
-import ntk.base.api.article.model.ArticleCategory;
+import ntk.base.api.article.entity.ArticleCategory;
 import ntk.base.api.article.model.ArticleContentListRequest;
-import ntk.base.api.model.Filters;
+import ntk.base.api.baseModel.Filters;
 
 public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
 

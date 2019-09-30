@@ -19,7 +19,7 @@ import ntk.android.academy.R;
 import ntk.android.academy.event.EvHtmlBody;
 import ntk.android.academy.event.EvHtmlBodyBlog;
 import ntk.android.academy.utill.FontManager;
-import ntk.base.api.blog.model.BlogContentOtherInfo;
+import ntk.base.api.blog.entity.BlogContentOtherInfo;
 
 public class AdTabBlog extends RecyclerView.Adapter<AdTabBlog.ViewHolder> {
 

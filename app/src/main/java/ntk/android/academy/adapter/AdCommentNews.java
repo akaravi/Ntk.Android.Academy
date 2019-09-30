@@ -27,7 +27,7 @@ import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.FontManager;
 
 import ntk.base.api.news.interfase.INews;
-import ntk.base.api.news.model.NewsComment;
+import ntk.base.api.news.entity.NewsComment;
 import ntk.base.api.news.model.NewsCommentResponse;
 import ntk.base.api.news.model.NewsCommentViewRequest;
 import ntk.base.api.utill.NTKClientAction;

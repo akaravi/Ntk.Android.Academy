@@ -62,8 +62,8 @@ import ntk.android.academy.utill.FontManager;
 import ntk.base.api.application.interfase.IApplication;
 import ntk.base.api.application.model.ApplicationScoreRequest;
 import ntk.base.api.application.model.ApplicationScoreResponse;
-import ntk.base.api.core.model.CoreMain;
-import ntk.base.api.model.theme.DrawerChild;
+import ntk.base.api.core.entity.CoreMain;
+import ntk.base.api.baseModel.theme.DrawerChild;
 import ntk.base.api.utill.RetrofitManager;
 
 public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {

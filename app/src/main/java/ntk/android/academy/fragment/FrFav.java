@@ -35,7 +35,7 @@ import ntk.android.academy.utill.AppUtill;
 import ntk.android.academy.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.academy.utill.FontManager;
 import ntk.base.api.article.interfase.IArticle;
-import ntk.base.api.article.model.ArticleContent;
+import ntk.base.api.article.entity.ArticleContent;
 import ntk.base.api.article.model.ArticleContentFavoriteListRequest;
 import ntk.base.api.article.model.ArticleContentFavoriteListResponse;
 import ntk.base.api.utill.RetrofitManager;

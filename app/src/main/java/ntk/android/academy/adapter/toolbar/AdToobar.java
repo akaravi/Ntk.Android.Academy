@@ -33,7 +33,7 @@ import ntk.android.academy.event.toolbar.EVHamberMenuClick;
 import ntk.android.academy.event.toolbar.EVSearchClick;
 import ntk.android.academy.utill.EasyPreference;
 import ntk.android.academy.utill.FontManager;
-import ntk.base.api.model.theme.Toolbar;
+import ntk.base.api.baseModel.theme.Toolbar;
 
 public class AdToobar extends RecyclerView.Adapter<AdToobar.ViewHolder> {
 

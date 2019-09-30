@@ -28,9 +28,9 @@ import ntk.android.academy.R;
 import ntk.android.academy.activity.ActDetailBlog;
 import ntk.android.academy.activity.ActDetailNews;
 import ntk.android.academy.utill.FontManager;
-import ntk.base.api.blog.model.BlogContent;
+import ntk.base.api.blog.entity.BlogContent;
 import ntk.base.api.blog.model.BlogContentViewRequest;
-import ntk.base.api.news.model.NewsContent;
+import ntk.base.api.news.entity.NewsContent;
 import ntk.base.api.news.model.NewsContentViewRequest;
 
 public class AdBlog extends RecyclerView.Adapter<AdBlog.ViewHolder> {

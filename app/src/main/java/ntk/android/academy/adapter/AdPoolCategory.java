@@ -27,8 +27,8 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ActDetailPooling;
 import ntk.android.academy.utill.FontManager;
-import ntk.base.api.model.Filters;
-import ntk.base.api.pooling.model.PoolingCategory;
+import ntk.base.api.baseModel.Filters;
+import ntk.base.api.pooling.entity.PoolingCategory;
 import ntk.base.api.pooling.model.PoolingContentListRequest;
 
 public class AdPoolCategory extends RecyclerView.Adapter<AdPoolCategory.ViewHolder> {
