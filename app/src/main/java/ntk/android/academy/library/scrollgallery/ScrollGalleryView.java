@@ -318,7 +318,7 @@ public class ScrollGalleryView extends LinearLayout {
     }
 
     private void scroll(View thumbnail) {
-        int thumbnailCoords[] = new int[2];
+        int[] thumbnailCoords = new int[2];
         thumbnail.getLocationOnScreen(thumbnailCoords);
 
         int thumbnailCenterX = thumbnailCoords[0] + thumbnailSize / 2;
