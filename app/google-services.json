@@ -6,11 +6,41 @@
     "storage_bucket": "ntk-cms.appspot.com"
   },
   "client": [
+
     {
       "client_info": {
         "mobilesdk_app_id": "1:893852902485:android:ec240a8c1aed8232",
         "android_client_info": {
           "package_name": "ntk.android.academy.APPNTK"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "893852902485-2ueq70m43of0nqrnmhc7nellvcv2nsbj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCebGPsbhfoLJVBrZITvXqLlvgwWsk1PyA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "893852902485-2ueq70m43of0nqrnmhc7nellvcv2nsbj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:893852902485:android:231a9eae81face9e",
+        "android_client_info": {
+          "package_name": "ntk.android.baseSample.APPNTK"
         }
       },
       "oauth_client": [
@@ -66,9 +96,67 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:893852902485:android:84c25ccaf93762cb",
+        "android_client_info": {
+          "package_name": "ntk.android.cpanel.APPNTK"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "893852902485-2ueq70m43of0nqrnmhc7nellvcv2nsbj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCebGPsbhfoLJVBrZITvXqLlvgwWsk1PyA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "893852902485-2ueq70m43of0nqrnmhc7nellvcv2nsbj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:893852902485:android:fec7a65cbf64a700",
         "android_client_info": {
           "package_name": "ntk.android.estate.APPNTK"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "893852902485-2ueq70m43of0nqrnmhc7nellvcv2nsbj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCebGPsbhfoLJVBrZITvXqLlvgwWsk1PyA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "893852902485-2ueq70m43of0nqrnmhc7nellvcv2nsbj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:893852902485:android:1a57510b1c2702e4d2e0dc",
+        "android_client_info": {
+          "package_name": "ntk.android.hypershop.APPNTK"
         }
       },
       "oauth_client": [
@@ -151,6 +239,7 @@
         }
       }
     }
+
   ],
   "configuration_version": "1"
 }
