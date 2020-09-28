@@ -80,15 +80,27 @@ public class ActIntro extends AppCompatActivity {
 
                     @Override
                     public void onNext(ApplicationIntroResponse response) {
-                        if (Intro.ListItems != null &&response.ListItems.size() != 0) {
+                        if (Intro.ListItems != null && response.ListItems.size() != 0) {
                             Intro.ListItems = response.ListItems;
                             HandelIntro();
-                        } else {
+                        }
+                        else
+                        {
                             EasyPreference.with(ActIntro.this).addBoolean("Intro", true);
-                            new Handler().postDelayed(() -> {
-                                startActivity(new Intent(ActIntro.this, ActRegister.class));
-                                finish();
-                            }, 3000);
+
+                            if( EasyPreference.with(ActIntro.this).getBoolean("Registered", false))
+                            {
+                                new Handler().postDelayed(() -> {
+                                    startActivity(new Intent(ActIntro.this, ActMain.class));
+                                    finish();
+                                }, 3000);
+                            }
+                            else {
+                                new Handler().postDelayed(() -> {
+                                    startActivity(new Intent(ActIntro.this, ActRegister.class));
+                                    finish();
+                                }, 3000);
+                            }
                         }
                     }
 
