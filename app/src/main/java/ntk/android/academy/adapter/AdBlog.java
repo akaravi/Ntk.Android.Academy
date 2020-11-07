@@ -25,15 +25,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
-import ntk.android.academy.activity.ActDetailBlog;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.blog.entity.BlogContent;
-import ntk.base.api.blog.model.BlogContentViewRequest;
+import ntk.android.academy.activity.BlogDetailActivity;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.blog.entity.BlogContent;
+import ntk.android.base.api.blog.model.BlogContentViewRequest;
 
 public class AdBlog extends RecyclerView.Adapter<AdBlog.ViewHolder> {
 
-    private List<BlogContent> arrayList;
-    private Context context;
+    private final List<BlogContent> arrayList;
+    private final Context context;
 
     public AdBlog(Context context, List<BlogContent> arrayList) {
         this.arrayList = arrayList;
@@ -100,7 +100,7 @@ public class AdBlog extends RecyclerView.Adapter<AdBlog.ViewHolder> {
         }
         holder.Rate.setRating((float) rating);
         holder.Root.setOnClickListener(view -> {
-            Intent intent = new Intent(context, ActDetailBlog.class);
+            Intent intent = new Intent(context, BlogDetailActivity.class);
             BlogContentViewRequest request = new BlogContentViewRequest();
             request.Id = arrayList.get(position).Id;
             intent.putExtra("Request", new Gson().toJson(request));

@@ -37,8 +37,11 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	private Snackbar.SnackbarLayout snackbarLayout;
 	private FloatingActionButton floatingActionButton;
 	private int mSnackbarHeight = -1, navigationBarHeight = 0;
-	private boolean fabBottomMarginInitialized = false;
-	private float targetOffset = 0, fabTargetOffset = 0, fabDefaultBottomMargin = 0, snackBarY = 0;
+	private final boolean fabBottomMarginInitialized = false;
+	private float targetOffset = 0;
+	private final float fabTargetOffset = 0;
+	private final float fabDefaultBottomMargin = 0;
+	private final float snackBarY = 0;
 	private boolean behaviorTranslationEnabled = true;
 	private AHBottomNavigation.OnNavigationPositionListener navigationPositionListener;
 

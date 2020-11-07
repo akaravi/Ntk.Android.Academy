@@ -25,14 +25,14 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.utill.EasyPreference;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.application.interfase.IApplication;
-import ntk.base.api.application.model.ApplicationIntroRequest;
-import ntk.base.api.application.model.ApplicationIntroResponse;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.utill.EasyPreference;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.application.interfase.IApplication;
+import ntk.android.base.api.application.model.ApplicationIntroRequest;
+import ntk.android.base.api.application.model.ApplicationIntroResponse;
+import ntk.android.base.config.RetrofitManager;
 
 public class ActIntro extends AppCompatActivity {
 
@@ -42,9 +42,9 @@ public class ActIntro extends AppCompatActivity {
     @BindView(R.id.imgPhotoActIntro)
     ImageView Img;
 
-    private ApplicationIntroResponse Intro = new ApplicationIntroResponse();
+    private final ApplicationIntroResponse Intro = new ApplicationIntroResponse();
     private int CountIntro = 0;
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
 
     public int Help = 0;
 
@@ -91,7 +91,7 @@ public class ActIntro extends AppCompatActivity {
                             if( EasyPreference.with(ActIntro.this).getBoolean("Registered", false))
                             {
                                 new Handler().postDelayed(() -> {
-                                    startActivity(new Intent(ActIntro.this, ActMain.class));
+                                    startActivity(new Intent(ActIntro.this, MainActivity.class));
                                     finish();
                                 }, 3000);
                             }

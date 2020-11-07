@@ -1,10 +1,10 @@
 package ntk.android.academy.event;
 
-public class EvRemoveAttach {
+public class RemoveAttachEvent {
 
-    private int position;
+    private final int position;
 
-    public EvRemoveAttach(int p) {
+    public RemoveAttachEvent(int p) {
         this.position = p;
     }
 

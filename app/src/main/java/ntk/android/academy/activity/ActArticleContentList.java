@@ -24,15 +24,15 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.AdArticleGrid;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.utill.EndlessRecyclerViewScrollListener;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.article.interfase.IArticle;
-import ntk.base.api.article.entity.ArticleContent;
-import ntk.base.api.article.model.ArticleContentListRequest;
-import ntk.base.api.article.model.ArticleContentResponse;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.article.interfase.IArticle;
+import ntk.android.base.api.article.entity.ArticleContent;
+import ntk.android.base.api.article.model.ArticleContentListRequest;
+import ntk.android.base.api.article.model.ArticleContentResponse;
+import ntk.android.base.config.RetrofitManager;
 
 public class ActArticleContentList extends AppCompatActivity {
 
@@ -47,7 +47,7 @@ public class ActArticleContentList extends AppCompatActivity {
     private EndlessRecyclerViewScrollListener scrollListener;
     private int TotalItem = 0;
     private AdArticleGrid adapter;
-    private List<ArticleContent> contents = new ArrayList<>();
+    private final List<ArticleContent> contents = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

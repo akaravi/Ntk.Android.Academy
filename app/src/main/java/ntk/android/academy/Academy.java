@@ -1,8 +1,8 @@
 package ntk.android.academy;
 
 import android.content.Context;
+
 import androidx.multidex.MultiDex;
-import androidx.multidex.MultiDexApplication;
 
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -11,17 +11,19 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import java.io.File;
 
 import es.dmoral.toasty.Toasty;
-import ntk.android.academy.utill.Constant;
-import ntk.android.academy.utill.FontManager;
+import ntk.android.academy.activity.MainActivity;
+import ntk.android.base.ApplicationParameter;
+import ntk.android.base.ApplicationStyle;
+import ntk.android.base.NTKApplication;
+import ntk.android.base.utill.FontManager;
 
-public class Academy extends MultiDexApplication {
+public class Academy extends NTKApplication {
 
     public static boolean Inbox = false;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
         if (!new File(getCacheDir(), "image").exists()) {
             new File(getCacheDir(), "image").mkdirs();
         }
@@ -35,16 +37,24 @@ public class Academy extends MultiDexApplication {
         ImageLoader.getInstance().init(config);
 
         Toasty.Config.getInstance()
-                .setToastTypeface(FontManager.GetTypeface(getApplicationContext(), FontManager.IranSans))
+                .setToastTypeface(ntk.android.base.utill.FontManager.GetTypeface(getApplicationContext(), FontManager.IranSans))
                 .setTextSize(14).apply();
-
-
-        new Constant().SetMap();
+        applicationStyle = new ApplicationStyle() {
+            @Override
+            public Class<?> getMainActivity() {
+                return MainActivity.class;
+            }
+        };
     }
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(base);
+    }
+
+    @Override
+    public ApplicationParameter getApplicationParameter() {
+        return new ApplicationParameter(BuildConfig.APPLICATION_ID, BuildConfig.APPLICATION_ID, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE);
     }
 }

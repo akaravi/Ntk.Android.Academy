@@ -2,7 +2,7 @@ package ntk.android.academy.event;
 
 public class EvNotify {
 
-    private boolean DataChange;
+    private final boolean DataChange;
 
     public EvNotify(boolean DC) {
         this.DataChange = DC;

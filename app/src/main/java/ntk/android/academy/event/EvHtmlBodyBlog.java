@@ -2,7 +2,7 @@ package ntk.android.academy.event;
 
 public class EvHtmlBodyBlog {
 
-    private String Html;
+    private final String Html;
 
     public EvHtmlBodyBlog(String m) {
         this.Html = m;

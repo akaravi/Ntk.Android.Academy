@@ -21,17 +21,17 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.AdBlog;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.utill.EndlessRecyclerViewScrollListener;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.blog.interfase.IBlog;
-import ntk.base.api.blog.entity.BlogContent;
-import ntk.base.api.blog.model.BlogContentListRequest;
-import ntk.base.api.blog.model.BlogContentListResponse;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.blog.interfase.IBlog;
+import ntk.android.base.api.blog.entity.BlogContent;
+import ntk.android.base.api.blog.model.BlogContentListRequest;
+import ntk.android.base.api.blog.model.BlogContentListResponse;
+import ntk.android.base.config.RetrofitManager;
 
-public class ActBlog extends AppCompatActivity {
+public class BlogActivity extends AppCompatActivity {
 
     @BindView(R.id.lblTitleActBlog)
     TextView LblTitle;
@@ -40,7 +40,7 @@ public class ActBlog extends AppCompatActivity {
     RecyclerView Rv;
 
     private int Total = 0;
-    private List<BlogContent> blogs = new ArrayList<>();
+    private final List<BlogContent> blogs = new ArrayList<>();
     private AdBlog adapter;
 
     @Override
@@ -97,14 +97,14 @@ public class ActBlog extends AppCompatActivity {
                             Total = response.TotalRowCount;
                             adapter.notifyDataSetChanged();
                         }else {
-                            Toasty.warning(ActBlog.this, "موردی یافت نشد", Toasty.LENGTH_LONG, true).show();
+                            Toasty.warning(BlogActivity.this, "موردی یافت نشد", Toasty.LENGTH_LONG, true).show();
                             finish();
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Toasty.warning(ActBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        Toasty.warning(BlogActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
 
                     }
 

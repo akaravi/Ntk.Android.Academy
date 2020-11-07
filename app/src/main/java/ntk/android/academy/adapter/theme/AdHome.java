@@ -34,33 +34,33 @@ import ntk.android.academy.adapter.theme.holder.HoButton;
 import ntk.android.academy.adapter.theme.holder.HoImage;
 import ntk.android.academy.adapter.theme.holder.HoSlider;
 import ntk.android.academy.adapter.theme.holder.HoTag;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.utill.Constant;
-import ntk.android.academy.utill.EasyPreference;
-import ntk.android.academy.utill.EndlessRecyclerViewScrollListener;
-import ntk.base.api.article.interfase.IArticle;
-import ntk.base.api.article.entity.ArticleContent;
-import ntk.base.api.article.model.ArticleContentListRequest;
-import ntk.base.api.article.model.ArticleContentResponse;
-import ntk.base.api.article.entity.ArticleTag;
-import ntk.base.api.article.model.ArticleTagRequest;
-import ntk.base.api.article.model.ArticleTagResponse;
-import ntk.base.api.baseModel.theme.ThemeChild;
-import ntk.base.api.baseModel.theme.ThemeChildConfig;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.academy.util.Constant;
+import ntk.android.base.utill.EasyPreference;
+import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
+import ntk.android.base.api.article.interfase.IArticle;
+import ntk.android.base.api.article.entity.ArticleContent;
+import ntk.android.base.api.article.model.ArticleContentListRequest;
+import ntk.android.base.api.article.model.ArticleContentResponse;
+import ntk.android.base.api.article.entity.ArticleTag;
+import ntk.android.base.api.article.model.ArticleTagRequest;
+import ntk.android.base.api.article.model.ArticleTagResponse;
+import ntk.android.base.api.baseModel.theme.ThemeChild;
+import ntk.android.base.api.baseModel.theme.ThemeChildConfig;
+import ntk.android.base.config.RetrofitManager;
 import ss.com.bannerslider.banners.Banner;
 import ss.com.bannerslider.banners.RemoteBanner;
 import ss.com.bannerslider.events.OnBannerClickListener;
 
 public class AdHome extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<ThemeChild> themes;
-    private Context context;
-    private List<ArticleTag> tags = new ArrayList<>();
-    private AdTag adTag;
-    private Map<Integer, List<ArticleContent>> map_articles = new HashMap<>();
-    private Map<Integer, AdArticle> map_adapter = new HashMap<>();
+    private final List<ThemeChild> themes;
+    private final Context context;
+    private final List<ArticleTag> tags = new ArrayList<>();
+    private final AdTag adTag;
+    private final Map<Integer, List<ArticleContent>> map_articles = new HashMap<>();
+    private final Map<Integer, AdArticle> map_adapter = new HashMap<>();
 
     private int TotalTag = 0, TotalArticle = 0;
 

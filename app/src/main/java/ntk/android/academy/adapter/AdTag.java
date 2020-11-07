@@ -17,14 +17,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ActArticleContentList;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.article.model.ArticleContentListRequest;
-import ntk.base.api.article.entity.ArticleTag;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.article.model.ArticleContentListRequest;
+import ntk.android.base.api.article.entity.ArticleTag;
 
 public class AdTag extends RecyclerView.Adapter<AdTag.ViewHolder> {
 
-    private List<ArticleTag> arrayList;
-    private Context context;
+    private final List<ArticleTag> arrayList;
+    private final Context context;
 
     public AdTag(Context context, List<ArticleTag> arrayList) {
         this.arrayList = arrayList;

@@ -29,10 +29,10 @@ import ntk.android.academy.library.scrollgallery.loader.MediaLoader;
 
 public class ScrollGalleryView extends LinearLayout {
     private FragmentManager fragmentManager;
-    private Context context;
-    private Point displayProps;
+    private final Context context;
+    private final Point displayProps;
     private PagerAdapter pagerAdapter;
-    private List<MediaInfo> mListOfMedia;
+    private final List<MediaInfo> mListOfMedia;
 
     // Options
     private int thumbnailSize; // width and height in pixels
@@ -42,8 +42,8 @@ public class ScrollGalleryView extends LinearLayout {
     private Integer hideThumbnailsAfterDelay;
 
     // Views
-    private LinearLayout thumbnailsContainer;
-    private HorizontalScrollView horizontalScrollView;
+    private final LinearLayout thumbnailsContainer;
+    private final HorizontalScrollView horizontalScrollView;
     private ViewPager viewPager;
 
     // Transitions
@@ -62,13 +62,13 @@ public class ScrollGalleryView extends LinearLayout {
         @Override
         public void onClick(View v) {
             scroll(v);
-            viewPager.setCurrentItem((int) v.getId(), true);
+            viewPager.setCurrentItem(v.getId(), true);
         }
     };
 
     private OnImageClickListener onImageClickListener;
 
-    private OnImageClickListener innerOnImageClickListener = new OnImageClickListener() {
+    private final OnImageClickListener innerOnImageClickListener = new OnImageClickListener() {
         @Override
         public void onClick() {
             if (hideThumbnailsOnClick) {
@@ -98,9 +98,9 @@ public class ScrollGalleryView extends LinearLayout {
         LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.scroll_gallery_view, this, true);
 
-        horizontalScrollView = (HorizontalScrollView) findViewById(R.id.thumbnails_scroll_view);
+        horizontalScrollView = findViewById(R.id.thumbnails_scroll_view);
 
-        thumbnailsContainer = (LinearLayout) findViewById(R.id.thumbnails_container);
+        thumbnailsContainer = findViewById(R.id.thumbnails_container);
         thumbnailsContainer.setPadding(displayProps.x / 2, 0, displayProps.x / 2, 0);
     }
 

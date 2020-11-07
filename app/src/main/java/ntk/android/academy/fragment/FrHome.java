@@ -22,9 +22,9 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.theme.AdHome;
 import ntk.android.academy.library.AnimatedRecyclerView;
-import ntk.android.academy.utill.EasyPreference;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.baseModel.theme.Theme;
+import ntk.android.base.utill.EasyPreference;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.baseModel.theme.Theme;
 
 public class FrHome extends Fragment {
 

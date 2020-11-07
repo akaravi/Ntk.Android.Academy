@@ -24,7 +24,7 @@ import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ntk.android.academy.R;
-import ntk.android.academy.utill.FontManager;
+import ntk.android.base.utill.FontManager;
 
 public class FrBmi extends Fragment {
 

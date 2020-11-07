@@ -41,33 +41,33 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 import ntk.android.academy.R;
-import ntk.android.academy.activity.ActAbout;
-import ntk.android.academy.activity.ActBlog;
-import ntk.android.academy.activity.ActFaq;
+import ntk.android.academy.activity.AboutUsActivity;
+import ntk.android.academy.activity.BlogActivity;
+import ntk.android.academy.activity.FaqActivity;
 import ntk.android.academy.activity.ActInbox;
 import ntk.android.academy.activity.ActIntro;
 import ntk.android.academy.activity.ActNews;
 import ntk.android.academy.activity.ActPooling;
-import ntk.android.academy.activity.ActSupport;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
+import ntk.android.academy.activity.TicketListActivity;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.academy.room.RoomDb;
-import ntk.android.academy.utill.AppUtill;
-import ntk.android.academy.utill.EasyPreference;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.application.interfase.IApplication;
-import ntk.base.api.application.model.ApplicationScoreRequest;
-import ntk.base.api.application.model.ApplicationScoreResponse;
-import ntk.base.api.core.entity.CoreMain;
-import ntk.base.api.baseModel.theme.DrawerChild;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.utill.AppUtill;
+import ntk.android.base.utill.EasyPreference;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.application.interfase.IApplication;
+import ntk.android.base.api.application.model.ApplicationScoreRequest;
+import ntk.android.base.api.application.model.ApplicationScoreResponse;
+import ntk.android.base.api.core.entity.CoreMain;
+import ntk.android.base.api.baseModel.theme.DrawerChild;
+import ntk.android.base.config.RetrofitManager;
 
 public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
 
-    private List<DrawerChild> childs;
-    private Context context;
+    private final List<DrawerChild> childs;
+    private final Context context;
     private int Click;
-    private FlowingDrawer Drawer;
+    private final FlowingDrawer Drawer;
 
     public AdDrawer(Context context, List<DrawerChild> children, FlowingDrawer drawer) {
         this.childs = children;
@@ -130,7 +130,7 @@ public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
     }
 
     private void ClickBlog() {
-        context.startActivity(new Intent(context, ActBlog.class));
+        context.startActivity(new Intent(context, BlogActivity.class));
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }
@@ -233,14 +233,14 @@ public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
     }
 
     private void ClickAbout() {
-        context.startActivity(new Intent(context, ActAbout.class));
+        context.startActivity(new Intent(context, AboutUsActivity.class));
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }
     }
 
     private void ClickContact() {
-        context.startActivity(new Intent(context, ActSupport.class));
+        context.startActivity(new Intent(context, TicketListActivity.class));
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }
@@ -322,7 +322,7 @@ public class AdDrawer extends RecyclerView.Adapter<AdDrawer.ViewHolder> {
     }
 
     private void ClickQuestion() {
-        context.startActivity(new Intent(context, ActFaq.class));
+        context.startActivity(new Intent(context, FaqActivity.class));
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }

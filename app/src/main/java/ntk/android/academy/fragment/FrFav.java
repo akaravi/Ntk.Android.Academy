@@ -28,15 +28,15 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.AdArticleGrid;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.utill.EndlessRecyclerViewScrollListener;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.article.interfase.IArticle;
-import ntk.base.api.article.entity.ArticleContent;
-import ntk.base.api.article.model.ArticleContentFavoriteListRequest;
-import ntk.base.api.article.model.ArticleContentFavoriteListResponse;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.article.interfase.IArticle;
+import ntk.android.base.api.article.entity.ArticleContent;
+import ntk.android.base.api.article.model.ArticleContentFavoriteListRequest;
+import ntk.android.base.api.article.model.ArticleContentFavoriteListResponse;
+import ntk.android.base.config.RetrofitManager;
 
 public class FrFav extends Fragment {
 
@@ -58,7 +58,7 @@ public class FrFav extends Fragment {
     List<ArticleContent> contents = new ArrayList<>();
     AdArticleGrid adapter;
 
-    private int TotalArticle = 0;
+    private final int TotalArticle = 0;
 
     @Nullable
     @Override

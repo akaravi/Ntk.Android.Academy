@@ -34,7 +34,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".activity.ActMain"
+            android:name=".activity.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
@@ -62,15 +62,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".activity.ActAbout"
+            android:name=".activity.AboutUsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen" />
         <activity
-            android:name=".activity.ActSupport"
+            android:name=".activity.TicketListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".activity.ActSendTicket"
+            android:name=".activity.NewTicketActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
@@ -78,7 +78,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".activity.ActBlog"
+            android:name=".activity.BlogActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
@@ -98,15 +98,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".activity.ActDetailBlog"
+            android:name=".activity.BlogDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".activity.ActFaq"
+            android:name=".activity.FaqActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
-            android:name=".activity.ActTicketAnswer"
+            android:name=".activity.TicketAnswerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
 

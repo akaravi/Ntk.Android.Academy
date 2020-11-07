@@ -13,15 +13,15 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.BuildConfig;
 import ntk.android.academy.R;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.academy.library.about.AboutPage;
 import ntk.android.academy.library.about.Element;
-import ntk.base.api.core.interfase.ICore;
-import ntk.base.api.core.model.CoreAboutUsResponse;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.api.core.interfase.ICore;
+import ntk.android.base.api.core.model.CoreAboutUsResponse;
+import ntk.android.base.config.RetrofitManager;
 
-public class ActAbout extends AppCompatActivity {
+public class AboutUsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class ActAbout extends AppCompatActivity {
                     @Override
                     public void onNext(CoreAboutUsResponse about) {
                         if (about != null) {
-                            View aboutPage = new AboutPage(ActAbout.this)
+                            View aboutPage = new AboutPage(AboutUsActivity.this)
                                     .isRTL(true)
                                     .setImage(R.mipmap.ic_launcher)
 
@@ -68,7 +68,7 @@ public class ActAbout extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Toasty.warning(ActAbout.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        Toasty.warning(AboutUsActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                     }
                     @Override
                     public void onComplete() {

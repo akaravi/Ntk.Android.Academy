@@ -19,17 +19,17 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
-import ntk.android.academy.activity.ActTicketAnswer;
-import ntk.android.academy.utill.AppUtill;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.baseModel.Filters;
-import ntk.base.api.ticket.model.TicketingAnswerListRequest;
-import ntk.base.api.ticket.entity.TicketingTask;
+import ntk.android.academy.activity.TicketAnswerActivity;
+import ntk.android.base.utill.AppUtill;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.baseModel.Filters;
+import ntk.android.base.api.ticket.model.TicketingAnswerListRequest;
+import ntk.android.base.api.ticket.entity.TicketingTask;
 
 public class AdTicket extends RecyclerView.Adapter<AdTicket.ViewHolder> {
 
-    private List<TicketingTask> arrayList;
-    private Context context;
+    private final List<TicketingTask> arrayList;
+    private final Context context;
 
     public AdTicket(Context context, ArrayList<TicketingTask> arrayList) {
         this.arrayList = arrayList;
@@ -77,7 +77,7 @@ public class AdTicket extends RecyclerView.Adapter<AdTicket.ViewHolder> {
             f.IntValue1 = arrayList.get(position).Id;
             filters.add(f);
             request.filters = filters;
-            Intent intent = new Intent(context, ActTicketAnswer.class);
+            Intent intent = new Intent(context, TicketAnswerActivity.class);
             intent.putExtra("Request", new Gson().toJson(request));
             intent.putExtra("TicketId", arrayList.get(position).Id);
             context.startActivity(intent);

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ntk.android.academy.utill.FontManager;
+import ntk.android.base.utill.FontManager;
 
 public class AdSpinner<S> extends ArrayAdapter<String> {
 

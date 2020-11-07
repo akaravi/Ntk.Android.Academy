@@ -27,7 +27,7 @@ public class ActInbox extends AppCompatActivity {
     @BindView(R.id.recyclerInbox)
     RecyclerView Rv;
 
-    private ArrayList<Notify> notifies = new ArrayList<>();
+    private final ArrayList<Notify> notifies = new ArrayList<>();
     private AdInbox adapter;
 
     @Override

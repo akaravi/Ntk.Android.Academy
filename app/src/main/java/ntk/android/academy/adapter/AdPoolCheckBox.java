@@ -24,26 +24,26 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.pooling.interfase.IPooling;
-import ntk.base.api.pooling.entity.PoolingContent;
-import ntk.base.api.pooling.entity.PoolingOption;
-import ntk.base.api.pooling.model.PoolingSubmitRequest;
-import ntk.base.api.pooling.model.PoolingSubmitResponse;
-import ntk.base.api.pooling.entity.PoolingVote;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.pooling.interfase.IPooling;
+import ntk.android.base.api.pooling.entity.PoolingContent;
+import ntk.android.base.api.pooling.entity.PoolingOption;
+import ntk.android.base.api.pooling.model.PoolingSubmitRequest;
+import ntk.android.base.api.pooling.model.PoolingSubmitResponse;
+import ntk.android.base.api.pooling.entity.PoolingVote;
+import ntk.android.base.config.RetrofitManager;
 
 public class AdPoolCheckBox extends RecyclerView.Adapter<AdPoolCheckBox.ViewHolder> {
 
-    private List<PoolingOption> arrayList;
-    private Context context;
-    private PoolingContent PC;
-    private Button BtnSend;
-    private Button BtnChart;
+    private final List<PoolingOption> arrayList;
+    private final Context context;
+    private final PoolingContent PC;
+    private final Button BtnSend;
+    private final Button BtnChart;
     private int Score = 0;
-    private Map<Long, Integer> MapVote;
+    private final Map<Long, Integer> MapVote;
 
     public AdPoolCheckBox(Context context, List<PoolingOption> arrayList, PoolingContent pc, Button send, Button chart) {
         this.arrayList = arrayList;

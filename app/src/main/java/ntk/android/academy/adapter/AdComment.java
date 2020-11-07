@@ -21,21 +21,21 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.utill.AppUtill;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.article.interfase.IArticle;
-import ntk.base.api.article.entity.ArticleComment;
-import ntk.base.api.article.model.ArticleCommentResponse;
-import ntk.base.api.article.model.ArticleCommentViewRequest;
-import ntk.base.api.utill.NTKClientAction;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.utill.AppUtill;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.article.interfase.IArticle;
+import ntk.android.base.api.article.entity.ArticleComment;
+import ntk.android.base.api.article.model.ArticleCommentResponse;
+import ntk.android.base.api.article.model.ArticleCommentViewRequest;
+import ntk.android.base.api.utill.NTKClientAction;
+import ntk.android.base.config.RetrofitManager;
 
 public class AdComment extends RecyclerView.Adapter<AdComment.ViewHolder> {
 
-    private List<ArticleComment> arrayList;
-    private Context context;
+    private final List<ArticleComment> arrayList;
+    private final Context context;
 
     public AdComment(Context context, List<ArticleComment> arrayList) {
         this.arrayList = arrayList;

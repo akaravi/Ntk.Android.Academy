@@ -9,11 +9,11 @@ import java.util.List;
 
 public class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
-    private List<MediaInfo> mListOfMedia;
+    private final List<MediaInfo> mListOfMedia;
 
     private boolean isZoom = false;
 
-    private ScrollGalleryView.OnImageClickListener onImageClickListener;
+    private final ScrollGalleryView.OnImageClickListener onImageClickListener;
 
     public ScreenSlidePagerAdapter(FragmentManager fm, List<MediaInfo> listOfMedia,
                                    boolean isZoom, ScrollGalleryView.OnImageClickListener onImageClickListener) {

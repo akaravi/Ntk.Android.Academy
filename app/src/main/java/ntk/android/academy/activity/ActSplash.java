@@ -28,16 +28,16 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.BuildConfig;
 import ntk.android.academy.R;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.utill.AppUtill;
-import ntk.android.academy.utill.EasyPreference;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.core.entity.CoreMain;
-import ntk.base.api.core.interfase.ICore;
-import ntk.base.api.core.entity.CoreTheme;
-import ntk.base.api.core.model.MainCoreResponse;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.utill.AppUtill;
+import ntk.android.base.utill.EasyPreference;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.core.entity.CoreMain;
+import ntk.android.base.api.core.interfase.ICore;
+import ntk.android.base.api.core.entity.CoreTheme;
+import ntk.android.base.api.core.model.MainCoreResponse;
+import ntk.android.base.config.RetrofitManager;
 
 public class ActSplash extends AppCompatActivity {
 
@@ -152,7 +152,7 @@ public class ActSplash extends AppCompatActivity {
         }
         new Handler().postDelayed(() -> {
             Loading.setVisibility(View.GONE);
-            startActivity(new Intent(ActSplash.this, ActMain.class));
+            startActivity(new Intent(ActSplash.this, MainActivity.class));
             finish();
         }, 3000);
     }

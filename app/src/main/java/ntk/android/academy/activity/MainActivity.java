@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
@@ -47,8 +46,8 @@ import ntk.android.academy.adapter.AdFragment;
 import ntk.android.academy.adapter.AdPager;
 import ntk.android.academy.adapter.drawer.AdDrawer;
 import ntk.android.academy.adapter.toolbar.AdToobar;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.academy.event.toolbar.EVHamberMenuClick;
 import ntk.android.academy.event.toolbar.EVSearchClick;
 import ntk.android.academy.fragment.FrBmi;
@@ -57,17 +56,17 @@ import ntk.android.academy.fragment.FrFav;
 import ntk.android.academy.fragment.FrHome;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigation;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigationItem;
-import ntk.android.academy.utill.AppUtill;
-import ntk.android.academy.utill.EasyPreference;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.core.interfase.ICore;
-import ntk.base.api.core.entity.CoreMain;
-import ntk.base.api.core.model.MainCoreResponse;
-import ntk.base.api.baseModel.theme.Theme;
-import ntk.base.api.baseModel.theme.Toolbar;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.utill.AppUtill;
+import ntk.android.base.utill.EasyPreference;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.core.interfase.ICore;
+import ntk.android.base.api.core.entity.CoreMain;
+import ntk.android.base.api.core.model.MainCoreResponse;
+import ntk.android.base.api.baseModel.theme.Theme;
+import ntk.android.base.api.baseModel.theme.Toolbar;
+import ntk.android.base.config.RetrofitManager;
 
-public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
+public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
 
     @BindView(R.id.bottomNavMenu)
     AHBottomNavigation navigation;
@@ -229,10 +228,10 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
                             if(!mainCoreResponse.IsSuccess)
                             {
                                 //BtnRefresh.setVisibility(View.VISIBLE);
-                                Toasty.warning(ActMain.this, "خطای سامانه مجددا تلاش کنید"+mainCoreResponse.ErrorMessage, Toasty.LENGTH_LONG, true).show();
+                                Toasty.warning(MainActivity.this, "خطای سامانه مجددا تلاش کنید"+mainCoreResponse.ErrorMessage, Toasty.LENGTH_LONG, true).show();
                                 return;
                             }
-                            EasyPreference.with(ActMain.this).addString("configapp", new Gson().toJson(mainCoreResponse.Item));
+                            EasyPreference.with(MainActivity.this).addString("configapp", new Gson().toJson(mainCoreResponse.Item));
                             CheckUpdate();
                         }
 
@@ -276,7 +275,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
         ((TextView) dialog.findViewById(R.id.lbl1PernissionDialog)).setText("توجه");
         ((TextView) dialog.findViewById(R.id.lbl2PernissionDialog)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         ((TextView) dialog.findViewById(R.id.lbl2PernissionDialog)).setText("نسخه جدید اپلیکیشن اومده دوست داری آبدیت بشه؟؟");
-        Button Ok = (Button) dialog.findViewById(R.id.btnOkPermissionDialog);
+        Button Ok = dialog.findViewById(R.id.btnOkPermissionDialog);
         Ok.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Ok.setOnClickListener(view1 -> {
             Intent i = new Intent(Intent.ACTION_VIEW);
@@ -284,7 +283,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
             startActivity(i);
             dialog.dismiss();
         });
-        Button Cancel = (Button) dialog.findViewById(R.id.btnCancelPermissionDialog);
+        Button Cancel = dialog.findViewById(R.id.btnCancelPermissionDialog);
         Cancel.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Cancel.setOnClickListener(view12 -> dialog.dismiss());
         dialog.show();
@@ -304,7 +303,7 @@ public class ActMain extends AppCompatActivity implements AHBottomNavigation.OnT
         ((TextView) dialog.findViewById(R.id.lbl1PernissionDialogUpdate)).setText("توجه");
         ((TextView) dialog.findViewById(R.id.lbl2PernissionDialogUpdate)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         ((TextView) dialog.findViewById(R.id.lbl2PernissionDialogUpdate)).setText("نسخه جدید اپلیکیشن اومده حتما باید آبدیت بشه");
-        Button Ok = (Button) dialog.findViewById(R.id.btnOkPermissionDialogUpdate);
+        Button Ok = dialog.findViewById(R.id.btnOkPermissionDialogUpdate);
         Ok.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Ok.setOnClickListener(view1 -> {
             Intent i = new Intent(Intent.ACTION_VIEW);

@@ -26,15 +26,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ActArticleContentList;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.article.entity.ArticleCategory;
-import ntk.base.api.article.model.ArticleContentListRequest;
-import ntk.base.api.baseModel.Filters;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.article.entity.ArticleCategory;
+import ntk.android.base.api.article.model.ArticleContentListRequest;
+import ntk.android.base.api.baseModel.Filters;
 
 public class AdCategory extends RecyclerView.Adapter<AdCategory.ViewHolder> {
 
-    private List<ArticleCategory> arrayList;
-    private Context context;
+    private final List<ArticleCategory> arrayList;
+    private final Context context;
 
     public AdCategory(Context context, List<ArticleCategory> arrayList) {
         this.arrayList = arrayList;

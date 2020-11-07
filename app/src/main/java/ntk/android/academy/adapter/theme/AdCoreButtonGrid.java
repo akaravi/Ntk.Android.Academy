@@ -22,13 +22,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ActArticleContentList;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.baseModel.theme.ThemeChildConfig;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.baseModel.theme.ThemeChildConfig;
 
 public class AdCoreButtonGrid extends RecyclerView.Adapter<AdCoreButtonGrid.ViewHolder> {
 
-    private List<ThemeChildConfig> childs;
-    private Context context;
+    private final List<ThemeChildConfig> childs;
+    private final Context context;
 
     public AdCoreButtonGrid(Context context, List<ThemeChildConfig> list) {
         this.childs = list;

@@ -28,13 +28,13 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.AdCategory;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.article.interfase.IArticle;
-import ntk.base.api.article.model.ArticleCategoryRequest;
-import ntk.base.api.article.model.ArticleCategoryResponse;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.article.interfase.IArticle;
+import ntk.android.base.api.article.model.ArticleCategoryRequest;
+import ntk.android.base.api.article.model.ArticleCategoryResponse;
+import ntk.android.base.config.RetrofitManager;
 
 public class FrCommand extends Fragment {
 

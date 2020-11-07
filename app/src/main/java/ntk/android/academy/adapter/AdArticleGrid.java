@@ -26,14 +26,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ActDetail;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.article.entity.ArticleContent;
-import ntk.base.api.article.model.ArticleContentViewRequest;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.article.entity.ArticleContent;
+import ntk.android.base.api.article.model.ArticleContentViewRequest;
 
 public class AdArticleGrid extends RecyclerView.Adapter<AdArticleGrid.ViewHolder> {
 
-    private List<ArticleContent> arrayList;
-    private Context context;
+    private final List<ArticleContent> arrayList;
+    private final Context context;
 
     public AdArticleGrid(Context context, List<ArticleContent> arrayList) {
         this.arrayList = arrayList;

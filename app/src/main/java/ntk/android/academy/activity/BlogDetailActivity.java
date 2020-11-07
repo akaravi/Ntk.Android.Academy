@@ -49,30 +49,30 @@ import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.AdCommentBlog;
 import ntk.android.academy.adapter.AdTabBlog;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.academy.event.EvHtmlBodyBlog;
-import ntk.android.academy.utill.AppUtill;
-import ntk.android.academy.utill.EasyPreference;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.blog.interfase.IBlog;
-import ntk.base.api.blog.model.BlogCommentAddRequest;
-import ntk.base.api.blog.model.BlogCommentListRequest;
-import ntk.base.api.blog.model.BlogCommentResponse;
-import ntk.base.api.blog.model.BlogContentFavoriteAddRequest;
-import ntk.base.api.blog.model.BlogContentFavoriteAddResponse;
-import ntk.base.api.blog.model.BlogContentFavoriteRemoveRequest;
-import ntk.base.api.blog.model.BlogContentFavoriteRemoveResponse;
-import ntk.base.api.blog.entity.BlogContentOtherInfo;
-import ntk.base.api.blog.model.BlogContentOtherInfoListRequest;
-import ntk.base.api.blog.model.BlogContentOtherInfoListResponse;
-import ntk.base.api.blog.model.BlogContentResponse;
-import ntk.base.api.blog.model.BlogContentViewRequest;
-import ntk.base.api.core.entity.CoreMain;
-import ntk.base.api.baseModel.Filters;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.utill.AppUtill;
+import ntk.android.base.utill.EasyPreference;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.blog.interfase.IBlog;
+import ntk.android.base.api.blog.model.BlogCommentAddRequest;
+import ntk.android.base.api.blog.model.BlogCommentListRequest;
+import ntk.android.base.api.blog.model.BlogCommentResponse;
+import ntk.android.base.api.blog.model.BlogContentFavoriteAddRequest;
+import ntk.android.base.api.blog.model.BlogContentFavoriteAddResponse;
+import ntk.android.base.api.blog.model.BlogContentFavoriteRemoveRequest;
+import ntk.android.base.api.blog.model.BlogContentFavoriteRemoveResponse;
+import ntk.android.base.api.blog.entity.BlogContentOtherInfo;
+import ntk.android.base.api.blog.model.BlogContentOtherInfoListRequest;
+import ntk.android.base.api.blog.model.BlogContentOtherInfoListResponse;
+import ntk.android.base.api.blog.model.BlogContentResponse;
+import ntk.android.base.api.blog.model.BlogContentViewRequest;
+import ntk.android.base.api.core.entity.CoreMain;
+import ntk.android.base.api.baseModel.Filters;
+import ntk.android.base.config.RetrofitManager;
 
-public class ActDetailBlog extends AppCompatActivity {
+public class BlogDetailActivity extends AppCompatActivity {
 
     @BindView(R.id.progressActDetailBlog)
     ProgressBar Progress;
@@ -147,7 +147,7 @@ public class ActDetailBlog extends AppCompatActivity {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 if (!fromUser) return;
-                if (AppUtill.isNetworkAvailable(ActDetailBlog.this)) {
+                if (AppUtill.isNetworkAvailable(BlogDetailActivity.this)) {
                     BlogContentViewRequest request = new BlogContentViewRequest();
                     request.Id = Request.Id;
                     request.ActionClientOrder = 55;
@@ -181,9 +181,9 @@ public class ActDetailBlog extends AppCompatActivity {
                     if (rating == 5) {
                         request.ScorePercent = 100;
                     }
-                    RetrofitManager manager = new RetrofitManager(ActDetailBlog.this);
-                    IBlog iNews = manager.getRetrofitUnCached(new ConfigStaticValue(ActDetailBlog.this).GetApiBaseUrl()).create(IBlog.class);
-                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(ActDetailBlog.this);
+                    RetrofitManager manager = new RetrofitManager(BlogDetailActivity.this);
+                    IBlog iNews = manager.getRetrofitUnCached(new ConfigStaticValue(BlogDetailActivity.this).GetApiBaseUrl()).create(IBlog.class);
+                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(BlogDetailActivity.this);
 
                     Observable<BlogContentResponse> Call = iNews.GetContentView(headers, request);
                     Call.observeOn(AndroidSchedulers.mainThread())
@@ -198,9 +198,9 @@ public class ActDetailBlog extends AppCompatActivity {
                                 public void onNext(BlogContentResponse response) {
                                     Loading.setVisibility(View.GONE);
                                     if (response.IsSuccess) {
-                                        Toasty.success(ActDetailBlog.this, "نظر شمابا موفقیت ثبت گردید").show();
+                                        Toasty.success(BlogDetailActivity.this, "نظر شمابا موفقیت ثبت گردید").show();
                                     } else {
-                                        Toasty.warning(ActDetailBlog.this, response.ErrorMessage).show();
+                                        Toasty.warning(BlogDetailActivity.this, response.ErrorMessage).show();
                                     }
                                 }
 
@@ -313,7 +313,7 @@ public class ActDetailBlog extends AppCompatActivity {
                         public void onNext(BlogCommentResponse model) {
                             if (model.IsSuccess) {
                                 findViewById(R.id.lblCommentActDetailBlog).setVisibility(View.VISIBLE);
-                                AdCommentBlog adapter = new AdCommentBlog(ActDetailBlog.this, model.ListItems);
+                                AdCommentBlog adapter = new AdCommentBlog(BlogDetailActivity.this, model.ListItems);
                                 RvComment.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
                             } else {
@@ -323,7 +323,7 @@ public class ActDetailBlog extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                            Toasty.warning(BlogDetailActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                         }
 
                         @Override
@@ -371,7 +371,7 @@ public class ActDetailBlog extends AppCompatActivity {
 
                         @Override
                         public void onError(Throwable e) {
-                            Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                            Toasty.warning(BlogDetailActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                         }
 
                         @Override
@@ -427,7 +427,7 @@ public class ActDetailBlog extends AppCompatActivity {
                     break;
             }
         }
-        AdTabBlog adapter = new AdTabBlog(ActDetailBlog.this, Info);
+        AdTabBlog adapter = new AdTabBlog(BlogDetailActivity.this, Info);
         RvTab.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -516,10 +516,10 @@ public class ActDetailBlog extends AppCompatActivity {
 
             Btn.setOnClickListener(v -> {
                 if (Txt[0].getText().toString().isEmpty()) {
-                    Toast.makeText(ActDetailBlog.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BlogDetailActivity.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
                 } else {
                     if (Txt[1].getText().toString().isEmpty()) {
-                        Toast.makeText(ActDetailBlog.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BlogDetailActivity.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
                     } else {
                         BlogCommentAddRequest add = new BlogCommentAddRequest();
                         add.Writer = Txt[0].getText().toString();
@@ -544,9 +544,9 @@ public class ActDetailBlog extends AppCompatActivity {
                                         if (e.IsSuccess) {
                                             HandelDataComment(Request.Id);
                                             dialog.dismiss();
-                                            Toasty.success(ActDetailBlog.this, "نظر شما با موفقیت ثبت شد").show();
+                                            Toasty.success(BlogDetailActivity.this, "نظر شما با موفقیت ثبت شد").show();
                                         } else {
-                                            Toasty.warning(ActDetailBlog.this, "لطفا مجددا تلاش کنید").show();
+                                            Toasty.warning(BlogDetailActivity.this, "لطفا مجددا تلاش کنید").show();
                                         }
                                     }
 
@@ -610,7 +610,7 @@ public class ActDetailBlog extends AppCompatActivity {
                         @Override
                         public void onNext(BlogContentFavoriteAddResponse e) {
                             if (e.IsSuccess) {
-                                Toasty.success(ActDetailBlog.this, "با موفقیت ثبت شد").show();
+                                Toasty.success(BlogDetailActivity.this, "با موفقیت ثبت شد").show();
                                 model.Item.Favorited = !model.Item.Favorited;
                                 if (model.Item.Favorited) {
                                     ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
@@ -618,13 +618,13 @@ public class ActDetailBlog extends AppCompatActivity {
                                     ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
                                 }
                             } else {
-                                Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                                Toasty.error(BlogDetailActivity.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                             }
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                            Toasty.warning(BlogDetailActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                         }
 
                         @Override
@@ -663,7 +663,7 @@ public class ActDetailBlog extends AppCompatActivity {
                         @Override
                         public void onNext(BlogContentFavoriteRemoveResponse e) {
                             if (e.IsSuccess) {
-                                Toasty.success(ActDetailBlog.this, "با موفقیت ثبت شد").show();
+                                Toasty.success(BlogDetailActivity.this, "با موفقیت ثبت شد").show();
                                 model.Item.Favorited = !model.Item.Favorited;
                                 if (model.Item.Favorited) {
                                     ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
@@ -671,14 +671,14 @@ public class ActDetailBlog extends AppCompatActivity {
                                     ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
                                 }
                             } else {
-                                Toasty.error(ActDetailBlog.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                                Toasty.error(BlogDetailActivity.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                             }
 
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Toasty.warning(ActDetailBlog.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                            Toasty.warning(BlogDetailActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                         }
 
                         @Override

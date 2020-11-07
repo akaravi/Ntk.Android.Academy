@@ -16,13 +16,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ActArticleContentList;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.baseModel.theme.ThemeChildConfig;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.baseModel.theme.ThemeChildConfig;
 
 public class AdCoreButtonLinear extends RecyclerView.Adapter<AdCoreButtonLinear.ViewHolder> {
 
-    private List<ThemeChildConfig> childs;
-    private Context context;
+    private final List<ThemeChildConfig> childs;
+    private final Context context;
 
     public AdCoreButtonLinear(Context context, List<ThemeChildConfig> list) {
         this.childs = list;

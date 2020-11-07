@@ -26,14 +26,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ActDetailNews;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.news.entity.NewsContent;
-import ntk.base.api.news.model.NewsContentViewRequest;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.news.entity.NewsContent;
+import ntk.android.base.api.news.model.NewsContentViewRequest;
 
 public class AdNews extends RecyclerView.Adapter<AdNews.ViewHolder> {
 
-    private List<NewsContent> arrayList;
-    private Context context;
+    private final List<NewsContent> arrayList;
+    private final Context context;
 
     public AdNews(Context context, List<NewsContent> arrayList) {
         this.arrayList = arrayList;

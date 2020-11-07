@@ -7,7 +7,7 @@ import java.util.Objects;
 
 import ntk.android.academy.model.Notify;
 import ntk.android.academy.room.RoomDb;
-import ntk.android.academy.utill.PugPush;
+import ntk.android.base.utill.PugPush;
 
 /**
  * Created by Mehrdad Safari on 18-Jan-17.

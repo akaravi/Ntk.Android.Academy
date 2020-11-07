@@ -22,13 +22,13 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.AdDetailPoolCategory;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.pooling.interfase.IPooling;
-import ntk.base.api.pooling.model.PoolingContentListRequest;
-import ntk.base.api.pooling.model.PoolingContentListResponse;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.pooling.interfase.IPooling;
+import ntk.android.base.api.pooling.model.PoolingContentListRequest;
+import ntk.android.base.api.pooling.model.PoolingContentListResponse;
+import ntk.android.base.config.RetrofitManager;
 
 public class ActDetailPooling extends AppCompatActivity {
 

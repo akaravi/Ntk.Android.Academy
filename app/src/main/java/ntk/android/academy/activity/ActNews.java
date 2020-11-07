@@ -21,15 +21,15 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.AdNews;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.utill.EndlessRecyclerViewScrollListener;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.news.interfase.INews;
-import ntk.base.api.news.entity.NewsContent;
-import ntk.base.api.news.model.NewsContentListRequest;
-import ntk.base.api.news.model.NewsContentResponse;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.news.interfase.INews;
+import ntk.android.base.api.news.entity.NewsContent;
+import ntk.android.base.api.news.model.NewsContentListRequest;
+import ntk.android.base.api.news.model.NewsContentResponse;
+import ntk.android.base.config.RetrofitManager;
 
 public class ActNews extends AppCompatActivity {
 
@@ -40,7 +40,7 @@ public class ActNews extends AppCompatActivity {
     RecyclerView Rv;
 
     private int Total = 0;
-    private List<NewsContent> news = new ArrayList<>();
+    private final List<NewsContent> news = new ArrayList<>();
     private AdNews adapter;
 
     @Override

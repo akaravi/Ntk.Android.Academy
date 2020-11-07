@@ -14,14 +14,14 @@ import java.util.List;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
-import ntk.android.academy.utill.AppUtill;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.ticket.entity.TicketingAnswer;
+import ntk.android.base.utill.AppUtill;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.ticket.entity.TicketingAnswer;
 
 public class AdTicketAnswer extends RecyclerView.Adapter<AdTicketAnswer.ViewHolder> {
 
-    private List<TicketingAnswer> arrayList;
-    private Context context;
+    private final List<TicketingAnswer> arrayList;
+    private final Context context;
 
     public AdTicketAnswer(Context context, List<TicketingAnswer> arrayList) {
         this.arrayList = arrayList;

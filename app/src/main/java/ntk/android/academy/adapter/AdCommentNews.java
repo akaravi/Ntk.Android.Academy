@@ -21,22 +21,22 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.utill.AppUtill;
-import ntk.android.academy.utill.FontManager;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.utill.AppUtill;
+import ntk.android.base.utill.FontManager;
 
-import ntk.base.api.news.interfase.INews;
-import ntk.base.api.news.entity.NewsComment;
-import ntk.base.api.news.model.NewsCommentResponse;
-import ntk.base.api.news.model.NewsCommentViewRequest;
-import ntk.base.api.utill.NTKClientAction;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.api.news.interfase.INews;
+import ntk.android.base.api.news.entity.NewsComment;
+import ntk.android.base.api.news.model.NewsCommentResponse;
+import ntk.android.base.api.news.model.NewsCommentViewRequest;
+import ntk.android.base.api.utill.NTKClientAction;
+import ntk.android.base.config.RetrofitManager;
 
 public class AdCommentNews extends RecyclerView.Adapter<AdCommentNews.ViewHolder> {
 
-    private List<NewsComment> arrayList;
-    private Context context;
+    private final List<NewsComment> arrayList;
+    private final Context context;
 
     public AdCommentNews(Context context, List<NewsComment> arrayList) {
         this.arrayList = arrayList;

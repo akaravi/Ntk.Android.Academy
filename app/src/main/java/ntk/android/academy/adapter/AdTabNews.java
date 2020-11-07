@@ -15,13 +15,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.news.entity.NewsContentOtherInfo;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.news.entity.NewsContentOtherInfo;
 
 public class AdTabNews extends RecyclerView.Adapter<AdTabNews.ViewHolder> {
 
-    private List<NewsContentOtherInfo> arrayList;
-    private Context context;
+    private final List<NewsContentOtherInfo> arrayList;
+    private final Context context;
 
     public AdTabNews(Context context, List<NewsContentOtherInfo> arrayList) {
         this.arrayList = arrayList;

@@ -2,17 +2,15 @@ package ntk.android.academy.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.view.View;
-import android.widget.TextView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -20,7 +18,6 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -28,19 +25,19 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.AdTicket;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.utill.EndlessRecyclerViewScrollListener;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.ticket.interfase.ITicket;
-import ntk.base.api.ticket.model.TicketingListRequest;
-import ntk.base.api.ticket.model.TicketingListResponse;
-import ntk.base.api.ticket.entity.TicketingTask;
-import ntk.base.api.utill.NTKUtill;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.activity.BaseActivity;
+import ntk.android.base.api.ticket.entity.TicketingTask;
+import ntk.android.base.api.ticket.interfase.ITicket;
+import ntk.android.base.api.ticket.model.TicketingListRequest;
+import ntk.android.base.api.ticket.model.TicketingTaskResponse;
+import ntk.android.base.api.utill.NTKUtill;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.RetrofitManager;
+import ntk.android.base.utill.AppUtill;
+import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
 
 
-public class ActSupport extends AppCompatActivity {
+public class TicketListActivity extends BaseActivity {
 
     @BindView(R.id.recyclerFrSupport)
     RecyclerView Rv;
@@ -50,6 +47,9 @@ public class ActSupport extends AppCompatActivity {
 
     @BindView(R.id.RefreshTicket)
     SwipeRefreshLayout Refresh;
+
+    @BindView(R.id.mainLayoutActSupport)
+    CoordinatorLayout layout;
 
     private ArrayList<TicketingTask> tickets = new ArrayList<>();
     private AdTicket adapter;
@@ -66,7 +66,6 @@ public class ActSupport extends AppCompatActivity {
     }
 
     private void init() {
-        ((TextView) findViewById(R.id.lblStateActSupport)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
         Rv.setHasFixedSize(true);
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         Rv.setLayoutManager(manager);
@@ -117,51 +116,57 @@ public class ActSupport extends AppCompatActivity {
 
 
     private void HandelData(int i) {
-        RetrofitManager retro = new RetrofitManager(this);
-        ITicket iTicket = retro.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(ITicket.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager retro = new RetrofitManager(this);
+            ITicket iTicket = retro.getCachedRetrofit().create(ITicket.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-        TicketingListRequest request = new TicketingListRequest();
-        request.RowPerPage = 10;
-        request.CurrentPageNumber = i;
-        request.SortType = NTKUtill.Descnding_Sort;
-        request.SortColumn = "Id";
+            TicketingListRequest request = new TicketingListRequest();
+            request.RowPerPage = 10;
+            request.CurrentPageNumber = i;
+            request.SortType = NTKUtill.Descnding_Sort;
+            request.SortColumn = "Id";
+            switcher.showProgressView();
+            Observable<TicketingTaskResponse> Call = iTicket.GetTicketTaskActList(headers, request);
+            Call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<TicketingTaskResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
 
-        Observable<TicketingListResponse> Call = iTicket.GetTicketList(headers, request);
-        Call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<TicketingListResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+                        }
 
-                    }
-
-                    @Override
-                    public void onNext(TicketingListResponse model) {
-                        if (model.ListItems.isEmpty())
-                            findViewById(R.id.lblStateActSupport).setVisibility(View.VISIBLE);
-                        else{
-                            findViewById(R.id.lblStateActSupport).setVisibility(View.GONE);
+                        @Override
+                        public void onNext(TicketingTaskResponse model) {
                             tickets.addAll(model.ListItems);
                             adapter.notifyDataSetChanged();
                             TotalTag = model.TotalRowCount;
+
+                            if (TotalTag > 0)
+                                switcher.showContentView();
+                            else
+                                switcher.showEmptyView();
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(ActSupport.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
+                        @Override
+                        public void onError(Throwable e) {
+                            switcher.showErrorView("خطای سامانه مجددا تلاش کنید", () -> init());
 
-                    @Override
-                    public void onComplete() {
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            switcher.showErrorView("عدم دسترسی به اینترنت", () -> init());
+
+        }
     }
 
     @OnClick(R.id.FabFrSupport)
     public void ClickSendTicket() {
-        startActivity(new Intent(this, ActSendTicket.class));
+        startActivity(new Intent(this, NewTicketActivity.class));
     }
 }

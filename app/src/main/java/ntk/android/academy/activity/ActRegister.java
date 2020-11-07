@@ -39,16 +39,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.academy.event.EvMessage;
-import ntk.android.academy.utill.AppUtill;
-import ntk.android.academy.utill.EasyPreference;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.core.interfase.ICore;
-import ntk.base.api.core.model.CoreUserRegisterByMobileRequest;
-import ntk.base.api.core.model.CoreUserResponse;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.utill.AppUtill;
+import ntk.android.base.utill.EasyPreference;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.core.interfase.ICore;
+import ntk.android.base.api.core.model.CoreUserRegisterByMobileRequest;
+import ntk.android.base.api.core.model.CoreUserResponse;
+import ntk.android.base.config.RetrofitManager;
 
 public class ActRegister extends AppCompatActivity {
 
@@ -70,7 +70,7 @@ public class ActRegister extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         Boolean Registered = EasyPreference.with(ActRegister.this).getBoolean("Registered", false);
         if (Registered) {
-            startActivity(new Intent(ActRegister.this, ActMain.class));
+            startActivity(new Intent(ActRegister.this, MainActivity.class));
             finish();
         }
         super.onCreate(savedInstanceState);
@@ -154,7 +154,7 @@ public class ActRegister extends AppCompatActivity {
                             EasyPreference.with(ActRegister.this).addLong("SiteId", response.Item.SiteId);
                             EasyPreference.with(ActRegister.this).addBoolean("Registered", true);
 
-                            startActivity(new Intent(ActRegister.this, ActMain.class));
+                            startActivity(new Intent(ActRegister.this, MainActivity.class));
                             finish();
 
                         }
@@ -263,7 +263,7 @@ public class ActRegister extends AppCompatActivity {
     @OnClick(R.id.RowNoPhoneActRegister)
     public void ClickNoPhone() {
         EasyPreference.with(this).addString("register", "1");
-        startActivity(new Intent(this, ActMain.class));
+        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 

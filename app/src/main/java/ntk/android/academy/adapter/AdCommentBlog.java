@@ -21,21 +21,21 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.academy.config.ConfigRestHeader;
-import ntk.android.academy.config.ConfigStaticValue;
-import ntk.android.academy.utill.AppUtill;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.blog.interfase.IBlog;
-import ntk.base.api.blog.entity.BlogComment;
-import ntk.base.api.blog.model.BlogCommentResponse;
-import ntk.base.api.blog.model.BlogCommentViewRequest;
-import ntk.base.api.utill.NTKClientAction;
-import ntk.base.api.utill.RetrofitManager;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.utill.AppUtill;
+import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.blog.interfase.IBlog;
+import ntk.android.base.api.blog.entity.BlogComment;
+import ntk.android.base.api.blog.model.BlogCommentResponse;
+import ntk.android.base.api.blog.model.BlogCommentViewRequest;
+import ntk.android.base.api.utill.NTKClientAction;
+import ntk.android.base.config.RetrofitManager;
 
 public class AdCommentBlog extends RecyclerView.Adapter<AdCommentBlog.ViewHolder> {
 
-    private List<BlogComment> arrayList;
-    private Context context;
+    private final List<BlogComment> arrayList;
+    private final Context context;
 
     public AdCommentBlog(Context context, List<BlogComment> arrayList) {
         this.arrayList = arrayList;

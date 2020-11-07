@@ -11,7 +11,7 @@ import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 public class DefaultImageLoader implements MediaLoader {
-    private String Url;
+    private final String Url;
 
     public DefaultImageLoader(String url) {
         Url = url;

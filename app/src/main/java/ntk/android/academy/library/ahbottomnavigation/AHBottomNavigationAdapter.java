@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class AHBottomNavigationAdapter {
 
-	private Menu mMenu;
+	private final Menu mMenu;
 	private List<AHBottomNavigationItem> navigationItems;
 
 	/**

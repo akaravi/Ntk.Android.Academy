@@ -2,12 +2,13 @@ package ntk.android.academy.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -15,15 +16,15 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
-import ntk.android.academy.utill.FontManager;
-import ntk.base.api.ticket.entity.TicketingTask;
+import ntk.android.base.api.ticket.entity.TicketingFaq;
+import ntk.android.base.utill.FontManager;
 
-public class AdFaq extends RecyclerView.Adapter<AdFaq.ViewHolder> {
+public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.ViewHolder> {
 
-    private List<TicketingTask> arrayList;
+    private List<TicketingFaq> arrayList;
     private Context context;
 
-    public AdFaq(Context context, List<TicketingTask> arrayList) {
+    public FaqAdapter(Context context, List<TicketingFaq> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }
@@ -36,7 +37,6 @@ public class AdFaq extends RecyclerView.Adapter<AdFaq.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.Web.setTextDirection(View.TEXT_DIRECTION_RTL);
         holder.Lbls.get(0).setText(arrayList.get(position).Question);
         holder.Lbls.get(1).setText(arrayList.get(position).Answer);
         holder.Root.get(0).setOnClickListener(view -> {

@@ -16,13 +16,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
-import ntk.android.academy.event.EvRemoveAttach;
-import ntk.android.academy.utill.FontManager;
+import ntk.android.academy.event.RemoveAttachEvent;
+import ntk.android.base.utill.FontManager;
 
 public class AdAttach extends RecyclerView.Adapter<AdAttach.ViewHolder> {
 
-    private List<String> arrayList;
-    private Context context;
+    private final List<String> arrayList;
+    private final Context context;
 
     public AdAttach(Context context, List<String> arrayList) {
         this.arrayList = arrayList;
@@ -39,7 +39,7 @@ public class AdAttach extends RecyclerView.Adapter<AdAttach.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.Lbl.setText(arrayList.get(position));
         holder.Img.setOnClickListener(v ->
-                EventBus.getDefault().post(new EvRemoveAttach(position)));
+                EventBus.getDefault().post(new RemoveAttachEvent(position)));
     }
 
     @Override
