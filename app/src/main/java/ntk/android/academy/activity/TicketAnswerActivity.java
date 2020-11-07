@@ -51,6 +51,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import ntk.android.academy.adapter.AttachAdapter;
 import ntk.android.base.api.file.entity.FileUploadModel;
 import ntk.android.base.api.file.interfase.IFile;
 import ntk.android.base.api.ticket.entity.TicketingAnswer;
@@ -64,8 +65,7 @@ import ntk.android.base.config.RetrofitManager;
 import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.FontManager;
 import ntk.android.academy.R;
-import ntk.android.academy.adapter.AdAttach;
-import ntk.android.academy.adapter.AdTicketAnswer;
+import ntk.android.academy.adapter.TicketAnswerAdapter;
 import ntk.android.academy.event.RemoveAttachEvent;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -92,9 +92,9 @@ public class TicketAnswerActivity extends AppCompatActivity {
     Button btn;
 
     private ArrayList<TicketingAnswer> tickets = new ArrayList<>();
-    private AdTicketAnswer adapter;
+    private TicketAnswerAdapter adapter;
     private List<String> attaches = new ArrayList<>();
-    private AdAttach AdAtach;
+    private AttachAdapter AdAtach;
     private String linkFileIds = "";
     private static final int READ_REQUEST_CODE = 42;
 
@@ -131,7 +131,7 @@ public class TicketAnswerActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         Rvs.get(0).setLayoutManager(manager);
 
-        adapter = new AdTicketAnswer(this, tickets);
+        adapter = new TicketAnswerAdapter(this, tickets);
         Rvs.get(0).setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -139,7 +139,7 @@ public class TicketAnswerActivity extends AppCompatActivity {
 
         Rvs.get(1).setHasFixedSize(true);
         Rvs.get(1).setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-        AdAtach = new AdAttach(this, attaches);
+        AdAtach = new AttachAdapter(this, attaches);
         Rvs.get(1).setAdapter(AdAtach);
         AdAtach.notifyDataSetChanged();
     }

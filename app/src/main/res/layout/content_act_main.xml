@@ -23,7 +23,7 @@
         android:layout_above="@id/bottomNavMenu"
         android:background="@color/colorAccent" />
 
-    <ntk.android.academy.adapter.AdPager
+    <ntk.android.academy.adapter.PagerAdapter
         android:id="@+id/ViewPagerContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -20,44 +20,43 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.academy.adapter.BlogAdapter;
+import ntk.android.academy.adapter.NewsAdapter;
 import ntk.android.base.config.ConfigRestHeader;
 import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.blog.interfase.IBlog;
-import ntk.android.base.api.blog.entity.BlogContent;
-import ntk.android.base.api.blog.model.BlogContentListRequest;
-import ntk.android.base.api.blog.model.BlogContentListResponse;
+import ntk.android.base.api.news.interfase.INews;
+import ntk.android.base.api.news.entity.NewsContent;
+import ntk.android.base.api.news.model.NewsContentListRequest;
+import ntk.android.base.api.news.model.NewsContentResponse;
 import ntk.android.base.config.RetrofitManager;
 
-public class BlogActivity extends AppCompatActivity {
+public class NewsActivity extends AppCompatActivity {
 
-    @BindView(R.id.lblTitleActBlog)
+    @BindView(R.id.lblTitleActNews)
     TextView LblTitle;
 
-    @BindView(R.id.recyclerBlog)
+    @BindView(R.id.recyclerNews)
     RecyclerView Rv;
 
     private int Total = 0;
-    private final List<BlogContent> blogs = new ArrayList<>();
-    private BlogAdapter adapter;
+    private final List<NewsContent> news = new ArrayList<>();
+    private NewsAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_blog);
+        setContentView(R.layout.act_news);
         ButterKnife.bind(this);
         init();
     }
 
     private void init() {
         LblTitle.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        LblTitle.setText("مجلات آموزشی دورهمی");
         Rv.setHasFixedSize(true);
         LinearLayoutManager LMC = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         Rv.setLayoutManager(LMC);
-        adapter = new BlogAdapter(this, blogs);
+        adapter = new NewsAdapter(this, news);
         Rv.setAdapter(adapter);
 
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(LMC) {
@@ -76,35 +75,32 @@ public class BlogActivity extends AppCompatActivity {
 
     private void RestCall(int i) {
         RetrofitManager manager = new RetrofitManager(this);
-        IBlog iBlog = manager.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(IBlog.class);
+        INews iNews = manager.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(INews.class);
 
-        BlogContentListRequest request = new BlogContentListRequest();
+        NewsContentListRequest request = new NewsContentListRequest();
         request.RowPerPage = 20;
         request.CurrentPageNumber = i;
-        Observable<BlogContentListResponse> call = iBlog.GetContentList(new ConfigRestHeader().GetHeaders(this), request);
+        Observable<NewsContentResponse> call = iNews.GetContentList(new ConfigRestHeader().GetHeaders(this), request);
         call.observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BlogContentListResponse>() {
+                .subscribe(new Observer<NewsContentResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(BlogContentListResponse response) {
-                        if (response.IsSuccess) {
-                            blogs.addAll(response.ListItems);
-                            Total = response.TotalRowCount;
+                    public void onNext(NewsContentResponse newsContentResponse) {
+                        if (newsContentResponse.IsSuccess) {
+                            news.addAll(newsContentResponse.ListItems);
+                            Total = newsContentResponse.TotalRowCount;
                             adapter.notifyDataSetChanged();
-                        }else {
-                            Toasty.warning(BlogActivity.this, "موردی یافت نشد", Toasty.LENGTH_LONG, true).show();
-                            finish();
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Toasty.warning(BlogActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        Toasty.warning(NewsActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
 
                     }
 
@@ -115,7 +111,7 @@ public class BlogActivity extends AppCompatActivity {
                 });
     }
 
-    @OnClick(R.id.imgBackActBlog)
+    @OnClick(R.id.imgBackActNews)
     public void ClickBack() {
         finish();
     }

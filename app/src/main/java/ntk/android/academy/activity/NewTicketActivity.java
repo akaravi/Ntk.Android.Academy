@@ -55,6 +55,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import ntk.android.academy.adapter.AttachAdapter;
 import ntk.android.base.activity.BaseActivity;
 import ntk.android.base.api.baseModel.FilterModel;
 import ntk.android.base.api.file.entity.FileUploadModel;
@@ -73,8 +74,7 @@ import ntk.android.base.utill.EasyPreference;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.utill.Regex;
 import ntk.android.academy.R;
-import ntk.android.academy.adapter.AdAttach;
-import ntk.android.academy.adapter.AdSpinner;
+import ntk.android.academy.adapter.SpinnerAdapter;
 import ntk.android.academy.event.RemoveAttachEvent;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -119,7 +119,7 @@ public class NewTicketActivity extends BaseActivity {
     private MemberUserActAddRequest requestMember = new MemberUserActAddRequest();
     private List<String> attaches = new ArrayList<>();
     private List<String> fileId = new ArrayList<>();
-    private AdAttach adapter;
+    private AttachAdapter adapter;
 
     private static final int READ_REQUEST_CODE = 1520;
 
@@ -166,11 +166,11 @@ public class NewTicketActivity extends BaseActivity {
 
         Rv.setHasFixedSize(true);
         Rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-        adapter = new AdAttach(this, attaches);
+        adapter = new AttachAdapter(this, attaches);
         Rv.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        AdSpinner<String> adapter_state = new AdSpinner<>(this, R.layout.spinner_item, new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.StateTicket))));
+        SpinnerAdapter<String> adapter_state = new SpinnerAdapter<>(this, R.layout.spinner_item, new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.StateTicket))));
         spinners.get(1).setAdapter(adapter_state);
         spinners.get(1).setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -204,7 +204,7 @@ public class NewTicketActivity extends BaseActivity {
                         List<String> list = new ArrayList<>();
                         for (TicketingDepartemen td : model.ListItems) {
                             list.add(td.Title);
-                            AdSpinner<String> adapter_dpartman = new AdSpinner<>(NewTicketActivity.this, R.layout.spinner_item, list);
+                            SpinnerAdapter<String> adapter_dpartman = new SpinnerAdapter<>(NewTicketActivity.this, R.layout.spinner_item, list);
                             spinners.get(0).setAdapter(adapter_dpartman);
                         }
                     }

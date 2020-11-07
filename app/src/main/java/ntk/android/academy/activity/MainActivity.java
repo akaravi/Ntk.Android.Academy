@@ -42,18 +42,18 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.BuildConfig;
 import ntk.android.academy.R;
-import ntk.android.academy.adapter.AdFragment;
-import ntk.android.academy.adapter.AdPager;
-import ntk.android.academy.adapter.drawer.AdDrawer;
-import ntk.android.academy.adapter.toolbar.AdToobar;
+import ntk.android.academy.adapter.FragmentAdapter;
+import ntk.android.academy.adapter.PagerAdapter;
+import ntk.android.academy.adapter.drawer.DrawerAdapter;
+import ntk.android.academy.adapter.toolbar.ToolbarAdapter;
+import ntk.android.academy.fragment.BmiFragment;
+import ntk.android.academy.fragment.CommandFragment;
+import ntk.android.academy.fragment.FavoriteFragment;
 import ntk.android.base.config.ConfigRestHeader;
 import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.academy.event.toolbar.EVHamberMenuClick;
 import ntk.android.academy.event.toolbar.EVSearchClick;
-import ntk.android.academy.fragment.FrBmi;
-import ntk.android.academy.fragment.FrCommand;
-import ntk.android.academy.fragment.FrFav;
-import ntk.android.academy.fragment.FrHome;
+import ntk.android.academy.fragment.HomeFragment;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigation;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigationItem;
 import ntk.android.base.utill.AppUtill;
@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     AHBottomNavigation navigation;
 
     @BindView(R.id.ViewPagerContainer)
-    AdPager pager;
+    PagerAdapter pager;
 
     @BindView(R.id.drawerlayout)
     FlowingDrawer drawer;
@@ -130,11 +130,11 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         navigation.setOnTabSelectedListener(this);
         navigation.setColored(false);
 
-        AdFragment adapter = new AdFragment(getSupportFragmentManager());
-        adapter.addFragment(new FrCommand());
-        adapter.addFragment(new FrHome());
-        adapter.addFragment(new FrFav());
-        adapter.addFragment(new FrBmi());
+        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
+        adapter.addFragment(new CommandFragment());
+        adapter.addFragment(new HomeFragment());
+        adapter.addFragment(new FavoriteFragment());
+        adapter.addFragment(new BmiFragment());
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(2);
         pager.setCurrentItem(1, false);
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         RvToolbar.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         List<Toolbar> toolbars = new ArrayList<>();
         toolbars.add(theme.Toolbar);
-        AdToobar AdToobar = new AdToobar(this, toolbars);
+        ToolbarAdapter AdToobar = new ToolbarAdapter(this, toolbars);
         RvToolbar.setAdapter(AdToobar);
         AdToobar.notifyDataSetChanged();
 
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
         RvDrawer.setHasFixedSize(true);
         RvDrawer.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        AdDrawer AdDrawer = new AdDrawer(this, theme.Toolbar.Drawer.Child, drawer);
+        DrawerAdapter AdDrawer = new DrawerAdapter(this, theme.Toolbar.Drawer.Child, drawer);
         RvDrawer.setAdapter(AdDrawer);
         AdDrawer.notifyDataSetChanged();
     }
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     @Subscribe
     public void EvClickSearch(EVSearchClick click) {
-        startActivity(new Intent(this, ActSearch.class));
+        startActivity(new Intent(this, ArticleSearchActivity.class));
     }
 
     @Subscribe

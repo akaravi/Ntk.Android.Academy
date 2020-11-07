@@ -24,7 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.academy.adapter.AdTicket;
+import ntk.android.academy.adapter.TicketAdapter;
 import ntk.android.base.activity.BaseActivity;
 import ntk.android.base.api.ticket.entity.TicketingTask;
 import ntk.android.base.api.ticket.interfase.ITicket;
@@ -52,7 +52,7 @@ public class TicketListActivity extends BaseActivity {
     CoordinatorLayout layout;
 
     private ArrayList<TicketingTask> tickets = new ArrayList<>();
-    private AdTicket adapter;
+    private TicketAdapter adapter;
 
     private EndlessRecyclerViewScrollListener scrollListener;
     private int TotalTag = 0;
@@ -70,7 +70,7 @@ public class TicketListActivity extends BaseActivity {
         LinearLayoutManager manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         Rv.setLayoutManager(manager);
 
-        adapter = new AdTicket(this, tickets);
+        adapter = new TicketAdapter(this, tickets);
         Rv.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 

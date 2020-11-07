@@ -47,79 +47,100 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.academy.adapter.CommentBlogAdapter;
-import ntk.android.academy.adapter.TabBlogAdapter;
+import ntk.android.academy.adapter.ArticleAdapter;
+import ntk.android.academy.adapter.CommentAdapter;
+import ntk.android.academy.adapter.TabAdapter;
 import ntk.android.base.config.ConfigRestHeader;
 import ntk.android.base.config.ConfigStaticValue;
-import ntk.android.academy.event.HtmlBodyBlogEvent;
+import ntk.android.academy.event.HtmlBodyEvent;
 import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.EasyPreference;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.blog.interfase.IBlog;
-import ntk.android.base.api.blog.model.BlogCommentAddRequest;
-import ntk.android.base.api.blog.model.BlogCommentListRequest;
-import ntk.android.base.api.blog.model.BlogCommentResponse;
-import ntk.android.base.api.blog.model.BlogContentFavoriteAddRequest;
-import ntk.android.base.api.blog.model.BlogContentFavoriteAddResponse;
-import ntk.android.base.api.blog.model.BlogContentFavoriteRemoveRequest;
-import ntk.android.base.api.blog.model.BlogContentFavoriteRemoveResponse;
-import ntk.android.base.api.blog.entity.BlogContentOtherInfo;
-import ntk.android.base.api.blog.model.BlogContentOtherInfoListRequest;
-import ntk.android.base.api.blog.model.BlogContentOtherInfoListResponse;
-import ntk.android.base.api.blog.model.BlogContentResponse;
-import ntk.android.base.api.blog.model.BlogContentViewRequest;
+import ntk.android.base.api.article.interfase.IArticle;
+import ntk.android.base.api.article.model.ArticleCommentAddRequest;
+import ntk.android.base.api.article.model.ArticleCommentListRequest;
+import ntk.android.base.api.article.model.ArticleCommentResponse;
+import ntk.android.base.api.article.model.ArticleContentCategoryListRequest;
+import ntk.android.base.api.article.model.ArticleContentFavoriteAddRequest;
+import ntk.android.base.api.article.model.ArticleContentFavoriteAddResponse;
+import ntk.android.base.api.article.model.ArticleContentFavoriteRemoveRequest;
+import ntk.android.base.api.article.model.ArticleContentFavoriteRemoveResponse;
+import ntk.android.base.api.article.entity.ArticleContentOtherInfo;
+import ntk.android.base.api.article.model.ArticleContentOtherInfoRequest;
+import ntk.android.base.api.article.model.ArticleContentOtherInfoResponse;
+import ntk.android.base.api.article.model.ArticleContentResponse;
+import ntk.android.base.api.article.model.ArticleContentSimilarListRequest;
+import ntk.android.base.api.article.model.ArticleContentViewRequest;
 import ntk.android.base.api.core.entity.CoreMain;
+import ntk.android.base.api.baseModel.ErrorException;
 import ntk.android.base.api.baseModel.Filters;
 import ntk.android.base.config.RetrofitManager;
 
-public class BlogDetailActivity extends AppCompatActivity {
+public class ArticleDetailActivity extends AppCompatActivity {
 
-    @BindView(R.id.progressActDetailBlog)
+    @BindView(R.id.progressActDetail)
     ProgressBar Progress;
 
-    @BindView(R.id.rowProgressActDetailBlog)
+    @BindView(R.id.rowProgressActDetail)
     LinearLayout Loading;
 
-    @BindViews({R.id.lblTitleActDetailBlog,
-            R.id.lblNameCommandActDetailBlog,
-            R.id.lblKeySeenActDetailBlog,
-            R.id.lblValueSeenActDetailBlog,
-            R.id.lblCommentActDetailBlog,
-            R.id.lblProgressActDetailBlog
+    @BindViews({R.id.lblTitleActDetail,
+            R.id.lblNameCommandActDetail,
+            R.id.lblKeySeenActDetail,
+            R.id.lblValueSeenActDetail,
+            R.id.lblPhotoExtraActDetail,
+            R.id.lblCalActDetail,
+            R.id.lblTimerOne,
+            R.id.lblTimerTwo,
+            R.id.lblTimerThree,
+            R.id.lblTimerFour,
+            R.id.lblTimerFive,
+            R.id.lblTimerSix,
+            R.id.lblMenuActDetail,
+            R.id.lblMenuTwoActDetail,
+            R.id.lblCommentActDetail,
+            R.id.lblProgressActDetail
     })
     List<TextView> Lbls;
 
-    @BindView(R.id.imgHeaderActDetailBlog)
+    @BindView(R.id.imgHeaderActDetail)
     ImageView ImgHeader;
 
-    @BindView(R.id.WebViewActDetailBlog)
+    @BindView(R.id.recyclerMenuActDetail)
+    RecyclerView RvSimilarArticle;
+
+    @BindView(R.id.recyclerMenuTwoActDetail)
+    RecyclerView RvSimilarCategory;
+
+    @BindView(R.id.WebViewActDetail)
     WebView webView;
 
-    @BindView(R.id.recyclerTabActDetailBlog)
+    @BindView(R.id.recyclerTabActDetail)
     RecyclerView RvTab;
 
-    @BindView(R.id.recyclerCommentActDetailBlog)
+    @BindView(R.id.recyclerCommentActDetail)
     RecyclerView RvComment;
 
-    @BindView(R.id.ratingBarActDetailBlog)
+    @BindView(R.id.ratingBarActDetail)
     RatingBar Rate;
 
-    @BindView(R.id.PageActDetailBlog)
+    @BindView(R.id.PageActDetail)
     LinearLayout Page;
 
-    @BindView(R.id.mainLayoutActDetailBlog)
+
+    @BindView(R.id.mainLayoutActDetail)
     CoordinatorLayout layout;
 
     private String RequestStr;
-    private BlogContentResponse model;
-    private BlogContentOtherInfoListResponse Info;
-    private BlogContentViewRequest Request;
+    private ArticleContentResponse model;
+    private ArticleContentOtherInfoResponse Info;
+    private ArticleContentViewRequest Request;
     private ConfigStaticValue configStaticValue;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_detail_blog);
+        setContentView(R.layout.act_detail);
         ButterKnife.bind(this);
         configStaticValue = new ConfigStaticValue(this);
         init();
@@ -136,19 +157,26 @@ public class BlogDetailActivity extends AppCompatActivity {
         RvTab.setHasFixedSize(true);
         RvTab.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
         RequestStr = getIntent().getExtras().getString("Request");
-        Request = new Gson().fromJson(RequestStr, BlogContentViewRequest.class);
+        Request = new Gson().fromJson(RequestStr, ArticleContentViewRequest.class);
         HandelDataContent(Request);
         Loading.setVisibility(View.VISIBLE);
 
         RvComment.setHasFixedSize(true);
         RvComment.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
+        RvSimilarArticle.setHasFixedSize(true);
+        RvSimilarArticle.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+
+        RvSimilarCategory.setHasFixedSize(true);
+        RvSimilarCategory.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
+
         Rate.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
                 if (!fromUser) return;
-                if (AppUtill.isNetworkAvailable(BlogDetailActivity.this)) {
-                    BlogContentViewRequest request = new BlogContentViewRequest();
+
+                if (AppUtill.isNetworkAvailable(ArticleDetailActivity.this)) {
+                    ArticleContentViewRequest request = new ArticleContentViewRequest();
                     request.Id = Request.Id;
                     request.ActionClientOrder = 55;
                     if (rating == 0.5) {
@@ -181,26 +209,26 @@ public class BlogDetailActivity extends AppCompatActivity {
                     if (rating == 5) {
                         request.ScorePercent = 100;
                     }
-                    RetrofitManager manager = new RetrofitManager(BlogDetailActivity.this);
-                    IBlog iNews = manager.getRetrofitUnCached(new ConfigStaticValue(BlogDetailActivity.this).GetApiBaseUrl()).create(IBlog.class);
-                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(BlogDetailActivity.this);
+                    RetrofitManager manager = new RetrofitManager(ArticleDetailActivity.this);
+                    IArticle iArticle = manager.getRetrofitUnCached(new ConfigStaticValue(ArticleDetailActivity.this).GetApiBaseUrl()).create(IArticle.class);
+                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(ArticleDetailActivity.this);
 
-                    Observable<BlogContentResponse> Call = iNews.GetContentView(headers, request);
+                    Observable<ArticleContentResponse> Call = iArticle.GetContentView(headers, request);
                     Call.observeOn(AndroidSchedulers.mainThread())
                             .subscribeOn(Schedulers.io())
-                            .subscribe(new Observer<BlogContentResponse>() {
+                            .subscribe(new Observer<ArticleContentResponse>() {
                                 @Override
                                 public void onSubscribe(Disposable d) {
 
                                 }
 
                                 @Override
-                                public void onNext(BlogContentResponse response) {
+                                public void onNext(ArticleContentResponse response) {
                                     Loading.setVisibility(View.GONE);
                                     if (response.IsSuccess) {
-                                        Toasty.success(BlogDetailActivity.this, "نظر شمابا موفقیت ثبت گردید").show();
+                                        Toasty.success(ArticleDetailActivity.this, "نظر شمابا موفقیت ثبت گردید").show();
                                     } else {
-                                        Toasty.warning(BlogDetailActivity.this, response.ErrorMessage).show();
+                                        Toasty.warning(ArticleDetailActivity.this, response.ErrorMessage).show();
                                     }
                                 }
 
@@ -234,29 +262,32 @@ public class BlogDetailActivity extends AppCompatActivity {
     }
 
 
-    private void HandelDataContent(BlogContentViewRequest request) {
+    private void HandelDataContent(ArticleContentViewRequest request) {
         if (AppUtill.isNetworkAvailable(this)) {
             RetrofitManager retro = new RetrofitManager(this);
-            IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
+            IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
             Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-            Observable<BlogContentResponse> call = iNews.GetContentView(headers, request);
+            Observable<ArticleContentResponse> call = iArticle.GetContentView(headers, request);
             call.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BlogContentResponse>() {
+                    .subscribe(new Observer<ArticleContentResponse>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onNext(BlogContentResponse ContentResponse) {
-                            Loading.setVisibility(View.GONE);
-                            model = ContentResponse;
-                            SetData(model);
-                            if (Request.Id > 0) {
-                                HandelDataContentOtherInfo(Request.Id);
-                                HandelDataComment(Request.Id);
+                        public void onNext(ArticleContentResponse articleContentResponse) {
+                            model = articleContentResponse;
+                            if (model.Item != null) {
+                                SetData(model);
+                                HandelSimilary(Request.Id);
+                                HandelSimilaryCategory(Request.Id);
+                                if (Request.Id > 0) {
+                                    HandelDataContentOtherInfo(Request.Id);
+                                    HandelDataComment(Request.Id);
+                                }
                             }
                             Loading.setVisibility(View.GONE);
                             Page.setVisibility(View.VISIBLE);
@@ -265,12 +296,107 @@ public class BlogDetailActivity extends AppCompatActivity {
                         @Override
                         public void onError(Throwable e) {
                             Loading.setVisibility(View.GONE);
-                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    init();
-                                }
-                            }).show();
+                            Toasty.warning(ArticleDetailActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
+    }
+
+    private void HandelSimilary(long id) {
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager manager = new RetrofitManager(this);
+            IArticle iArticle = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IArticle.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+
+            ArticleContentSimilarListRequest request = new ArticleContentSimilarListRequest();
+            request.LinkContetnId = id;
+
+            Observable<ArticleContentResponse> call = iArticle.GetContentSimilarList(headers, request);
+            call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<ArticleContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(ArticleContentResponse response) {
+                            if (response.ListItems.size() == 0) {
+                                findViewById(R.id.RowSimilaryActDetail).setVisibility(View.GONE);
+                            } else {
+                                ArticleAdapter adapter = new ArticleAdapter(ArticleDetailActivity.this, response.ListItems);
+                                RvSimilarArticle.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
+                                findViewById(R.id.RowSimilaryActDetail).setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
+    }
+
+    private void HandelSimilaryCategory(long id) {
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager manager = new RetrofitManager(this);
+            IArticle iArticle = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IArticle.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+
+            ArticleContentCategoryListRequest request = new ArticleContentCategoryListRequest();
+            request.LinkContetnId = id;
+
+            Observable<ArticleContentResponse> call = iArticle.GetContentCategoryList(headers, request);
+            call.observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new Observer<ArticleContentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(ArticleContentResponse response) {
+                            if (response.ListItems.size() == 0) {
+                                findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.GONE);
+                            } else {
+                                findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.VISIBLE);
+                                ArticleAdapter adapter = new ArticleAdapter(ArticleDetailActivity.this, response.ListItems);
+                                RvSimilarCategory.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
                         }
 
                         @Override
@@ -291,39 +417,41 @@ public class BlogDetailActivity extends AppCompatActivity {
     private void HandelDataComment(long ContentId) {
         if (AppUtill.isNetworkAvailable(this)) {
             List<Filters> filters = new ArrayList<>();
-            BlogCommentListRequest Request = new BlogCommentListRequest();
+            ArticleCommentListRequest Request = new ArticleCommentListRequest();
             Filters f = new Filters();
             f.PropertyName = "LinkContentId";
             f.IntValue1 = ContentId;
             filters.add(f);
             Request.filters = filters;
             RetrofitManager retro = new RetrofitManager(this);
-            IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
+            IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
             Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-            Observable<BlogCommentResponse> call = iNews.GetCommentList(headers, Request);
+            Observable<ArticleCommentResponse> call = iArticle.GetCommentList(headers, Request);
             call.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<BlogCommentResponse>() {
+                    .subscribe(new Observer<ArticleCommentResponse>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onNext(BlogCommentResponse model) {
+                        public void onNext(ArticleCommentResponse model) {
                             if (model.IsSuccess) {
-                                findViewById(R.id.lblCommentActDetailBlog).setVisibility(View.VISIBLE);
-                                CommentBlogAdapter adapter = new CommentBlogAdapter(BlogDetailActivity.this, model.ListItems);
-                                RvComment.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                findViewById(R.id.lblCommentActDetailBlog).setVisibility(View.GONE);
+                                if (model.ListItems.size() == 0) {
+                                    findViewById(R.id.RowCommentActDetail).setVisibility(View.GONE);
+                                } else {
+                                    CommentAdapter adapter = new CommentAdapter(ArticleDetailActivity.this, model.ListItems);
+                                    RvComment.setAdapter(adapter);
+                                    adapter.notifyDataSetChanged();
+                                    findViewById(R.id.RowCommentActDetail).setVisibility(View.VISIBLE);
+                                }
                             }
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Toasty.warning(BlogDetailActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                            Toasty.warning(ArticleDetailActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                         }
 
                         @Override
@@ -342,54 +470,48 @@ public class BlogDetailActivity extends AppCompatActivity {
     }
 
     private void HandelDataContentOtherInfo(long ContentId) {
-        if (AppUtill.isNetworkAvailable(this)) {
-            List<Filters> filters = new ArrayList<>();
-            BlogContentOtherInfoListRequest Request = new BlogContentOtherInfoListRequest();
-            Filters f = new Filters();
-            f.PropertyName = "LinkContentId";
-            f.IntValue1 = ContentId;
-            filters.add(f);
-            Request.filters = filters;
-            RetrofitManager retro = new RetrofitManager(this);
-            IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+
+        List<Filters> filters = new ArrayList<>();
+        ArticleContentOtherInfoRequest Request = new ArticleContentOtherInfoRequest();
+        Filters f = new Filters();
+        f.PropertyName = "LinkContentId";
+        f.IntValue1 = ContentId;
+        filters.add(f);
+        Request.filters = filters;
+        RetrofitManager retro = new RetrofitManager(this);
+        IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
+        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
 
-            Observable<BlogContentOtherInfoListResponse> call = iNews.GetContentOtherInfoList(headers, Request);
-            call.observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BlogContentOtherInfoListResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
+        Observable<ArticleContentOtherInfoResponse> call = iArticle.GetContentOtherInfoList(headers, Request);
+        call.observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<ArticleContentOtherInfoResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onNext(BlogContentOtherInfoListResponse ContentOtherInfoResponse) {
-                            SetDataOtherinfo(ContentOtherInfoResponse);
-                        }
+                    @Override
+                    public void onNext(ArticleContentOtherInfoResponse articleContentOtherInfoResponse) {
+                        SetDataOtherinfo(articleContentOtherInfoResponse);
+                    }
 
-                        @Override
-                        public void onError(Throwable e) {
-                            Toasty.warning(BlogDetailActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                        }
+                    @Override
+                    public void onError(Throwable e) {
+                        Toasty.warning(ArticleDetailActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                    }
 
-                        @Override
-                        public void onComplete() {
+                    @Override
+                    public void onComplete() {
 
-                        }
-                    });
-        } else {
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    init();
-                }
-            }).show();
-        }
+                    }
+                });
+
+
     }
 
-    private void SetDataOtherinfo(BlogContentOtherInfoListResponse model) {
+    private void SetDataOtherinfo(ArticleContentOtherInfoResponse model) {
         Info = model;
         if (model.ListItems == null || model.ListItems.size() == 0) {
             findViewById(R.id.RowTimeActDetail).setVisibility(View.GONE);
@@ -397,9 +519,15 @@ public class BlogDetailActivity extends AppCompatActivity {
             p.weight = 3;
             return;
         }
-        List<BlogContentOtherInfo> Info = new ArrayList<>();
+        findViewById(R.id.RowTimeActDetail).setVisibility(View.GONE);
+        List<ArticleContentOtherInfo> Info = new ArrayList<>();
+        ArticleContentOtherInfo i = new ArticleContentOtherInfo();
+        i.Title = "طرز تهیه";
+        i.TypeId = 0;
+        i.HtmlBody = this.model.Item.Body;
+        Info.add(i);
 
-        for (BlogContentOtherInfo ai : model.ListItems) {
+        for (ArticleContentOtherInfo ai : model.ListItems) {
             switch (ai.TypeId) {
                 case 21:
                     Lbls.get(7).setText(ai.Title);
@@ -427,16 +555,12 @@ public class BlogDetailActivity extends AppCompatActivity {
                     break;
             }
         }
-        TabBlogAdapter adapter = new TabBlogAdapter(BlogDetailActivity.this, Info);
+        TabAdapter adapter = new TabAdapter(ArticleDetailActivity.this, Info);
         RvTab.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
 
-    private void SetData(BlogContentResponse model) {
-        ImageLoader.getInstance().displayImage(model.Item.imageSrc, ImgHeader);
-        Lbls.get(0).setText(model.Item.Title);
-        Lbls.get(1).setText(model.Item.Title);
-        Lbls.get(3).setText(String.valueOf(model.Item.viewCount));
+    private void SetData(ArticleContentResponse model) {
         double rating = 0.0;
         int sumClick = model.Item.ScoreSumClick;
         if (model.Item.ScoreSumClick == 0) sumClick = 1;
@@ -462,18 +586,38 @@ public class BlogDetailActivity extends AppCompatActivity {
             rating = 5.0;
         }
         Rate.setRating((float) rating);
+        ImageLoader.getInstance().displayImage(model.Item.imageSrc, ImgHeader);
+        Lbls.get(0).setText(model.Item.Title);
+        Lbls.get(1).setText(model.Item.Title);
+        Lbls.get(3).setText(String.valueOf(model.Item.viewCount));
         if (model.Item.Favorited) {
             ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
         }
     }
 
-    @OnClick(R.id.imgBackActDetailBlog)
+    @OnClick(R.id.imgBackActDetail)
     public void ClickBack() {
         finish();
     }
 
+    @OnClick(R.id.RowGalleryActDetail)
+    public void ClickGalley() {
+        if (model.Item.LinkFileIdsSrc != null && model.Item.LinkFileIdsSrc.size() != 0) {
+            String request = "";
+            for (String s : model.Item.LinkFileIdsSrc) {
+                if (!request.equals("")) {
+                    request = request + "@";
+                }
+                request = request + s;
+            }
+            Intent intent = new Intent(this, PhotoGalleryActivity.class);
+            intent.putExtra("Request", request);
+            startActivity(intent);
+        }
+    }
+
     @Subscribe
-    public void EventHtmlBody(HtmlBodyBlogEvent event) {
+    public void EventHtmlBody(HtmlBodyEvent event) {
         webView.loadData("<html dir=\"rtl\" lang=\"\"><body>" + event.GetMessage() + "</body></html>", "text/html; charset=utf-8", "UTF-8");
     }
 
@@ -489,7 +633,7 @@ public class BlogDetailActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    @OnClick(R.id.imgCommentActDetailBlog)
+    @OnClick(R.id.imgCommentActDetail)
     public void ClickCommentAdd() {
         if (AppUtill.isNetworkAvailable(this)) {
             final Dialog dialog = new Dialog(this);
@@ -516,37 +660,37 @@ public class BlogDetailActivity extends AppCompatActivity {
 
             Btn.setOnClickListener(v -> {
                 if (Txt[0].getText().toString().isEmpty()) {
-                    Toast.makeText(BlogDetailActivity.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ArticleDetailActivity.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
                 } else {
                     if (Txt[1].getText().toString().isEmpty()) {
-                        Toast.makeText(BlogDetailActivity.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ArticleDetailActivity.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
                     } else {
-                        BlogCommentAddRequest add = new BlogCommentAddRequest();
+                        ArticleCommentAddRequest add = new ArticleCommentAddRequest();
                         add.Writer = Txt[0].getText().toString();
                         add.Comment = Txt[1].getText().toString();
                         add.LinkContentId = Request.Id;
                         RetrofitManager retro = new RetrofitManager(this);
-                        IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
+                        IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
                         Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
 
-                        Observable<BlogCommentResponse> call = iNews.SetComment(headers, add);
+                        Observable<ArticleCommentResponse> call = iArticle.SetComment(headers, add);
                         call.subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Observer<BlogCommentResponse>() {
+                                .subscribe(new Observer<ErrorException>() {
                                     @Override
                                     public void onSubscribe(Disposable d) {
 
                                     }
 
                                     @Override
-                                    public void onNext(BlogCommentResponse e) {
+                                    public void onNext(ErrorException e) {
                                         if (e.IsSuccess) {
                                             HandelDataComment(Request.Id);
                                             dialog.dismiss();
-                                            Toasty.success(BlogDetailActivity.this, "نظر شما با موفقیت ثبت شد").show();
+                                            Toasty.success(ArticleDetailActivity.this, "نظر شما با موفقیت ثبت شد").show();
                                         } else {
-                                            Toasty.warning(BlogDetailActivity.this, "لطفا مجددا تلاش کنید").show();
+                                            Toasty.warning(ArticleDetailActivity.this, "لطفا مجددا تلاش کنید").show();
                                         }
                                     }
 
@@ -579,7 +723,7 @@ public class BlogDetailActivity extends AppCompatActivity {
         }
     }
 
-    @OnClick(R.id.imgFavActDetailBlog)
+    @OnClick(R.id.imgFavActDetail)
     public void ClickFav() {
         if (!model.Item.Favorited) {
             Fav();
@@ -588,82 +732,28 @@ public class BlogDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void Fav() {
-        if (AppUtill.isNetworkAvailable(this)) {
-            RetrofitManager retro = new RetrofitManager(this);
-            IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-
-            BlogContentFavoriteAddRequest add = new BlogContentFavoriteAddRequest();
-            add.Id = model.Item.Id;
-
-            Observable<BlogContentFavoriteAddResponse> Call = iNews.SetContentFavoriteAdd(headers, add);
-            Call.subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BlogContentFavoriteAddResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(BlogContentFavoriteAddResponse e) {
-                            if (e.IsSuccess) {
-                                Toasty.success(BlogDetailActivity.this, "با موفقیت ثبت شد").show();
-                                model.Item.Favorited = !model.Item.Favorited;
-                                if (model.Item.Favorited) {
-                                    ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
-                                } else {
-                                    ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
-                                }
-                            } else {
-                                Toasty.error(BlogDetailActivity.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
-                            }
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-                            Toasty.warning(BlogDetailActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                        }
-
-                        @Override
-                        public void onComplete() {
-
-                        }
-                    });
-        } else {
-            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    init();
-                }
-            }).show();
-        }
-    }
-
     private void UnFav() {
         if (AppUtill.isNetworkAvailable(this)) {
             RetrofitManager retro = new RetrofitManager(this);
-            IBlog iNews = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IBlog.class);
+            IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
             Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-            BlogContentFavoriteRemoveRequest add = new BlogContentFavoriteRemoveRequest();
+            ArticleContentFavoriteRemoveRequest add = new ArticleContentFavoriteRemoveRequest();
             add.Id = model.Item.Id;
 
-            Observable<BlogContentFavoriteRemoveResponse> Call = iNews.SetContentFavoriteRemove(headers, add);
+            Observable<ArticleContentFavoriteRemoveResponse> Call = iArticle.SetContentFavoriteRemove(headers, add);
             Call.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<BlogContentFavoriteRemoveResponse>() {
+                    .subscribe(new Observer<ArticleContentFavoriteRemoveResponse>() {
                         @Override
                         public void onSubscribe(Disposable d) {
 
                         }
 
                         @Override
-                        public void onNext(BlogContentFavoriteRemoveResponse e) {
+                        public void onNext(ArticleContentFavoriteRemoveResponse e) {
                             if (e.IsSuccess) {
-                                Toasty.success(BlogDetailActivity.this, "با موفقیت ثبت شد").show();
+                                Toasty.success(ArticleDetailActivity.this, "با موفقیت ثبت شد").show();
                                 model.Item.Favorited = !model.Item.Favorited;
                                 if (model.Item.Favorited) {
                                     ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
@@ -671,14 +761,19 @@ public class BlogDetailActivity extends AppCompatActivity {
                                     ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
                                 }
                             } else {
-                                Toasty.error(BlogDetailActivity.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                                Toasty.error(ArticleDetailActivity.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                             }
 
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Toasty.warning(BlogDetailActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
                         }
 
                         @Override
@@ -696,8 +791,66 @@ public class BlogDetailActivity extends AppCompatActivity {
         }
     }
 
+    private void Fav() {
+        if (AppUtill.isNetworkAvailable(this)) {
+            RetrofitManager retro = new RetrofitManager(this);
+            IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-    @OnClick(R.id.imgShareActDetailBlog)
+            ArticleContentFavoriteAddRequest add = new ArticleContentFavoriteAddRequest();
+            add.Id = model.Item.Id;
+
+            Observable<ArticleContentFavoriteAddResponse> Call = iArticle.SetContentFavoriteAdd(headers, add);
+            Call.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<ArticleContentFavoriteAddResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(ArticleContentFavoriteAddResponse e) {
+                            if (e.IsSuccess) {
+                                Toasty.success(ArticleDetailActivity.this, "با موفقیت ثبت شد").show();
+                                model.Item.Favorited = !model.Item.Favorited;
+                                if (model.Item.Favorited) {
+                                    ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
+                                } else {
+                                    ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav);
+                                }
+                            } else {
+                                Toasty.error(ArticleDetailActivity.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
+                            }
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    init();
+                                }
+                            }).show();
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        } else {
+            Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    init();
+                }
+            }).show();
+        }
+    }
+
+    @OnClick(R.id.imgShareActDetail)
     public void ClickShare() {
         String st = EasyPreference.with(this).getString("configapp", "");
         CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
@@ -715,4 +868,13 @@ public class BlogDetailActivity extends AppCompatActivity {
         this.startActivity(Intent.createChooser(shareIntent, "به اشتراک گزاری با...."));
     }
 
+    @OnClick(R.id.playActDetail)
+    public void onPlayClick() {
+        Toasty.warning(ArticleDetailActivity.this, "موردی یافت نشد").show();
+    }
+
+    @OnClick(R.id.calActDetail)
+    public void onCalClick() {
+        Toasty.warning(ArticleDetailActivity.this, "موردی یافت نشد").show();
+    }
 }
