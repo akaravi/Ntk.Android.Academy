@@ -1,43 +1,37 @@
 package ntk.android.academy.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.base.config.ConfigRestHeader;
-import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.config.NtkObserver;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.entitymodel.blog.BlogCommentModel;
+import ntk.android.base.services.blog.BlogCommentService;
 import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.blog.interfase.IBlog;
-import ntk.android.base.api.blog.entity.BlogComment;
-import ntk.android.base.api.blog.model.BlogCommentResponse;
-import ntk.android.base.api.blog.model.BlogCommentViewRequest;
-import ntk.android.base.api.utill.NTKClientAction;
-import ntk.android.base.config.RetrofitManager;
 
 public class CommentBlogAdapter extends RecyclerView.Adapter<CommentBlogAdapter.ViewHolder> {
 
-    private final List<BlogComment> arrayList;
+    private final List<BlogCommentModel> arrayList;
     private final Context context;
 
-    public CommentBlogAdapter(Context context, List<BlogComment> arrayList) {
+    public CommentBlogAdapter(Context context, List<BlogCommentModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }
@@ -61,23 +55,14 @@ public class CommentBlogAdapter extends RecyclerView.Adapter<CommentBlogAdapter.
         holder.Lbls.get(4).setText(String.valueOf(arrayList.get(position).Comment));
 
         holder.ImgLike.setOnClickListener(v -> {
-            BlogCommentViewRequest request = new BlogCommentViewRequest();
-            request.Id = arrayList.get(position).Id;
-            request.ActionClientOrder = NTKClientAction.LikeClientAction;
-            RetrofitManager retro = new RetrofitManager(context);
-            IBlog iNews = retro.getRetrofitUnCached(new ConfigStaticValue(context).GetApiBaseUrl()).create(IBlog.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(context);
-            Observable<BlogCommentResponse> call = iNews.GetCommentView(headers, request);
-            call.observeOn(AndroidSchedulers.mainThread())
+            long id = arrayList.get(position).Id;
+            new BlogCommentService(context).getOne(id).observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BlogCommentResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
+                    .subscribe(new NtkObserver<ErrorException<BlogCommentModel>>() {
 
-                        }
 
                         @Override
-                        public void onNext(BlogCommentResponse model) {
+                        public void onNext(@NonNull ErrorException<BlogCommentModel> model) {
                             if (model.IsSuccess) {
                                 arrayList.get(position).SumLikeClick = arrayList.get(position).SumLikeClick + 1;
                                 notifyDataSetChanged();
@@ -91,30 +76,18 @@ public class CommentBlogAdapter extends RecyclerView.Adapter<CommentBlogAdapter.
                             Toasty.warning(context, e.getMessage(), Toasty.LENGTH_LONG, true).show();
                         }
 
-                        @Override
-                        public void onComplete() {
-                        }
                     });
         });
 
         holder.ImgDisLike.setOnClickListener(v -> {
-            BlogCommentViewRequest request = new BlogCommentViewRequest();
-            request.Id = arrayList.get(position).Id;
-            request.ActionClientOrder = NTKClientAction.DisLikeClientAction;
-            RetrofitManager retro = new RetrofitManager(context);
-            IBlog iNews = retro.getRetrofitUnCached(new ConfigStaticValue(context).GetApiBaseUrl()).create(IBlog.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(context);
-            Observable<BlogCommentResponse> call = iNews.GetCommentView(headers, request);
-            call.observeOn(AndroidSchedulers.mainThread())
+            long id = arrayList.get(position).Id;
+            new BlogCommentService(context).getOne(id).
+                    observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<BlogCommentResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
+                    .subscribe(new NtkObserver<ErrorException<BlogCommentModel>>() {
 
                         @Override
-                        public void onNext(BlogCommentResponse model) {
+                        public void onNext(ErrorException<BlogCommentModel> model) {
                             if (model.IsSuccess) {
                                 arrayList.get(position).SumDisLikeClick = arrayList.get(position).SumDisLikeClick - 1;
                                 notifyDataSetChanged();
@@ -128,10 +101,7 @@ public class CommentBlogAdapter extends RecyclerView.Adapter<CommentBlogAdapter.
                             Toasty.warning(context, e.getMessage(), Toasty.LENGTH_LONG, true).show();
                         }
 
-                        @Override
-                        public void onComplete() {
 
-                        }
                     });
         });
     }

@@ -1,33 +1,31 @@
 package ntk.android.academy.activity;
 
 import android.os.Bundle;
+import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.widget.TextView;
-
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.PoolCategoryAdapter;
-import ntk.android.base.config.ConfigRestHeader;
-import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.activity.BaseActivity;
+import ntk.android.base.config.NtkObserver;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.polling.PollingCategoryModel;
+import ntk.android.base.services.pooling.PollingCategoryService;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.pooling.interfase.IPooling;
-import ntk.android.base.api.pooling.model.PoolingCategoryResponse;
-import ntk.android.base.config.RetrofitManager;
 
-public class PoolingActivity extends AppCompatActivity {
+public class PoolingActivity extends BaseActivity {
 
     @BindView(R.id.lblTitleActPooling)
     TextView LblTitle;
@@ -49,36 +47,30 @@ public class PoolingActivity extends AppCompatActivity {
         Rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
 
-        RetrofitManager manager = new RetrofitManager(this);
-        IPooling iPooling = manager.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(IPooling.class);
-        Observable<PoolingCategoryResponse> call = iPooling.GetCategoryList(new ConfigRestHeader().GetHeaders(this));
-        call.observeOn(AndroidSchedulers.mainThread())
+        new PollingCategoryService(this).getAll(new FilterDataModel())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<PoolingCategoryResponse>() {
+                .subscribe(new NtkObserver<ErrorException<PollingCategoryModel>>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(PoolingCategoryResponse poolingCategoryResponse) {
+                    public void onNext(@NonNull ErrorException<PollingCategoryModel> poolingCategoryResponse) {
                         if (poolingCategoryResponse.IsSuccess) {
                             PoolCategoryAdapter adapter = new PoolCategoryAdapter(PoolingActivity.this, poolingCategoryResponse.ListItems);
                             Rv.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
+                            if (adapter.getItemCount() > 0)
+                                switcher.showContentView();
+                            else
+                                switcher.showEmptyView();
+
                         }
                     }
 
                     @Override
-                    public void onError(Throwable e){
+                    public void onError(Throwable e) {
                         Toasty.warning(PoolingActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
 
                     }
 
-                    @Override
-                    public void onComplete() {
-
-                    }
                 });
     }
 

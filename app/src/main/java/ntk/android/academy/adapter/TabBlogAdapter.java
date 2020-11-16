@@ -18,15 +18,16 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.event.HtmlBodyEvent;
 import ntk.android.academy.event.HtmlBodyBlogEvent;
+import ntk.android.base.entitymodel.blog.BlogContentOtherInfoModel;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.api.blog.entity.BlogContentOtherInfo;
 
 public class TabBlogAdapter extends RecyclerView.Adapter<TabBlogAdapter.ViewHolder> {
 
-    private final List<BlogContentOtherInfo> arrayList;
+    private List<BlogContentOtherInfoModel> arrayList;
     private final Context context;
 
-    public TabBlogAdapter(Context context, List<BlogContentOtherInfo> arrayList) {
+    public TabBlogAdapter(Context context, List<BlogContentOtherInfoModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }

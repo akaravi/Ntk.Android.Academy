@@ -45,7 +45,7 @@ public class ArticleSearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_search);
+        setContentView(R.layout.ticket_search_activity);
         ButterKnife.bind(this);
         configStaticValue=new ConfigStaticValue(this);
         init();

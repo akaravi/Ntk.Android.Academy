@@ -38,6 +38,7 @@ import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.BuildConfig;
@@ -49,6 +50,7 @@ import ntk.android.academy.adapter.toolbar.ToolbarAdapter;
 import ntk.android.academy.fragment.BmiFragment;
 import ntk.android.academy.fragment.CommandFragment;
 import ntk.android.academy.fragment.FavoriteFragment;
+import ntk.android.base.activity.common.BaseSplashActivity;
 import ntk.android.base.config.ConfigRestHeader;
 import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.academy.event.toolbar.EVHamberMenuClick;
@@ -56,6 +58,10 @@ import ntk.android.academy.event.toolbar.EVSearchClick;
 import ntk.android.academy.fragment.HomeFragment;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigation;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigationItem;
+import ntk.android.base.config.NtkObserver;
+import ntk.android.base.dtomodel.application.MainResponseDtoModel;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.services.application.ApplicationAppService;
 import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.EasyPreference;
 import ntk.android.base.utill.FontManager;
@@ -211,20 +217,11 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
     private void HandelData() {
         if (AppUtill.isNetworkAvailable(this)) {
-            RetrofitManager manager = new RetrofitManager(this);
-            ICore iCore = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(ICore.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-            Observable<MainCoreResponse> observable = iCore.GetResponseMain(headers);
-            observable.observeOn(AndroidSchedulers.mainThread())
+            new ApplicationAppService(this).getResponseMain().observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<MainCoreResponse>() {
+                    .subscribe(new NtkObserver<ErrorException<MainResponseDtoModel>>() {
                         @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(MainCoreResponse mainCoreResponse) {
+                        public void onNext(@NonNull ErrorException<MainResponseDtoModel> mainCoreResponse) {
                             if(!mainCoreResponse.IsSuccess)
                             {
                                 //BtnRefresh.setVisibility(View.VISIBLE);
@@ -237,10 +234,8 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
 
                         @Override
                         public void onError(Throwable e) {
-                        }
 
-                        @Override
-                        public void onComplete() {
+                            Toasty.warning(MainActivity.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
 
                         }
                     });

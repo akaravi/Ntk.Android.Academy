@@ -26,6 +26,12 @@ import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.base.config.ConfigRestHeader;
 import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.config.NtkObserver;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.entitymodel.polling.PollingContentModel;
+import ntk.android.base.entitymodel.polling.PollingOptionModel;
+import ntk.android.base.entitymodel.polling.PollingVoteModel;
+import ntk.android.base.services.pooling.PollingVoteService;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.api.pooling.interfase.IPooling;
 import ntk.android.base.api.pooling.entity.PoolingContent;
@@ -37,15 +43,15 @@ import ntk.android.base.config.RetrofitManager;
 
 public class PoolCheckBoxAdapter extends RecyclerView.Adapter<PoolCheckBoxAdapter.ViewHolder> {
 
-    private final List<PoolingOption> arrayList;
-    private final Context context;
-    private final PoolingContent PC;
-    private final Button BtnSend;
-    private final Button BtnChart;
+    private List<PollingOptionModel> arrayList;
+    private Context context;
+    private PollingContentModel PC;
+    private Button BtnSend;
+    private Button BtnChart;
     private int Score = 0;
-    private final Map<Long, Integer> MapVote;
+    private Map<Long, Integer> MapVote;
 
-    public PoolCheckBoxAdapter(Context context, List<PoolingOption> arrayList, PoolingContent pc, Button send, Button chart) {
+    public PoolCheckBoxAdapter(Context context, List<PollingOptionModel> arrayList, PollingContentModel pc, Button send, Button chart) {
         this.arrayList = arrayList;
         this.context = context;
         this.PC = pc;
@@ -91,30 +97,23 @@ public class PoolCheckBoxAdapter extends RecyclerView.Adapter<PoolCheckBoxAdapte
         });
 
         BtnSend.setOnClickListener(v -> {
-            PoolingSubmitRequest request = new PoolingSubmitRequest();
-            request.ContentId = arrayList.get(position).LinkPollingContentId;
-            request.votes = new ArrayList<>();
+//            request.ContentId = arrayList.get(position).linkPollingContentId;
+            ArrayList<PollingVoteModel> votes = new ArrayList<>();
             for (Map.Entry<Long, Integer> map : MapVote.entrySet()) {
-                PoolingVote vote = new PoolingVote();
-                vote.OptionId = map.getKey();
+                PollingVoteModel vote = new PollingVoteModel();
+                vote.LinkPollingOptionId = map.getKey();
+                vote.LinkPollingContentId = arrayList.get(position).LinkPollingContentId;
                 vote.OptionScore = map.getValue();
-                request.votes.add(vote);
+                votes.add(vote);
             }
-            RetrofitManager retro = new RetrofitManager(context);
-            IPooling iPooling = retro.getRetrofitUnCached(new ConfigStaticValue(context).GetApiBaseUrl()).create(IPooling.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(context);
 
-            Observable<PoolingSubmitResponse> observable = iPooling.SetSubmitPooling(headers, request);
-            observable.observeOn(AndroidSchedulers.mainThread())
+            new PollingVoteService(context).addBatch(votes)
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<PoolingSubmitResponse>() {
-                        @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
+                    .subscribe(new NtkObserver<ErrorException<PollingVoteModel>>() {
 
                         @Override
-                        public void onNext(PoolingSubmitResponse poolingSubmitResponse) {
+                        public void onNext(ErrorException<PollingVoteModel> poolingSubmitResponse) {
                             if (poolingSubmitResponse.IsSuccess) {
                                 Toasty.info(context, "نظر شما با موققثیت ثبت شد", Toasty.LENGTH_LONG, true).show();
                                 if (PC.ViewStatisticsAfterVote) {
@@ -130,10 +129,6 @@ public class PoolCheckBoxAdapter extends RecyclerView.Adapter<PoolCheckBoxAdapte
                             Toasty.warning(context, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                         }
 
-                        @Override
-                        public void onComplete() {
-
-                        }
                     });
         });
     }

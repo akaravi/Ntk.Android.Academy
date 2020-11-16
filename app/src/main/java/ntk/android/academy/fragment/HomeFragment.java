@@ -2,18 +2,18 @@ package ntk.android.academy.fragment;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 
@@ -22,9 +22,9 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.theme.HomeAdapter;
 import ntk.android.academy.library.AnimatedRecyclerView;
+import ntk.android.base.api.baseModel.theme.Theme;
 import ntk.android.base.utill.EasyPreference;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.baseModel.theme.Theme;
 
 public class HomeFragment extends Fragment {
 

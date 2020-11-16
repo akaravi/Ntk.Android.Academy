@@ -21,15 +21,16 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
+import ntk.android.base.entitymodel.polling.PollingContentModel;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.api.pooling.entity.PoolingContent;
 
 public class DetailPoolCategoryAdapter extends RecyclerView.Adapter<DetailPoolCategoryAdapter.ViewHolder> {
 
-    private final List<PoolingContent> arrayList;
+    private final List<PollingContentModel> arrayList;
     private final Context context;
 
-    public DetailPoolCategoryAdapter(Context context, List<PoolingContent> arrayList) {
+    public DetailPoolCategoryAdapter(Context context, List<PollingContentModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }

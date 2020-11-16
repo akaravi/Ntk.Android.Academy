@@ -17,12 +17,20 @@ import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.BlogAdapter;
+import ntk.android.base.activity.BaseActivity;
 import ntk.android.base.config.ConfigRestHeader;
 import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.config.NtkObserver;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.blog.BlogContentModel;
+import ntk.android.base.services.blog.BlogContentService;
+import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.api.blog.interfase.IBlog;
@@ -31,7 +39,7 @@ import ntk.android.base.api.blog.model.BlogContentListRequest;
 import ntk.android.base.api.blog.model.BlogContentListResponse;
 import ntk.android.base.config.RetrofitManager;
 
-public class BlogActivity extends AppCompatActivity {
+public class BlogActivity extends BaseActivity {
 
     @BindView(R.id.lblTitleActBlog)
     TextView LblTitle;
@@ -40,7 +48,7 @@ public class BlogActivity extends AppCompatActivity {
     RecyclerView Rv;
 
     private int Total = 0;
-    private final List<BlogContent> blogs = new ArrayList<>();
+    private final List<BlogContentModel> blogs = new ArrayList<>();
     private BlogAdapter adapter;
 
     @Override
@@ -75,44 +83,39 @@ public class BlogActivity extends AppCompatActivity {
     }
 
     private void RestCall(int i) {
-        RetrofitManager manager = new RetrofitManager(this);
-        IBlog iBlog = manager.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(IBlog.class);
+        if (AppUtill.isNetworkAvailable(this)) {
+            switcher.showProgressView();
+            FilterDataModel request = new FilterDataModel();
+            request.RowPerPage = 20;
+            request.CurrentPageNumber = i;
+            //todo show loading
+            new BlogContentService(this).getAll(request).
+                    observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new NtkObserver<ErrorException<BlogContentModel>>() {
+                        @Override
+                        public void onNext(@NonNull ErrorException<BlogContentModel> blogContentResponse) {
+                            if (blogContentResponse.IsSuccess) {
+                                blogs.addAll(blogContentResponse.ListItems);
+                                Total = blogContentResponse.TotalRowCount;
+                                adapter.notifyDataSetChanged();
+                                if (Total > 0)
+                                    switcher.showContentView();
+                                else
+                                    switcher.showEmptyView();
 
-        BlogContentListRequest request = new BlogContentListRequest();
-        request.RowPerPage = 20;
-        request.CurrentPageNumber = i;
-        Observable<BlogContentListResponse> call = iBlog.GetContentList(new ConfigRestHeader().GetHeaders(this), request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<BlogContentListResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(BlogContentListResponse response) {
-                        if (response.IsSuccess) {
-                            blogs.addAll(response.ListItems);
-                            Total = response.TotalRowCount;
-                            adapter.notifyDataSetChanged();
-                        }else {
-                            Toasty.warning(BlogActivity.this, "موردی یافت نشد", Toasty.LENGTH_LONG, true).show();
-                            finish();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toasty.warning(BlogActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+                            switcher.showErrorView("خطای سامانه مجددا تلاش کنید", () -> init());
+                        }
+                    });
+        } else {
+            switcher.showErrorView("عدم دسترسی به اینترنت", () -> init());
 
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
+        }
     }
 
     @OnClick(R.id.imgBackActBlog)

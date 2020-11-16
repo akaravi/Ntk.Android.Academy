@@ -1,7 +1,6 @@
 package ntk.android.academy.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,39 +8,36 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.base.config.ConfigRestHeader;
-import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.config.NtkObserver;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.entitymodel.polling.PollingContentModel;
+import ntk.android.base.entitymodel.polling.PollingOptionModel;
+import ntk.android.base.entitymodel.polling.PollingVoteModel;
+import ntk.android.base.services.pooling.PollingVoteService;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.pooling.interfase.IPooling;
-import ntk.android.base.api.pooling.entity.PoolingContent;
-import ntk.android.base.api.pooling.entity.PoolingOption;
-import ntk.android.base.api.pooling.model.PoolingSubmitRequest;
-import ntk.android.base.api.pooling.model.PoolingSubmitResponse;
-import ntk.android.base.api.pooling.entity.PoolingVote;
-import ntk.android.base.config.RetrofitManager;
+
 
 public class PoolRadioAdapter extends RecyclerView.Adapter<PoolRadioAdapter.ViewHolder> {
 
-    private final List<PoolingOption> arrayList;
-    private final Context context;
+    private List<PollingOptionModel> arrayList;
+    private Context context;
     private int lastSelectedPosition = -1;
-    private final PoolingContent PC;
-    private final Button BtnChart;
+    private PollingContentModel PC;
+    private Button BtnChart;
 
-    public PoolRadioAdapter(Context context, List<PoolingOption> arrayList, PoolingContent pc, Button chart) {
+    public PoolRadioAdapter(Context context, List<PollingOptionModel> arrayList, PollingContentModel pc, Button chart) {
         this.arrayList = arrayList;
         this.context = context;
         this.BtnChart = chart;
@@ -60,31 +56,19 @@ public class PoolRadioAdapter extends RecyclerView.Adapter<PoolRadioAdapter.View
         holder.Radio.setChecked(lastSelectedPosition == position);
         holder.Radio.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                PoolingSubmitRequest request = new PoolingSubmitRequest();
-                request.ContentId = arrayList.get(position).LinkPollingContentId;
-                PoolingVote vote = new PoolingVote();
-                vote.OptionId = Long.parseLong(String.valueOf(arrayList.get(position).Id));
+                ArrayList<PollingVoteModel> votes = new ArrayList<>();
+                PollingVoteModel vote = new PollingVoteModel();
+//                vote.OptionId = Long.parseLong(String.valueOf(arrayList.get(position).Id));
+                vote.LinkPollingOptionId = Long.parseLong(String.valueOf(arrayList.get(position).Id));
                 vote.OptionScore = 1;
-                List<PoolingVote> votes = new ArrayList<>();
+                vote.LinkPollingContentId=arrayList.get(position).LinkPollingContentId;
                 votes.add(vote);
-                request.votes = votes;
-
-
-                RetrofitManager retro = new RetrofitManager(context);
-                IPooling iPooling = retro.getRetrofitUnCached(new ConfigStaticValue(context).GetApiBaseUrl()).create(IPooling.class);
-                Map<String, String> headers = new ConfigRestHeader().GetHeaders(context);
-
-                Observable<PoolingSubmitResponse> observable = iPooling.SetSubmitPooling(headers, request);
-                observable.observeOn(AndroidSchedulers.mainThread())
+                 new PollingVoteService(context).addBatch(votes).observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
-                        .subscribe(new Observer<PoolingSubmitResponse>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
-
-                            }
+                        .subscribe(new NtkObserver<ErrorException<PollingVoteModel>>() {
 
                             @Override
-                            public void onNext(PoolingSubmitResponse poolingSubmitResponse) {
+                            public void onNext(@NonNull ErrorException<PollingVoteModel> poolingSubmitResponse) {
                                 if (poolingSubmitResponse.IsSuccess) {
                                     Toasty.info(context, "نظر شما با موققثیت ثبت شد", Toasty.LENGTH_LONG, true).show();
                                     if (PC.ViewStatisticsAfterVote) {
@@ -100,10 +84,6 @@ public class PoolRadioAdapter extends RecyclerView.Adapter<PoolRadioAdapter.View
                                 Toasty.warning(context, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
                             }
 
-                            @Override
-                            public void onComplete() {
-
-                            }
                         });
             }
         });

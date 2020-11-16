@@ -43,15 +43,15 @@ import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.AboutUsActivity;
 import ntk.android.academy.activity.BlogActivity;
-import ntk.android.academy.activity.FaqActivity;
-import ntk.android.academy.activity.NewsActivity;
+import ntk.android.academy.activity.NewsListActivity;
 import ntk.android.academy.activity.PoolingActivity;
-import ntk.android.academy.activity.TicketListActivity;
-import ntk.android.base.activity.IntroActivity;
-import ntk.android.base.activity.NotificationsActivity;
+import ntk.android.base.activity.common.IntroActivity;
+import ntk.android.base.activity.common.NotificationsActivity;
+import ntk.android.base.activity.ticketing.FaqActivity;
+import ntk.android.base.activity.ticketing.TicketListActivity;
 import ntk.android.base.config.ConfigRestHeader;
 import ntk.android.base.config.ConfigStaticValue;
-import ntk.android.academy.room.RoomDb;
+import ntk.android.base.room.RoomDb;
 import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.EasyPreference;
 import ntk.android.base.utill.FontManager;
@@ -179,7 +179,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
     }
 
     private void ClickNews() {
-        context.startActivity(new Intent(context, NewsActivity.class));
+        context.startActivity(new Intent(context, NewsListActivity.class));
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }

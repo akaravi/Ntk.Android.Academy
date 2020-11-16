@@ -17,12 +17,20 @@ import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.NewsAdapter;
+import ntk.android.base.activity.BaseActivity;
 import ntk.android.base.config.ConfigRestHeader;
 import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.config.NtkObserver;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.news.NewsContentModel;
+import ntk.android.base.services.news.NewsContentService;
+import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.api.news.interfase.INews;
@@ -31,7 +39,7 @@ import ntk.android.base.api.news.model.NewsContentListRequest;
 import ntk.android.base.api.news.model.NewsContentResponse;
 import ntk.android.base.config.RetrofitManager;
 
-public class NewsActivity extends AppCompatActivity {
+public class NewsListActivity extends BaseActivity {
 
     @BindView(R.id.lblTitleActNews)
     TextView LblTitle;
@@ -40,7 +48,7 @@ public class NewsActivity extends AppCompatActivity {
     RecyclerView Rv;
 
     private int Total = 0;
-    private final List<NewsContent> news = new ArrayList<>();
+    private List<NewsContentModel> news = new ArrayList<>();
     private NewsAdapter adapter;
 
     @Override
@@ -71,26 +79,23 @@ public class NewsActivity extends AppCompatActivity {
         Rv.addOnScrollListener(scrollListener);
 
         RestCall(1);
+
     }
 
     private void RestCall(int i) {
-        RetrofitManager manager = new RetrofitManager(this);
-        INews iNews = manager.getRetrofitUnCached(new ConfigStaticValue(this).GetApiBaseUrl()).create(INews.class);
+        if (AppUtill.isNetworkAvailable(this)) {
+            switcher.showProgressView();
 
-        NewsContentListRequest request = new NewsContentListRequest();
-        request.RowPerPage = 20;
-        request.CurrentPageNumber = i;
-        Observable<NewsContentResponse> call = iNews.GetContentList(new ConfigRestHeader().GetHeaders(this), request);
-        call.observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<NewsContentResponse>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
+            FilterDataModel request = new FilterDataModel();
+            request.RowPerPage = 20;
+            request.CurrentPageNumber = i;
 
-                    }
-
-                    @Override
-                    public void onNext(NewsContentResponse newsContentResponse) {
+            new NewsContentService(this).getAll(request)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new NtkObserver<ErrorException<NewsContentModel>>() {
+                        @Override
+                        public void onNext(@NonNull ErrorException<NewsContentModel> newsContentResponse) {
                         if (newsContentResponse.IsSuccess) {
                             news.addAll(newsContentResponse.ListItems);
                             Total = newsContentResponse.TotalRowCount;
@@ -100,15 +105,15 @@ public class NewsActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Toasty.warning(NewsActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
+                        Toasty.warning(NewsListActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
 
                     }
 
-                    @Override
-                    public void onComplete() {
-
-                    }
                 });
+        } else {
+            switcher.showErrorView("عدم دسترسی به اینترنت", () -> init());
+
+        }
     }
 
     @OnClick(R.id.imgBackActNews)

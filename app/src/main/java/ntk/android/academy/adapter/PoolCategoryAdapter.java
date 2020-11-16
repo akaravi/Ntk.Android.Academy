@@ -25,18 +25,18 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
-import ntk.android.academy.activity.DetailPoolingActivity;
+import ntk.android.academy.activity.PoolingDetailActivity;
+import ntk.android.base.entitymodel.polling.PollingCategoryModel;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.api.baseModel.Filters;
-import ntk.android.base.api.pooling.entity.PoolingCategory;
 import ntk.android.base.api.pooling.model.PoolingContentListRequest;
 
 public class PoolCategoryAdapter extends RecyclerView.Adapter<PoolCategoryAdapter.ViewHolder> {
 
-    private final List<PoolingCategory> arrayList;
+    private final List<PollingCategoryModel> arrayList;
     private final Context context;
 
-    public PoolCategoryAdapter(Context context, List<PoolingCategory> arrayList) {
+    public PoolCategoryAdapter(Context context, List<PollingCategoryModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }
@@ -52,7 +52,7 @@ public class PoolCategoryAdapter extends RecyclerView.Adapter<PoolCategoryAdapte
         holder.LblTitle.setText(arrayList.get(position).Title);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true).build();
-        ImageLoader.getInstance().displayImage(arrayList.get(position).imageSrc, holder.img, options, new ImageLoadingListener() {
+        ImageLoader.getInstance().displayImage(arrayList.get(position).LinkMainImageIdSrc, holder.img, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
 
@@ -81,7 +81,7 @@ public class PoolCategoryAdapter extends RecyclerView.Adapter<PoolCategoryAdapte
             f.IntValue1 = arrayList.get(position).Id;
             filters.add(f);
             request.filters = filters;
-            Intent intent = new Intent(context, DetailPoolingActivity.class);
+            Intent intent = new Intent(context, PoolingDetailActivity.class);
             intent.putExtra("Request", new Gson().toJson(request));
             intent.putExtra("Title", arrayList.get(position).Title);
             context.startActivity(intent);

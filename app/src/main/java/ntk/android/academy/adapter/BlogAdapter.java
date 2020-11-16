@@ -26,16 +26,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.BlogDetailActivity;
+import ntk.android.base.entitymodel.blog.BlogContentModel;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.api.blog.entity.BlogContent;
 import ntk.android.base.api.blog.model.BlogContentViewRequest;
 
 public class BlogAdapter extends RecyclerView.Adapter<BlogAdapter.ViewHolder> {
 
-    private final List<BlogContent> arrayList;
+    private final List<BlogContentModel> arrayList;
     private final Context context;
 
-    public BlogAdapter(Context context, List<BlogContent> arrayList) {
+    public BlogAdapter(Context context, List<BlogContentModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }
@@ -49,11 +50,11 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.LblTitle.setText(arrayList.get(position).Title);
-        holder.LblDescrption.setText(arrayList.get(position).description);
-        holder.LblLike.setText(String.valueOf(arrayList.get(position).viewCount));
+        holder.LblDescrption.setText(arrayList.get(position).Description);
+        holder.LblLike.setText(String.valueOf(arrayList.get(position).ViewCount));
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true).build();
-        ImageLoader.getInstance().displayImage(arrayList.get(position).imageSrc, holder.Img, options, new ImageLoadingListener() {
+        ImageLoader.getInstance().displayImage(arrayList.get(position).MainImageSrc, holder.Img, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
 
@@ -75,8 +76,8 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogAdapter.ViewHolder> {
             }
         });
         double rating = 0.0;
-        int sumClick = arrayList.get(position).ScoreSumClick;
-        if (arrayList.get(position).ScoreSumClick == 0) sumClick = 1;
+        int sumClick = arrayList.get(position).ViewCount;
+        if (arrayList.get(position).ViewCount == 0) sumClick = 1;
         if (arrayList.get(position).ScoreSumPercent / sumClick > 0 && arrayList.get(position).ScoreSumPercent / sumClick <= 10) {
             rating = 0.5;
         } else if (arrayList.get(position).ScoreSumPercent / sumClick > 10 && arrayList.get(position).ScoreSumPercent / sumClick <= 20) {
