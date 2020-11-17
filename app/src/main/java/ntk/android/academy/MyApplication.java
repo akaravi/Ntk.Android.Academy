@@ -13,11 +13,12 @@ import java.io.File;
 import es.dmoral.toasty.Toasty;
 import ntk.android.academy.activity.MainActivity;
 import ntk.android.base.ApplicationParameter;
+import ntk.android.base.ApplicationStaticParameter;
 import ntk.android.base.ApplicationStyle;
 import ntk.android.base.NTKApplication;
 import ntk.android.base.utill.FontManager;
 
-public class Academy extends NTKApplication {
+public class MyApplication extends NTKApplication {
 
     public static boolean Inbox = false;
 
@@ -45,6 +46,12 @@ public class Academy extends NTKApplication {
                 return MainActivity.class;
             }
         };
+    }
+
+    @Override
+    protected ApplicationStaticParameter getConfig() {
+        ApplicationStaticParameter.URL = "http://4b01bf215469.ngrok.io";
+       return super.getConfig();
     }
 
     @Override
