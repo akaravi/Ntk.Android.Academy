@@ -290,7 +290,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
             f.IntValue1 = Id;
             Request.addFilter(f);
 
-            new ArticleContentSimilarService(this).ServiceGetAllWithSimilarsId(Request)
+            new ArticleContentService(this).getAllWithSimilarsId(id,Request)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(new  NtkObserver<ErrorException<ArticleContentModel>>() {
