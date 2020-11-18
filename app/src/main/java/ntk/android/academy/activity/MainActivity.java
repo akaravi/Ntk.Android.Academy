@@ -30,16 +30,12 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.BuildConfig;
 import ntk.android.academy.R;
@@ -50,9 +46,6 @@ import ntk.android.academy.adapter.toolbar.ToolbarAdapter;
 import ntk.android.academy.fragment.BmiFragment;
 import ntk.android.academy.fragment.CommandFragment;
 import ntk.android.academy.fragment.FavoriteFragment;
-import ntk.android.base.activity.common.BaseSplashActivity;
-import ntk.android.base.config.ConfigRestHeader;
-import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.academy.event.toolbar.EVHamberMenuClick;
 import ntk.android.academy.event.toolbar.EVSearchClick;
 import ntk.android.academy.fragment.HomeFragment;
@@ -63,14 +56,11 @@ import ntk.android.base.dtomodel.application.MainResponseDtoModel;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.services.application.ApplicationAppService;
 import ntk.android.base.utill.AppUtill;
-import ntk.android.base.utill.EasyPreference;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.core.interfase.ICore;
 import ntk.android.base.api.core.entity.CoreMain;
-import ntk.android.base.api.core.model.MainCoreResponse;
 import ntk.android.base.api.baseModel.theme.Theme;
 import ntk.android.base.api.baseModel.theme.Toolbar;
-import ntk.android.base.config.RetrofitManager;
+import ntk.android.base.utill.prefrense.Preferences;
 
 public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
 
@@ -149,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     }
 
     private void HandelToolbarDrawer() {
-        Theme theme = new Gson().fromJson(EasyPreference.with(this).getString("Theme", ""), Theme.class);
+        Theme theme = new Gson().fromJson(Preferences.with(this).UserInfo().theme(), Theme.class);
         if (theme == null) return;
         RvToolbar.setHasFixedSize(true);
         RvToolbar.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -228,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
                                 Toasty.warning(MainActivity.this, "خطای سامانه مجددا تلاش کنید"+mainCoreResponse.ErrorMessage, Toasty.LENGTH_LONG, true).show();
                                 return;
                             }
-                            EasyPreference.with(MainActivity.this).addString("configapp", new Gson().toJson(mainCoreResponse.Item));
+                            Preferences.with(MainActivity.this).appVariableInfo().setConfigapp(new Gson().toJson(mainCoreResponse.Item));
                             CheckUpdate();
                         }
 
@@ -245,7 +235,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     }
 
     private void CheckUpdate() {
-        String st = EasyPreference.with(this).getString("configapp", "");
+        String st =  Preferences.with(this).appVariableInfo().configapp();
         CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
         if (mcr.AppVersion > BuildConfig.VERSION_CODE && BuildConfig.APPLICATION_ID.indexOf(".APPNTK") < 0) {
             if (mcr.AppForceUpdate) {
@@ -257,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     }
 
     private void Update() {
-        String st = EasyPreference.with(this).getString("configapp", "");
+        String st = Preferences.with(this).appVariableInfo().configapp();
         CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -285,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     }
 
     private void UpdateFore() {
-        String st = EasyPreference.with(this).getString("configapp", "");
+        String st =  Preferences.with(this).appVariableInfo().configapp();
         CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

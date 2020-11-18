@@ -32,34 +32,20 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.CommentNewsAdapter;
 import ntk.android.academy.adapter.TabNewsAdapter;
 import ntk.android.base.api.core.entity.CoreMain;
-import ntk.android.base.api.news.interfase.INews;
-import ntk.android.base.api.news.model.NewsCommentAddRequest;
-import ntk.android.base.api.news.model.NewsCommentResponse;
-import ntk.android.base.api.news.model.NewsContentFavoriteAddRequest;
-import ntk.android.base.api.news.model.NewsContentFavoriteAddResponse;
-import ntk.android.base.api.news.model.NewsContentFavoriteRemoveRequest;
-import ntk.android.base.api.news.model.NewsContentFavoriteRemoveResponse;
-import ntk.android.base.api.news.model.NewsContentResponse;
-import ntk.android.base.config.ConfigRestHeader;
 import ntk.android.base.config.NtkObserver;
-import ntk.android.base.config.RetrofitManager;
 import ntk.android.base.dtomodel.core.ScoreClickDtoModel;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.ErrorExceptionBase;
@@ -72,8 +58,8 @@ import ntk.android.base.services.news.NewsCommentService;
 import ntk.android.base.services.news.NewsContentOtherInfoService;
 import ntk.android.base.services.news.NewsContentService;
 import ntk.android.base.utill.AppUtill;
-import ntk.android.base.utill.EasyPreference;
 import ntk.android.base.utill.FontManager;
+import ntk.android.base.utill.prefrense.Preferences;
 
 public class NewsDetailActivity extends AppCompatActivity {
 
@@ -591,7 +577,7 @@ public class NewsDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.imgShareActDetailNews)
     public void ClickShare() {
-        String st = EasyPreference.with(this).getString("configapp", "");
+        String st =  Preferences.with(this).appVariableInfo().configapp();
         CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);

@@ -54,7 +54,6 @@ import ntk.android.base.config.ConfigRestHeader;
 import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.academy.event.HtmlBodyEvent;
 import ntk.android.base.utill.AppUtill;
-import ntk.android.base.utill.EasyPreference;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.api.article.interfase.IArticle;
 import ntk.android.base.api.article.model.ArticleCommentAddRequest;
@@ -75,6 +74,7 @@ import ntk.android.base.api.core.entity.CoreMain;
 import ntk.android.base.api.baseModel.ErrorException;
 import ntk.android.base.api.baseModel.Filters;
 import ntk.android.base.config.RetrofitManager;
+import ntk.android.base.utill.prefrense.Preferences;
 
 public class ArticleDetailActivity extends AppCompatActivity {
 
@@ -852,7 +852,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.imgShareActDetail)
     public void ClickShare() {
-        String st = EasyPreference.with(this).getString("configapp", "");
+        String st = Preferences.with(this).appVariableInfo().configapp();
         CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);

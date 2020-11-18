@@ -23,8 +23,8 @@ import ntk.android.academy.R;
 import ntk.android.academy.adapter.theme.HomeAdapter;
 import ntk.android.academy.library.AnimatedRecyclerView;
 import ntk.android.base.api.baseModel.theme.Theme;
-import ntk.android.base.utill.EasyPreference;
 import ntk.android.base.utill.FontManager;
+import ntk.android.base.utill.prefrense.Preferences;
 
 public class HomeFragment extends Fragment {
 
@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void SetDataHome() {
-        Theme theme = new Gson().fromJson(EasyPreference.with(getContext()).getString("Theme", ""), Theme.class);
+        Theme theme = new Gson().fromJson(Preferences.with(getContext()).UserInfo().theme(), Theme.class);
         if (theme == null) return;
         HomeAdapter adapter = new HomeAdapter(getContext(), theme.Childs);
         RvHome.setAdapter(adapter);

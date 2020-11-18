@@ -34,24 +34,18 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.CommentBlogAdapter;
 import ntk.android.academy.adapter.TabBlogAdapter;
-import ntk.android.base.config.ConfigRestHeader;
-import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.academy.event.HtmlBodyBlogEvent;
 import ntk.android.base.config.NtkObserver;
 import ntk.android.base.dtomodel.core.ScoreClickDtoModel;
@@ -66,23 +60,9 @@ import ntk.android.base.services.blog.BlogCommentService;
 import ntk.android.base.services.blog.BlogContentOtherInfoService;
 import ntk.android.base.services.blog.BlogContentService;
 import ntk.android.base.utill.AppUtill;
-import ntk.android.base.utill.EasyPreference;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.blog.interfase.IBlog;
-import ntk.android.base.api.blog.model.BlogCommentAddRequest;
-import ntk.android.base.api.blog.model.BlogCommentListRequest;
-import ntk.android.base.api.blog.model.BlogCommentResponse;
-import ntk.android.base.api.blog.model.BlogContentFavoriteAddRequest;
-import ntk.android.base.api.blog.model.BlogContentFavoriteAddResponse;
-import ntk.android.base.api.blog.model.BlogContentFavoriteRemoveRequest;
-import ntk.android.base.api.blog.model.BlogContentFavoriteRemoveResponse;
-import ntk.android.base.api.blog.entity.BlogContentOtherInfo;
-import ntk.android.base.api.blog.model.BlogContentOtherInfoListRequest;
-import ntk.android.base.api.blog.model.BlogContentOtherInfoListResponse;
-import ntk.android.base.api.blog.model.BlogContentResponse;
-import ntk.android.base.api.blog.model.BlogContentViewRequest;
 import ntk.android.base.api.core.entity.CoreMain;
-import ntk.android.base.config.RetrofitManager;
+import ntk.android.base.utill.prefrense.Preferences;
 
 public class BlogDetailActivity extends AppCompatActivity {
 
@@ -620,7 +600,7 @@ public class BlogDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.imgShareActDetailBlog)
     public void ClickShare() {
-        String st = EasyPreference.with(this).getString("configapp", "");
+        String st = Preferences.with(this).appVariableInfo().configapp();
         CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);

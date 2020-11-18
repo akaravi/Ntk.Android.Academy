@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
@@ -34,21 +35,21 @@ import ntk.android.academy.adapter.theme.holder.ButtonHolder;
 import ntk.android.academy.adapter.theme.holder.ImageHolder;
 import ntk.android.academy.adapter.theme.holder.SliderHolder;
 import ntk.android.academy.adapter.theme.holder.TagHolder;
-import ntk.android.base.config.ConfigRestHeader;
-import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.academy.util.Constant;
-import ntk.android.base.utill.EasyPreference;
-import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
-import ntk.android.base.api.article.interfase.IArticle;
 import ntk.android.base.api.article.entity.ArticleContent;
+import ntk.android.base.api.article.entity.ArticleTag;
+import ntk.android.base.api.article.interfase.IArticle;
 import ntk.android.base.api.article.model.ArticleContentListRequest;
 import ntk.android.base.api.article.model.ArticleContentResponse;
-import ntk.android.base.api.article.entity.ArticleTag;
 import ntk.android.base.api.article.model.ArticleTagRequest;
 import ntk.android.base.api.article.model.ArticleTagResponse;
 import ntk.android.base.api.baseModel.theme.ThemeChild;
 import ntk.android.base.api.baseModel.theme.ThemeChildConfig;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.base.config.RetrofitManager;
+import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
+import ntk.android.base.utill.prefrense.Preferences;
 import ss.com.bannerslider.banners.Banner;
 import ss.com.bannerslider.banners.RemoteBanner;
 import ss.com.bannerslider.events.OnBannerClickListener;
@@ -237,7 +238,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         hoArticle.Lbls.get(1).setText(themes.get(position).LayoutConfig.get(1).Title);
 
 
-        String RequestStr = EasyPreference.with(context).getString("ArticleContentList", "");
+        String RequestStr = Preferences.with(context).articleInfo().articleContentList();
         if (!RequestStr.equals("")) {
             Log.i("likfvj", "ConfigArticle: " + RequestStr + "");
             ArticleContentResponse response = new Gson().fromJson(RequestStr, ArticleContentResponse.class);
@@ -289,9 +290,8 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                     @Override
                     public void onNext(ArticleContentResponse articleContentResponse) {
-                        Log.i("likfvj", "ConfigArticle: " + EasyPreference.with(context).addString("ArticleContentList", String.valueOf(articleContentResponse)) + "");
-                        if (!EasyPreference.with(context).getString("ArticleContentList", "").equals("")) {
-                            EasyPreference.with(context).addString("ArticleContentList", new Gson().toJson(articleContentResponse));
+                        if (!Preferences.with(context).articleInfo().articleContentList().equals("")) {
+                            Preferences.with(context).articleInfo().setArticleContentList( new Gson().toJson(articleContentResponse));
                         }
                         map_articles.get(position).addAll(articleContentResponse.ListItems);
                         map_adapter.get(position).notifyDataSetChanged();

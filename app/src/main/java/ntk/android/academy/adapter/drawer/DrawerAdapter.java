@@ -53,7 +53,6 @@ import ntk.android.base.config.ConfigRestHeader;
 import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.base.room.RoomDb;
 import ntk.android.base.utill.AppUtill;
-import ntk.android.base.utill.EasyPreference;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.api.application.interfase.IApplication;
 import ntk.android.base.api.application.model.ApplicationScoreRequest;
@@ -61,6 +60,7 @@ import ntk.android.base.api.application.model.ApplicationScoreResponse;
 import ntk.android.base.api.core.entity.CoreMain;
 import ntk.android.base.api.baseModel.theme.DrawerChild;
 import ntk.android.base.config.RetrofitManager;
+import ntk.android.base.utill.prefrense.Preferences;
 
 public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder> {
 
@@ -193,7 +193,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
     }
 
     private void ClickShare() {
-        String st = EasyPreference.with(context).getString("configapp", "");
+        String st = Preferences.with(context).appVariableInfo().configapp();
         CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
 
         final Dialog dialog = new Dialog(context);
@@ -263,9 +263,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         Lbl.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
         final EditText Txt = dialog.findViewById(R.id.txtDialogComment);
         Txt.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-        Txt.setText(EasyPreference.with(context).getString("RateMessage", ""));
+//        Txt.setText(EasyPreference.with(context).getString("RateMessage", ""));
         final MaterialRatingBar Rate = dialog.findViewById(R.id.rateDialogComment);
-        Rate.setRating(EasyPreference.with(context).getInt("Rate", 0));
+//        Rate.setRating(EasyPreference.with(context).getInt("Rate", 0));
         Rate.setOnRatingChangeListener((ratingBar, rating) -> {
             request.ScorePercent = (int) rating;
             //برای تبدیل به درصد
