@@ -21,6 +21,7 @@ import ntk.android.academy.R;
 import ntk.android.academy.activity.ArticleContentListActivity;
 import ntk.android.base.api.article.model.ArticleContentListRequest;
 import ntk.android.base.entitymodel.article.ArticleContentTagModel;
+import ntk.android.base.entitymodel.base.FilterDataModel;
 import ntk.android.base.entitymodel.coremodulemain.CoreModuleTagModel;
 import ntk.android.base.utill.FontManager;
 
@@ -46,10 +47,10 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
         holder.Lbl.setText(arrayList.get(position).Title);
         holder.Lbl.setOnClickListener(view -> {
             Intent intent = new Intent(context, ArticleContentListActivity.class);
-            ArticleContentListRequest request = new ArticleContentListRequest();
+            FilterDataModel request = new FilterDataModel();
             List<Long> Tags = new ArrayList<>();
             Tags.add(arrayList.get(position).Id);
-            request.TagIds = Tags;
+            //todo karavi Tag biad too filtermodel
             intent.putExtra("Request", new Gson().toJson(request));
             context.startActivity(intent);
         });

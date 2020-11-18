@@ -21,16 +21,15 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ArticleContentListActivity;
-import ntk.android.base.api.article.model.ArticleContentListRequest;
-import ntk.android.base.api.baseModel.Filters;
 import ntk.android.base.entitymodel.article.ArticleCategoryModel;
+import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.base.Filters;
 import ntk.android.base.utill.FontManager;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
@@ -79,13 +78,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             holder.ImgDrop.setVisibility(View.GONE);
         }
         holder.Img.setOnClickListener(view -> {
-            ArticleContentListRequest request = new ArticleContentListRequest();
-            List<Filters> filters = new ArrayList<>();
+            FilterDataModel request = new FilterDataModel();
             Filters f = new Filters();
             f.PropertyName = "LinkCategoryId";
             f.IntValue1 = arrayList.get(position).Id;
-            filters.add(f);
-            request.filters = filters;
+            request.addFilter(f);
             Intent intent = new Intent(context, ArticleContentListActivity.class);
             intent.putExtra("Request", new Gson().toJson(request));
             context.startActivity(intent);
