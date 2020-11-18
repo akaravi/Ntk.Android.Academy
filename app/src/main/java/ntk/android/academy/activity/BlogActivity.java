@@ -1,11 +1,11 @@
 package ntk.android.academy.activity;
 
 import android.os.Bundle;
+import android.widget.TextView;
+
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,18 +13,12 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import es.dmoral.toasty.Toasty;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.BlogAdapter;
 import ntk.android.base.activity.BaseActivity;
-import ntk.android.base.config.ConfigRestHeader;
-import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.base.config.NtkObserver;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.FilterDataModel;
@@ -33,11 +27,6 @@ import ntk.android.base.services.blog.BlogContentService;
 import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.blog.interfase.IBlog;
-import ntk.android.base.api.blog.entity.BlogContent;
-import ntk.android.base.api.blog.model.BlogContentListRequest;
-import ntk.android.base.api.blog.model.BlogContentListResponse;
-import ntk.android.base.config.RetrofitManager;
 
 public class BlogActivity extends BaseActivity {
 

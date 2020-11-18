@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -26,16 +27,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ArticleDetailActivity;
-import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.article.entity.ArticleContent;
 import ntk.android.base.api.article.model.ArticleContentViewRequest;
+import ntk.android.base.entitymodel.article.ArticleContentModel;
+import ntk.android.base.utill.FontManager;
 
 public class ArticleGridAdapter extends RecyclerView.Adapter<ArticleGridAdapter.ViewHolder> {
 
-    private final List<ArticleContent> arrayList;
+    private final List<ArticleContentModel> arrayList;
     private final Context context;
 
-    public ArticleGridAdapter(Context context, List<ArticleContent> arrayList) {
+    public ArticleGridAdapter(Context context, List<ArticleContentModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }
@@ -49,10 +50,10 @@ public class ArticleGridAdapter extends RecyclerView.Adapter<ArticleGridAdapter.
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.LblName.setText(arrayList.get(position).Title);
-        holder.LblLike.setText(String.valueOf(arrayList.get(position).viewCount));
+        holder.LblLike.setText(String.valueOf(arrayList.get(position).ViewCount));
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true).build();
-        ImageLoader.getInstance().displayImage(arrayList.get(position).imageSrc, holder.Img, options, new ImageLoadingListener() {
+        ImageLoader.getInstance().displayImage(arrayList.get(position).MainImageSrc, holder.Img, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
 
@@ -74,8 +75,8 @@ public class ArticleGridAdapter extends RecyclerView.Adapter<ArticleGridAdapter.
             }
         });
         double rating = 0.0;
-        int sumClick = arrayList.get(position).ScoreSumClick;
-        if (arrayList.get(position).ScoreSumClick == 0) sumClick = 1;
+        int sumClick = arrayList.get(position).ViewCount;
+        if (arrayList.get(position).ViewCount == 0) sumClick = 1;
         if (arrayList.get(position).ScoreSumPercent / sumClick > 0 && arrayList.get(position).ScoreSumPercent / sumClick <= 10) {
             rating = 0.5;
         } else if (arrayList.get(position).ScoreSumPercent / sumClick > 10 && arrayList.get(position).ScoreSumPercent / sumClick <= 20) {
@@ -100,9 +101,8 @@ public class ArticleGridAdapter extends RecyclerView.Adapter<ArticleGridAdapter.
         holder.Rate.setRating((float) rating);
         holder.Root.setOnClickListener(view -> {
             Intent intent = new Intent(context, ArticleDetailActivity.class);
-            ArticleContentViewRequest request = new ArticleContentViewRequest();
-            request.Id = arrayList.get(position).Id;
-            intent.putExtra("Request", new Gson().toJson(request));
+            Long Id = arrayList.get(position).Id;
+            intent.putExtra("Request",Id);
             context.startActivity(intent);
         });
     }

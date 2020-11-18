@@ -23,6 +23,9 @@ import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.base.config.ConfigRestHeader;
 import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.config.RetrofitManager;
+import ntk.android.base.entitymodel.article.ArticleCommentModel;
+import ntk.android.base.entitymodel.article.ArticleContentModel;
 import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.api.article.interfase.IArticle;
@@ -30,14 +33,13 @@ import ntk.android.base.api.article.entity.ArticleComment;
 import ntk.android.base.api.article.model.ArticleCommentResponse;
 import ntk.android.base.api.article.model.ArticleCommentViewRequest;
 import ntk.android.base.api.utill.NTKClientAction;
-import ntk.android.base.config.RetrofitManager;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
 
-    private final List<ArticleComment> arrayList;
+    private final List<ArticleCommentModel> arrayList;
     private final Context context;
 
-    public CommentAdapter(Context context, List<ArticleComment> arrayList) {
+    public CommentAdapter(Context context, List<ArticleCommentModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }

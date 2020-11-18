@@ -4,14 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -26,17 +28,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ArticleContentListActivity;
-import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.article.entity.ArticleCategory;
 import ntk.android.base.api.article.model.ArticleContentListRequest;
 import ntk.android.base.api.baseModel.Filters;
+import ntk.android.base.entitymodel.article.ArticleCategoryModel;
+import ntk.android.base.utill.FontManager;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
-    private final List<ArticleCategory> arrayList;
+    private final List<ArticleCategoryModel> arrayList;
     private final Context context;
 
-    public CategoryAdapter(Context context, List<ArticleCategory> arrayList) {
+    public CategoryAdapter(Context context, List<ArticleCategoryModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }

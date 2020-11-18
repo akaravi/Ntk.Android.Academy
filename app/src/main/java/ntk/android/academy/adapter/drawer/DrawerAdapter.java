@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.zxing.WriterException;
@@ -49,17 +49,17 @@ import ntk.android.base.activity.common.NotificationsActivity;
 import ntk.android.base.activity.poling.PoolingActivity;
 import ntk.android.base.activity.ticketing.FaqActivity;
 import ntk.android.base.activity.ticketing.TicketListActivity;
-import ntk.android.base.config.ConfigRestHeader;
-import ntk.android.base.config.ConfigStaticValue;
-import ntk.android.base.room.RoomDb;
-import ntk.android.base.utill.AppUtill;
-import ntk.android.base.utill.FontManager;
 import ntk.android.base.api.application.interfase.IApplication;
 import ntk.android.base.api.application.model.ApplicationScoreRequest;
 import ntk.android.base.api.application.model.ApplicationScoreResponse;
-import ntk.android.base.api.core.entity.CoreMain;
 import ntk.android.base.api.baseModel.theme.DrawerChild;
+import ntk.android.base.api.core.entity.CoreMain;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.base.config.RetrofitManager;
+import ntk.android.base.room.RoomDb;
+import ntk.android.base.utill.AppUtill;
+import ntk.android.base.utill.FontManager;
 import ntk.android.base.utill.prefrense.Preferences;
 
 public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder> {
@@ -74,6 +74,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
         this.context = context;
         this.Drawer = drawer;
     }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -138,7 +139,9 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return childs.size();
+        if (childs != null)
+            return childs.size();
+        else return 0;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

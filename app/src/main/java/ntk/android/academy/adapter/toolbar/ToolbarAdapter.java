@@ -114,7 +114,7 @@ public class ToolbarAdapter extends RecyclerView.Adapter<ToolbarAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return toolbars.size();
+        return 0;// toolbars.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

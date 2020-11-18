@@ -2,18 +2,19 @@ package ntk.android.academy.fragment;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,15 +29,19 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.ArticleGridAdapter;
-import ntk.android.base.config.ConfigRestHeader;
-import ntk.android.base.config.ConfigStaticValue;
-import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
-import ntk.android.base.utill.FontManager;
 import ntk.android.base.api.article.interfase.IArticle;
-import ntk.android.base.api.article.entity.ArticleContent;
 import ntk.android.base.api.article.model.ArticleContentFavoriteListRequest;
 import ntk.android.base.api.article.model.ArticleContentFavoriteListResponse;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.config.NtkObserver;
 import ntk.android.base.config.RetrofitManager;
+import ntk.android.base.entitymodel.article.ArticleContentModel;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.services.article.ArticleContentService;
+import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
+import ntk.android.base.utill.FontManager;
 
 public class FavoriteFragment extends Fragment {
 
@@ -55,7 +60,7 @@ public class FavoriteFragment extends Fragment {
     @BindView(R.id.rowProgressFrFav)
     LinearLayout Loading;
 
-    List<ArticleContent> contents = new ArrayList<>();
+    List<ArticleContentModel> contents = new ArrayList<>();
     ArticleGridAdapter adapter;
 
     private final int TotalArticle = 0;
@@ -110,34 +115,25 @@ public class FavoriteFragment extends Fragment {
         RetrofitManager manager = new RetrofitManager(getContext());
         IArticle iArticle = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IArticle.class);
 
-        ArticleContentFavoriteListRequest request = new ArticleContentFavoriteListRequest();
+        FilterDataModel request = new FilterDataModel();
         request.RowPerPage = 20;
         request.CurrentPageNumber = i;
-        Observable<ArticleContentFavoriteListResponse> call = iArticle.GetContentFavoriteList(new ConfigRestHeader().GetHeaders(getContext()), request);
-        call.observeOn(AndroidSchedulers.mainThread())
+        new ArticleContentService(getContext()).getFavoriteList(request).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<ArticleContentFavoriteListResponse>() {
+                .subscribe(new NtkObserver<ErrorException<ArticleContentModel>>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(ArticleContentFavoriteListResponse articleContentResponse) {
+                    public void onNext(@io.reactivex.annotations.NonNull ErrorException<ArticleContentModel> articleContentResponse) {
                         Loading.setVisibility(View.GONE);
                         contents.addAll(articleContentResponse.ListItems);
                         adapter.notifyDataSetChanged();
                         Rv.setItemViewCacheSize(contents.size());
+
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         Loading.setVisibility(View.GONE);
                         Toasty.error(getContext(), "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
-                    }
-
-                    @Override
-                    public void onComplete() {
 
                     }
                 });

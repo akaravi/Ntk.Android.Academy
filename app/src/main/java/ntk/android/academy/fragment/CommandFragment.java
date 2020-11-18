@@ -2,13 +2,6 @@ package ntk.android.academy.fragment;
 
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,25 +9,27 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.Map;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.CategoryAdapter;
-import ntk.android.base.config.ConfigRestHeader;
 import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.config.NtkObserver;
+import ntk.android.base.entitymodel.article.ArticleCategoryModel;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.services.article.ArticleCategoryService;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.article.interfase.IArticle;
-import ntk.android.base.api.article.model.ArticleCategoryRequest;
-import ntk.android.base.api.article.model.ArticleCategoryResponse;
-import ntk.android.base.config.RetrofitManager;
 
 public class CommandFragment extends Fragment {
 
@@ -88,23 +83,15 @@ public class CommandFragment extends Fragment {
     }
 
     private void HandelRest() {
-        RetrofitManager manager = new RetrofitManager(getContext());
-        IArticle iArticle = manager.getCachedRetrofit(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(getContext());
 
-        ArticleCategoryRequest request = new ArticleCategoryRequest();
+        FilterDataModel request = new FilterDataModel();
         request.RowPerPage = 20;
-        Observable<ArticleCategoryResponse> call = iArticle.GetCategoryList(headers, request);
-        call.observeOn(AndroidSchedulers.mainThread())
+        new ArticleCategoryService(getContext()).getAll(request)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<ArticleCategoryResponse>() {
+                .subscribe(new NtkObserver<ErrorException<ArticleCategoryModel>>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(ArticleCategoryResponse articleCategoryResponse) {
+                    public void onNext(@io.reactivex.annotations.NonNull ErrorException<ArticleCategoryModel> articleCategoryResponse) {
                         CategoryAdapter adapter = new CategoryAdapter(getContext(), articleCategoryResponse.ListItems);
                         Rv.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
@@ -113,13 +100,9 @@ public class CommandFragment extends Fragment {
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onError(@io.reactivex.annotations.NonNull Throwable e) {
                         Loading.setVisibility(View.GONE);
                         Toasty.error(getContext(), "خطای سامانه مجددا تلاش کنیدِ", Toasty.LENGTH_LONG, true).show();
-                    }
-
-                    @Override
-                    public void onComplete() {
 
                     }
                 });

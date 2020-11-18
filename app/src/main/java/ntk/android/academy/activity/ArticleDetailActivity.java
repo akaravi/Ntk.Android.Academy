@@ -5,13 +5,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
@@ -26,6 +19,14 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -44,36 +45,33 @@ import es.dmoral.toasty.Toasty;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.ArticleAdapter;
 import ntk.android.academy.adapter.CommentAdapter;
 import ntk.android.academy.adapter.TabAdapter;
-import ntk.android.base.config.ConfigRestHeader;
-import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.academy.event.HtmlBodyEvent;
+import ntk.android.base.api.core.entity.CoreMain;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.NtkObserver;
+import ntk.android.base.config.RetrofitManager;
+import ntk.android.base.dtomodel.core.ScoreClickDtoModel;
+import ntk.android.base.entitymodel.article.ArticleCommentModel;
+import ntk.android.base.entitymodel.article.ArticleContentModel;
+import ntk.android.base.entitymodel.article.ArticleContentOtherInfoModel;
+import ntk.android.base.entitymodel.article.ArticleContentSimilarModel;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.entitymodel.base.ErrorExceptionBase;
+import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.base.Filters;
+import ntk.android.base.services.article.ArticleCommentService;
+import ntk.android.base.services.article.ArticleContentOtherInfoService;
+import ntk.android.base.services.article.ArticleContentService;
+import ntk.android.base.services.article.ArticleContentSimilarService;
 import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.article.interfase.IArticle;
-import ntk.android.base.api.article.model.ArticleCommentAddRequest;
-import ntk.android.base.api.article.model.ArticleCommentListRequest;
-import ntk.android.base.api.article.model.ArticleCommentResponse;
-import ntk.android.base.api.article.model.ArticleContentCategoryListRequest;
-import ntk.android.base.api.article.model.ArticleContentFavoriteAddRequest;
-import ntk.android.base.api.article.model.ArticleContentFavoriteAddResponse;
-import ntk.android.base.api.article.model.ArticleContentFavoriteRemoveRequest;
-import ntk.android.base.api.article.model.ArticleContentFavoriteRemoveResponse;
-import ntk.android.base.api.article.entity.ArticleContentOtherInfo;
-import ntk.android.base.api.article.model.ArticleContentOtherInfoRequest;
-import ntk.android.base.api.article.model.ArticleContentOtherInfoResponse;
-import ntk.android.base.api.article.model.ArticleContentResponse;
-import ntk.android.base.api.article.model.ArticleContentSimilarListRequest;
-import ntk.android.base.api.article.model.ArticleContentViewRequest;
-import ntk.android.base.api.core.entity.CoreMain;
-import ntk.android.base.api.baseModel.ErrorException;
-import ntk.android.base.api.baseModel.Filters;
-import ntk.android.base.config.RetrofitManager;
 import ntk.android.base.utill.prefrense.Preferences;
 
 public class ArticleDetailActivity extends AppCompatActivity {
@@ -131,18 +129,16 @@ public class ArticleDetailActivity extends AppCompatActivity {
     @BindView(R.id.mainLayoutActDetail)
     CoordinatorLayout layout;
 
-    private String RequestStr;
-    private ArticleContentResponse model;
-    private ArticleContentOtherInfoResponse Info;
-    private ArticleContentViewRequest Request;
-    private ConfigStaticValue configStaticValue;
+
+    private ErrorException<ArticleContentModel> model;
+    private ErrorException<ArticleContentOtherInfoModel> Info;
+    long Id;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_detail);
         ButterKnife.bind(this);
-        configStaticValue = new ConfigStaticValue(this);
         init();
     }
 
@@ -156,9 +152,8 @@ public class ArticleDetailActivity extends AppCompatActivity {
         webView.getSettings().setBuiltInZoomControls(true);
         RvTab.setHasFixedSize(true);
         RvTab.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-        RequestStr = getIntent().getExtras().getString("Request");
-        Request = new Gson().fromJson(RequestStr, ArticleContentViewRequest.class);
-        HandelDataContent(Request);
+        Id = getIntent().getExtras().getLong("Request");
+        HandelDataContent();
         Loading.setVisibility(View.VISIBLE);
 
         RvComment.setHasFixedSize(true);
@@ -176,9 +171,8 @@ public class ArticleDetailActivity extends AppCompatActivity {
                 if (!fromUser) return;
 
                 if (AppUtill.isNetworkAvailable(ArticleDetailActivity.this)) {
-                    ArticleContentViewRequest request = new ArticleContentViewRequest();
-                    request.Id = Request.Id;
-                    request.ActionClientOrder = 55;
+                    ScoreClickDtoModel request = new ScoreClickDtoModel();
+                    request.Id = Id;
                     if (rating == 0.5) {
                         request.ScorePercent = 10;
                     }
@@ -209,21 +203,13 @@ public class ArticleDetailActivity extends AppCompatActivity {
                     if (rating == 5) {
                         request.ScorePercent = 100;
                     }
-                    RetrofitManager manager = new RetrofitManager(ArticleDetailActivity.this);
-                    IArticle iArticle = manager.getRetrofitUnCached(new ConfigStaticValue(ArticleDetailActivity.this).GetApiBaseUrl()).create(IArticle.class);
-                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(ArticleDetailActivity.this);
-
-                    Observable<ArticleContentResponse> Call = iArticle.GetContentView(headers, request);
-                    Call.observeOn(AndroidSchedulers.mainThread())
+                    new ArticleContentService(ArticleDetailActivity.this).scoreClick(request)
+                            .observeOn(AndroidSchedulers.mainThread())
                             .subscribeOn(Schedulers.io())
-                            .subscribe(new Observer<ArticleContentResponse>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
-
-                                }
+                            .subscribe(new NtkObserver<ErrorExceptionBase>() {
 
                                 @Override
-                                public void onNext(ArticleContentResponse response) {
+                                public void onNext(@NonNull ErrorExceptionBase response) {
                                     Loading.setVisibility(View.GONE);
                                     if (response.IsSuccess) {
                                         Toasty.success(ArticleDetailActivity.this, "نظر شمابا موفقیت ثبت گردید").show();
@@ -243,10 +229,6 @@ public class ArticleDetailActivity extends AppCompatActivity {
                                     }).show();
                                 }
 
-                                @Override
-                                public void onComplete() {
-
-                                }
                             });
                 } else {
                     Loading.setVisibility(View.GONE);
@@ -262,31 +244,21 @@ public class ArticleDetailActivity extends AppCompatActivity {
     }
 
 
-    private void HandelDataContent(ArticleContentViewRequest request) {
+    private void HandelDataContent() {
         if (AppUtill.isNetworkAvailable(this)) {
-            RetrofitManager retro = new RetrofitManager(this);
-            IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-
-            Observable<ArticleContentResponse> call = iArticle.GetContentView(headers, request);
-            call.observeOn(AndroidSchedulers.mainThread())
+            new ArticleContentService(this).getOne(Id).observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<ArticleContentResponse>() {
+                    .subscribe(new NtkObserver<ErrorException<ArticleContentModel>>() {
                         @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(ArticleContentResponse articleContentResponse) {
+                        public void onNext(@NonNull ErrorException<ArticleContentModel> articleContentResponse) {
                             model = articleContentResponse;
                             if (model.Item != null) {
                                 SetData(model);
-                                HandelSimilary(Request.Id);
-                                HandelSimilaryCategory(Request.Id);
-                                if (Request.Id > 0) {
-                                    HandelDataContentOtherInfo(Request.Id);
-                                    HandelDataComment(Request.Id);
+                                HandelSimilary(Id);
+                                HandelSimilaryCategory(Id);
+                                if (Id > 0) {
+                                    HandelDataContentOtherInfo(Id);
+                                    HandelDataComment(Id);
                                 }
                             }
                             Loading.setVisibility(View.GONE);
@@ -294,13 +266,9 @@ public class ArticleDetailActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onError(Throwable e) {
+                        public void onError(@NonNull Throwable e) {
                             Loading.setVisibility(View.GONE);
                             Toasty.warning(ArticleDetailActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                        }
-
-                        @Override
-                        public void onComplete() {
 
                         }
                     });
@@ -316,24 +284,18 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
     private void HandelSimilary(long id) {
         if (AppUtill.isNetworkAvailable(this)) {
-            RetrofitManager manager = new RetrofitManager(this);
-            IArticle iArticle = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IArticle.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+            FilterDataModel Request = new FilterDataModel();
+            Filters f = new Filters();
+            f.PropertyName = "LinkContentId";
+            f.IntValue1 = Id;
+            Request.addFilter(f);
 
-            ArticleContentSimilarListRequest request = new ArticleContentSimilarListRequest();
-            request.LinkContetnId = id;
-
-            Observable<ArticleContentResponse> call = iArticle.GetContentSimilarList(headers, request);
-            call.observeOn(AndroidSchedulers.mainThread())
+            new ArticleContentSimilarService(this).ServiceGetAllWithSimilarsId(Request)
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<ArticleContentResponse>() {
+                    .subscribe(new  NtkObserver<ErrorException<ArticleContentModel>>() {
                         @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(ArticleContentResponse response) {
+                        public void onNext(@NonNull ErrorException<ArticleContentModel> response) {
                             if (response.ListItems.size() == 0) {
                                 findViewById(R.id.RowSimilaryActDetail).setVisibility(View.GONE);
                             } else {
@@ -345,12 +307,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
+                        public void onError(@NonNull Throwable e) {
 
                         }
                     });
@@ -366,24 +323,12 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
     private void HandelSimilaryCategory(long id) {
         if (AppUtill.isNetworkAvailable(this)) {
-            RetrofitManager manager = new RetrofitManager(this);
-            IArticle iArticle = manager.getCachedRetrofit(new ConfigStaticValue(this).GetApiBaseUrl()).create(IArticle.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-
-            ArticleContentCategoryListRequest request = new ArticleContentCategoryListRequest();
-            request.LinkContetnId = id;
-
-            Observable<ArticleContentResponse> call = iArticle.GetContentCategoryList(headers, request);
-            call.observeOn(AndroidSchedulers.mainThread())
+            FilterDataModel request = new FilterDataModel();
+            new ArticleContentService(this).getAllWithCategoryUsedInContent(id, request).observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new Observer<ArticleContentResponse>() {
+                    .subscribe(new NtkObserver<ErrorException<ArticleContentModel>>() {
                         @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(ArticleContentResponse response) {
+                        public void onNext(@NonNull ErrorException<ArticleContentModel> response) {
                             if (response.ListItems.size() == 0) {
                                 findViewById(R.id.RowSimilaryCategoryActDetail).setVisibility(View.GONE);
                             } else {
@@ -395,12 +340,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onError(Throwable e) {
-
-                        }
-
-                        @Override
-                        public void onComplete() {
+                        public void onError(@NonNull Throwable e) {
 
                         }
                     });
@@ -416,27 +356,16 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
     private void HandelDataComment(long ContentId) {
         if (AppUtill.isNetworkAvailable(this)) {
-            List<Filters> filters = new ArrayList<>();
-            ArticleCommentListRequest Request = new ArticleCommentListRequest();
+            FilterDataModel Request = new FilterDataModel();
             Filters f = new Filters();
             f.PropertyName = "LinkContentId";
             f.IntValue1 = ContentId;
-            filters.add(f);
-            Request.filters = filters;
-            RetrofitManager retro = new RetrofitManager(this);
-            IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-            Observable<ArticleCommentResponse> call = iArticle.GetCommentList(headers, Request);
-            call.subscribeOn(Schedulers.io())
+            Request.addFilter(f);
+            new ArticleCommentService(this).getAll(Request).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<ArticleCommentResponse>() {
+                    .subscribe(new NtkObserver<ErrorException<ArticleCommentModel>>() {
                         @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(ArticleCommentResponse model) {
+                        public void onNext(@NonNull ErrorException<ArticleCommentModel> model) {
                             if (model.IsSuccess) {
                                 if (model.ListItems.size() == 0) {
                                     findViewById(R.id.RowCommentActDetail).setVisibility(View.GONE);
@@ -450,12 +379,8 @@ public class ArticleDetailActivity extends AppCompatActivity {
                         }
 
                         @Override
-                        public void onError(Throwable e) {
+                        public void onError(@NonNull Throwable e) {
                             Toasty.warning(ArticleDetailActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                        }
-
-                        @Override
-                        public void onComplete() {
 
                         }
                     });
@@ -471,47 +396,32 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
     private void HandelDataContentOtherInfo(long ContentId) {
 
-        List<Filters> filters = new ArrayList<>();
-        ArticleContentOtherInfoRequest Request = new ArticleContentOtherInfoRequest();
+        FilterDataModel Request = new FilterDataModel();
         Filters f = new Filters();
         f.PropertyName = "LinkContentId";
         f.IntValue1 = ContentId;
-        filters.add(f);
-        Request.filters = filters;
-        RetrofitManager retro = new RetrofitManager(this);
-        IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-
-
-        Observable<ArticleContentOtherInfoResponse> call = iArticle.GetContentOtherInfoList(headers, Request);
-        call.observeOn(AndroidSchedulers.mainThread())
+        Request.addFilter(f);
+        new ArticleContentOtherInfoService(this).getAll(Request)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<ArticleContentOtherInfoResponse>() {
+                .subscribe(new NtkObserver<ErrorException<ArticleContentOtherInfoModel>>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(ArticleContentOtherInfoResponse articleContentOtherInfoResponse) {
+                    public void onNext(@NonNull ErrorException<ArticleContentOtherInfoModel> articleContentOtherInfoResponse) {
                         SetDataOtherinfo(articleContentOtherInfoResponse);
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onError(@NonNull Throwable e) {
                         Toasty.warning(ArticleDetailActivity.this, "خطای سامانه", Toasty.LENGTH_LONG, true).show();
-                    }
-
-                    @Override
-                    public void onComplete() {
 
                     }
+
                 });
 
 
     }
 
-    private void SetDataOtherinfo(ArticleContentOtherInfoResponse model) {
+    private void SetDataOtherinfo(ErrorException<ArticleContentOtherInfoModel> model) {
         Info = model;
         if (model.ListItems == null || model.ListItems.size() == 0) {
             findViewById(R.id.RowTimeActDetail).setVisibility(View.GONE);
@@ -520,14 +430,14 @@ public class ArticleDetailActivity extends AppCompatActivity {
             return;
         }
         findViewById(R.id.RowTimeActDetail).setVisibility(View.GONE);
-        List<ArticleContentOtherInfo> Info = new ArrayList<>();
-        ArticleContentOtherInfo i = new ArticleContentOtherInfo();
+        List<ArticleContentOtherInfoModel> Info = new ArrayList<>();
+        ArticleContentOtherInfoModel i = new ArticleContentOtherInfoModel();
         i.Title = "طرز تهیه";
         i.TypeId = 0;
         i.HtmlBody = this.model.Item.Body;
         Info.add(i);
 
-        for (ArticleContentOtherInfo ai : model.ListItems) {
+        for (ArticleContentOtherInfoModel ai : model.ListItems) {
             switch (ai.TypeId) {
                 case 21:
                     Lbls.get(7).setText(ai.Title);
@@ -560,10 +470,10 @@ public class ArticleDetailActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    private void SetData(ArticleContentResponse model) {
+    private void SetData(ErrorException<ArticleContentModel> model) {
         double rating = 0.0;
-        int sumClick = model.Item.ScoreSumClick;
-        if (model.Item.ScoreSumClick == 0) sumClick = 1;
+        int sumClick = model.Item.ViewCount;
+        if (model.Item.ViewCount == 0) sumClick = 1;
         if (model.Item.ScoreSumPercent / sumClick > 0 && model.Item.ScoreSumPercent / sumClick <= 10) {
             rating = 0.5;
         } else if (model.Item.ScoreSumPercent / sumClick > 10 && model.Item.ScoreSumPercent / sumClick <= 20) {
@@ -586,10 +496,10 @@ public class ArticleDetailActivity extends AppCompatActivity {
             rating = 5.0;
         }
         Rate.setRating((float) rating);
-        ImageLoader.getInstance().displayImage(model.Item.imageSrc, ImgHeader);
+        ImageLoader.getInstance().displayImage(model.Item.MainImageSrc, ImgHeader);
         Lbls.get(0).setText(model.Item.Title);
         Lbls.get(1).setText(model.Item.Title);
-        Lbls.get(3).setText(String.valueOf(model.Item.viewCount));
+        Lbls.get(3).setText(String.valueOf(model.Item.ViewCount));
         if (model.Item.Favorited) {
             ((ImageView) findViewById(R.id.imgHeartActDetail)).setImageResource(R.drawable.ic_fav_full);
         }
@@ -665,28 +575,19 @@ public class ArticleDetailActivity extends AppCompatActivity {
                     if (Txt[1].getText().toString().isEmpty()) {
                         Toast.makeText(ArticleDetailActivity.this, "لطفا مقادیر را وارد نمایید", Toast.LENGTH_SHORT).show();
                     } else {
-                        ArticleCommentAddRequest add = new ArticleCommentAddRequest();
+                        ArticleCommentModel add = new ArticleCommentModel();
                         add.Writer = Txt[0].getText().toString();
                         add.Comment = Txt[1].getText().toString();
-                        add.LinkContentId = Request.Id;
-                        RetrofitManager retro = new RetrofitManager(this);
-                        IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
-                        Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
+                        add.LinkContentId = Id;
 
 
-                        Observable<ArticleCommentResponse> call = iArticle.SetComment(headers, add);
-                        call.subscribeOn(Schedulers.io())
+                       new ArticleCommentService(this).add(add).subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(new Observer<ErrorException>() {
+                                .subscribe(new NtkObserver<ErrorException<ArticleCommentModel>>() {
                                     @Override
-                                    public void onSubscribe(Disposable d) {
-
-                                    }
-
-                                    @Override
-                                    public void onNext(ErrorException e) {
+                                    public void onNext(@NonNull ErrorException<ArticleCommentModel> e) {
                                         if (e.IsSuccess) {
-                                            HandelDataComment(Request.Id);
+                                            HandelDataComment(Id);
                                             dialog.dismiss();
                                             Toasty.success(ArticleDetailActivity.this, "نظر شما با موفقیت ثبت شد").show();
                                         } else {
@@ -695,18 +596,13 @@ public class ArticleDetailActivity extends AppCompatActivity {
                                     }
 
                                     @Override
-                                    public void onError(Throwable e) {
+                                    public void onError(@NonNull Throwable e) {
                                         Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 init();
                                             }
                                         }).show();
-                                    }
-
-                                    @Override
-                                    public void onComplete() {
-
                                     }
                                 });
                     }
@@ -732,26 +628,15 @@ public class ArticleDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void UnFav() {
+    private void Fav() {
         if (AppUtill.isNetworkAvailable(this)) {
-            RetrofitManager retro = new RetrofitManager(this);
-            IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
 
-            ArticleContentFavoriteRemoveRequest add = new ArticleContentFavoriteRemoveRequest();
-            add.Id = model.Item.Id;
 
-            Observable<ArticleContentFavoriteRemoveResponse> Call = iArticle.SetContentFavoriteRemove(headers, add);
-            Call.subscribeOn(Schedulers.io())
+          new ArticleContentService(this).addFavorite(Id).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<ArticleContentFavoriteRemoveResponse>() {
+                    .subscribe(new NtkObserver<ErrorExceptionBase>() {
                         @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(ArticleContentFavoriteRemoveResponse e) {
+                        public void onNext(@NonNull ErrorExceptionBase e) {
                             if (e.IsSuccess) {
                                 Toasty.success(ArticleDetailActivity.this, "با موفقیت ثبت شد").show();
                                 model.Item.Favorited = !model.Item.Favorited;
@@ -763,22 +648,16 @@ public class ArticleDetailActivity extends AppCompatActivity {
                             } else {
                                 Toasty.error(ArticleDetailActivity.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                             }
-
                         }
 
                         @Override
-                        public void onError(Throwable e) {
+                        public void onError(@NonNull Throwable e) {
                             Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     init();
                                 }
                             }).show();
-                        }
-
-                        @Override
-                        public void onComplete() {
-
                         }
                     });
         } else {
@@ -791,26 +670,13 @@ public class ArticleDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void Fav() {
+    private void UnFav() {
         if (AppUtill.isNetworkAvailable(this)) {
-            RetrofitManager retro = new RetrofitManager(this);
-            IArticle iArticle = retro.getRetrofitUnCached(configStaticValue.GetApiBaseUrl()).create(IArticle.class);
-            Map<String, String> headers = new ConfigRestHeader().GetHeaders(this);
-
-            ArticleContentFavoriteAddRequest add = new ArticleContentFavoriteAddRequest();
-            add.Id = model.Item.Id;
-
-            Observable<ArticleContentFavoriteAddResponse> Call = iArticle.SetContentFavoriteAdd(headers, add);
-            Call.subscribeOn(Schedulers.io())
+           new ArticleContentService(this).removeFavorite(Id).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<ArticleContentFavoriteAddResponse>() {
+                    .subscribe(new NtkObserver<ErrorExceptionBase>() {
                         @Override
-                        public void onSubscribe(Disposable d) {
-
-                        }
-
-                        @Override
-                        public void onNext(ArticleContentFavoriteAddResponse e) {
+                        public void onNext(@NonNull ErrorExceptionBase e) {
                             if (e.IsSuccess) {
                                 Toasty.success(ArticleDetailActivity.this, "با موفقیت ثبت شد").show();
                                 model.Item.Favorited = !model.Item.Favorited;
@@ -822,11 +688,10 @@ public class ArticleDetailActivity extends AppCompatActivity {
                             } else {
                                 Toasty.error(ArticleDetailActivity.this, e.ErrorMessage, Toast.LENGTH_LONG, true).show();
                             }
-
                         }
 
                         @Override
-                        public void onError(Throwable e) {
+                        public void onError(@NonNull Throwable e) {
                             Snackbar.make(layout, "خطای سامانه مجددا تلاش کنید", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -835,10 +700,6 @@ public class ArticleDetailActivity extends AppCompatActivity {
                             }).show();
                         }
 
-                        @Override
-                        public void onComplete() {
-
-                        }
                     });
         } else {
             Snackbar.make(layout, "عدم دسترسی به اینترنت", Snackbar.LENGTH_INDEFINITE).setAction("تلاش مجددا", new View.OnClickListener() {
@@ -856,7 +717,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
         CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
-        String message = model.Item.Title + "\n" + model.Item.description + "\n";
+        String message = model.Item.Title + "\n" + model.Item.Description + "\n";
         if (model.Item.Body != null) {
             message = message + Html.fromHtml(model.Item.Body
                     .replace("<p>", "")

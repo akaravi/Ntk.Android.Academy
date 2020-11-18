@@ -21,10 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ArticleContentListActivity;
@@ -36,18 +34,16 @@ import ntk.android.academy.adapter.theme.holder.ImageHolder;
 import ntk.android.academy.adapter.theme.holder.SliderHolder;
 import ntk.android.academy.adapter.theme.holder.TagHolder;
 import ntk.android.academy.util.Constant;
-import ntk.android.base.api.article.entity.ArticleContent;
-import ntk.android.base.api.article.entity.ArticleTag;
-import ntk.android.base.api.article.interfase.IArticle;
-import ntk.android.base.api.article.model.ArticleContentListRequest;
-import ntk.android.base.api.article.model.ArticleContentResponse;
-import ntk.android.base.api.article.model.ArticleTagRequest;
-import ntk.android.base.api.article.model.ArticleTagResponse;
 import ntk.android.base.api.baseModel.theme.ThemeChild;
 import ntk.android.base.api.baseModel.theme.ThemeChildConfig;
-import ntk.android.base.config.ConfigRestHeader;
-import ntk.android.base.config.ConfigStaticValue;
-import ntk.android.base.config.RetrofitManager;
+import ntk.android.base.config.ListOfJson;
+import ntk.android.base.config.NtkObserver;
+import ntk.android.base.entitymodel.article.ArticleContentModel;
+import ntk.android.base.entitymodel.base.ErrorException;
+import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.coremodulemain.CoreModuleTagModel;
+import ntk.android.base.services.article.ArticleContentService;
+import ntk.android.base.services.coremodulemain.CoreModuleTagService;
 import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.base.utill.prefrense.Preferences;
 import ss.com.bannerslider.banners.Banner;
@@ -58,9 +54,9 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final List<ThemeChild> themes;
     private final Context context;
-    private final List<ArticleTag> tags = new ArrayList<>();
+    private final List<CoreModuleTagModel> tags = new ArrayList<CoreModuleTagModel>();
     private final TagAdapter adTag;
-    private final Map<Integer, List<ArticleContent>> map_articles = new HashMap<>();
+    private final Map<Integer, List<ArticleContentModel>> map_articles = new HashMap<>();
     private final Map<Integer, ArticleAdapter> map_adapter = new HashMap<>();
 
     private int TotalTag = 0, TotalArticle = 0;
@@ -71,7 +67,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         adTag = new TagAdapter(context, tags);
         for (int i = 0; i < themes.size(); i++) {
             if (themes.get(i).LayoutName.equals("ArticleContentList")) {
-                List<ArticleContent> contents = new ArrayList<>();
+                List<ArticleContentModel> contents = new ArrayList<>();
                 map_articles.put(i, contents);
                 ArticleAdapter adArticle = new ArticleAdapter(context, contents);
                 map_adapter.put(i, adArticle);
@@ -104,6 +100,11 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 View view_slider = inflater.inflate(R.layout.row_home_slider, viewGroup, false);
                 viewHolder = new SliderHolder(view_slider);
                 break;
+            default:
+                Log.d("NTK", "View is Null in HomeAdapter ");
+                View view = inflater.inflate(R.layout.view_empty, viewGroup, false);
+                viewHolder = new BaseViewHolder(view);
+                break;
         }
         return viewHolder;
     }
@@ -131,6 +132,9 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 SliderHolder hoSlider = (SliderHolder) holder;
                 ConfigSlider(hoSlider, position);
                 break;
+            case 6:
+
+
         }
     }
 
@@ -154,38 +158,22 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void RestCategory(int i, TagHolder hoTag, int position) {
-        RetrofitManager manager = new RetrofitManager(context);
-        IArticle iArticle = manager.getCachedRetrofit(new ConfigStaticValue(context).GetApiBaseUrl()).create(IArticle.class);
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(context);
-
-        ArticleTagRequest request = new Gson().fromJson(themes.get(position).LayoutRequest, ArticleTagRequest.class);
+        FilterDataModel request = new Gson().fromJson(themes.get(position).LayoutRequest, FilterDataModel.class);
         request.RowPerPage = 8;
         request.CurrentPageNumber = i;
-        headers.put("body", new Gson().toJson(request));
-
-        Observable<ArticleTagResponse> call = iArticle.GetTagList(headers, request);
-        call.observeOn(AndroidSchedulers.mainThread())
+        new CoreModuleTagService(context).getAll(request).
+                observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<ArticleTagResponse>() {
+                .subscribe(new NtkObserver<ErrorException<CoreModuleTagModel>>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(ArticleTagResponse articleTagResponse) {
+                    public void onNext(@NonNull ErrorException<CoreModuleTagModel> articleTagResponse) {
                         tags.addAll(articleTagResponse.ListItems);
                         adTag.notifyDataSetChanged();
                         TotalTag = articleTagResponse.TotalRowCount;
                     }
 
                     @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
+                    public void onError(@NonNull Throwable e) {
 
                     }
                 });
@@ -241,10 +229,10 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         String RequestStr = Preferences.with(context).articleInfo().articleContentList();
         if (!RequestStr.equals("")) {
             Log.i("likfvj", "ConfigArticle: " + RequestStr + "");
-            ArticleContentResponse response = new Gson().fromJson(RequestStr, ArticleContentResponse.class);
-            map_articles.get(position).addAll(response.ListItems);
+            List<ArticleContentModel> response = new Gson().fromJson(RequestStr, new ListOfJson(ArticleContentModel.class));
+            map_articles.get(position).addAll(response);
             map_adapter.get(position).notifyDataSetChanged();
-            TotalArticle = response.TotalRowCount;
+            TotalArticle = response.size();
             hoArticle.RvMenu.setItemViewCacheSize(map_articles.get(position).size());
             hoArticle.Progress.setVisibility(View.GONE);
         }
@@ -273,40 +261,28 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private void RestArticle(int i, ArticleHolder hoArticle, int position) {
         hoArticle.Progress.setVisibility(View.VISIBLE);
-        RetrofitManager manager = new RetrofitManager(context);
-        IArticle iArticle = manager.getCachedRetrofit(new ConfigStaticValue(context).GetApiBaseUrl()).create(IArticle.class);
-        ArticleContentListRequest request = new Gson().fromJson(themes.get(position).LayoutRequest, ArticleContentListRequest.class);
+        FilterDataModel request = new Gson().fromJson(themes.get(position).LayoutRequest, FilterDataModel.class);
         request.RowPerPage = 20;
         request.CurrentPageNumber = i;
-        Map<String, String> headers = new ConfigRestHeader().GetHeaders(context);
-        Observable<ArticleContentResponse> call = iArticle.GetContentList(headers, request);
-        call.observeOn(AndroidSchedulers.mainThread())
+        new ArticleContentService(context).getAll(request).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<ArticleContentResponse>() {
+                .subscribe(new NtkObserver<ErrorException<ArticleContentModel>>() {
                     @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(ArticleContentResponse articleContentResponse) {
+                    public void onNext(@NonNull ErrorException<ArticleContentModel> articleContentResponse) {
                         if (!Preferences.with(context).articleInfo().articleContentList().equals("")) {
-                            Preferences.with(context).articleInfo().setArticleContentList( new Gson().toJson(articleContentResponse));
+                            Preferences.with(context).articleInfo().setArticleContentList(new Gson().toJson(articleContentResponse));
                         }
                         map_articles.get(position).addAll(articleContentResponse.ListItems);
                         map_adapter.get(position).notifyDataSetChanged();
                         TotalArticle = articleContentResponse.TotalRowCount;
                         hoArticle.RvMenu.setItemViewCacheSize(map_articles.get(position).size());
                         hoArticle.Progress.setVisibility(View.GONE);
+
                     }
 
                     @Override
-                    public void onError(Throwable e) {
+                    public void onError(@NonNull Throwable e) {
                         hoArticle.Progress.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onComplete() {
 
                     }
                 });
@@ -349,4 +325,9 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return themes.size();
     }
 
+    private class BaseViewHolder extends RecyclerView.ViewHolder {
+        public BaseViewHolder(View view) {
+            super(view);
+        }
+    }
 }

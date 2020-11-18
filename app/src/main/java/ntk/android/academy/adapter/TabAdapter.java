@@ -15,15 +15,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.event.HtmlBodyEvent;
+import ntk.android.base.entitymodel.article.ArticleContentOtherInfoModel;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.api.article.entity.ArticleContentOtherInfo;
 
 public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> {
 
-    private final List<ArticleContentOtherInfo> arrayList;
+    private final List<ArticleContentOtherInfoModel> arrayList;
     private final Context context;
 
-    public TabAdapter(Context context, List<ArticleContentOtherInfo> arrayList) {
+    public TabAdapter(Context context, List<ArticleContentOtherInfoModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }
