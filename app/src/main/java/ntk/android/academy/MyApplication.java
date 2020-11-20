@@ -50,7 +50,7 @@ public class MyApplication extends NTKApplication {
 
     @Override
     protected ApplicationStaticParameter getConfig() {
-        ApplicationStaticParameter.URL = "http://01ab9643fde5.ngrok.io";
+//        ApplicationStaticParameter.URL = "http://01ab9643fde5.ngrok.io";
        return super.getConfig();
     }
 
