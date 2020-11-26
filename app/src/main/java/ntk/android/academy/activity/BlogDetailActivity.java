@@ -44,7 +44,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.academy.adapter.CommentBlogAdapter;
+import ntk.android.academy.adapter.BlogCommentAdapter;
 import ntk.android.academy.adapter.TabBlogAdapter;
 import ntk.android.academy.event.HtmlBodyBlogEvent;
 import ntk.android.base.config.NtkObserver;
@@ -267,7 +267,7 @@ public class BlogDetailActivity extends AppCompatActivity {
                         public void onNext(ErrorException<BlogCommentModel> model) {
                             if (model.IsSuccess&&!model.ListItems.isEmpty()) {
                                 findViewById(R.id.lblCommentActDetailBlog).setVisibility(View.VISIBLE);
-                                CommentBlogAdapter adapter = new CommentBlogAdapter(BlogDetailActivity.this, model.ListItems);
+                                BlogCommentAdapter adapter = new BlogCommentAdapter(BlogDetailActivity.this, model.ListItems);
                                 RvComment.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
                             } else {

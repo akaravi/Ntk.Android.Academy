@@ -15,7 +15,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
-import ntk.android.academy.activity.ArticleContentListActivity;
+import ntk.android.academy.activity.ArticleContentGridListActivity;
+import ntk.android.base.Extras;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.api.baseModel.theme.ThemeChildConfig;
 
@@ -46,8 +47,8 @@ public class AdCoreButtonLinear extends RecyclerView.Adapter<AdCoreButtonLinear.
                 i.setData(Uri.parse(childs.get(position).ActionRequest));
                 context.startActivity(i);
             }else if (childs.get(position).ActionName.equals("ArticleContentList")) {
-                Intent intent = new Intent(context, ArticleContentListActivity.class);
-                intent.putExtra("Request", childs.get(position).ActionRequest);
+                Intent intent = new Intent(context, ArticleContentGridListActivity.class);
+                intent.putExtra(Extras.EXTRA_FIRST_ARG, childs.get(position).ActionRequest);
                 context.startActivity(intent);
             }
         });

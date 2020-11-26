@@ -26,18 +26,19 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
-import ntk.android.academy.activity.ArticleContentListActivity;
+import ntk.android.academy.activity.ArticleContentGridListActivity;
+import ntk.android.base.Extras;
 import ntk.android.base.entitymodel.article.ArticleCategoryModel;
 import ntk.android.base.entitymodel.base.FilterDataModel;
 import ntk.android.base.entitymodel.base.Filters;
 import ntk.android.base.utill.FontManager;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
+public class ArticleCategoryAdapter extends RecyclerView.Adapter<ArticleCategoryAdapter.ViewHolder> {
 
     private final List<ArticleCategoryModel> arrayList;
     private final Context context;
 
-    public CategoryAdapter(Context context, List<ArticleCategoryModel> arrayList) {
+    public ArticleCategoryAdapter(Context context, List<ArticleCategoryModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }
@@ -83,14 +84,14 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             f.PropertyName = "LinkCategoryId";
             f.IntValue1 = arrayList.get(position).Id;
             request.addFilter(f);
-            Intent intent = new Intent(context, ArticleContentListActivity.class);
-            intent.putExtra("Request", new Gson().toJson(request));
+            Intent intent = new Intent(context, ArticleContentGridListActivity.class);
+            intent.putExtra(Extras.EXTRA_FIRST_ARG, new Gson().toJson(request));
             context.startActivity(intent);
         });
         holder.ImgDrop.setOnClickListener(view -> {
             if (holder.Rv.getVisibility() == View.GONE) {
                 holder.ImgArrow.setRotation(180);
-                CategoryAdapter adapter = new CategoryAdapter(context, arrayList.get(position).Children);
+                ArticleCategoryAdapter adapter = new ArticleCategoryAdapter(context, arrayList.get(position).Children);
                 holder.Rv.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 holder.Rv.setVisibility(View.VISIBLE);

@@ -42,7 +42,7 @@ import io.reactivex.schedulers.Schedulers;
 import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.AboutUsActivity;
-import ntk.android.academy.activity.BlogActivity;
+import ntk.android.academy.activity.BlogListActivity;
 import ntk.android.academy.activity.NewsListActivity;
 import ntk.android.base.activity.common.IntroActivity;
 import ntk.android.base.activity.common.NotificationsActivity;
@@ -131,7 +131,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
     }
 
     private void ClickBlog() {
-        context.startActivity(new Intent(context, BlogActivity.class));
+        context.startActivity(new Intent(context, BlogListActivity.class));
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }

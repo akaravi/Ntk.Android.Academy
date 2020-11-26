@@ -51,6 +51,7 @@ import ntk.android.academy.event.toolbar.EVSearchClick;
 import ntk.android.academy.fragment.HomeFragment;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigation;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigationItem;
+import ntk.android.base.activity.abstraction.AbstractMainActivity;
 import ntk.android.base.config.NtkObserver;
 import ntk.android.base.dtomodel.application.MainResponseDtoModel;
 import ntk.android.base.entitymodel.base.ErrorException;
@@ -62,7 +63,7 @@ import ntk.android.base.api.baseModel.theme.Theme;
 import ntk.android.base.api.baseModel.theme.Toolbar;
 import ntk.android.base.utill.prefrense.Preferences;
 
-public class MainActivity extends AppCompatActivity implements AHBottomNavigation.OnTabSelectedListener {
+public class MainActivity extends AbstractMainActivity implements AHBottomNavigation.OnTabSelectedListener {
 
     @BindView(R.id.bottomNavMenu)
     AHBottomNavigation navigation;
@@ -82,8 +83,6 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
     @BindView(R.id.RecyclerDrawer)
     RecyclerView RvDrawer;
 
-    private long lastPressedTime;
-    private static final int PERIOD = 2000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -187,23 +186,7 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         drawer.openMenu(false);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
-            switch (event.getAction()) {
-                case KeyEvent.ACTION_DOWN:
-                    if (event.getDownTime() - lastPressedTime < PERIOD) {
-                        finish();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "برای خروج مجددا کلید بازگشت را فشار دهید",
-                                Toast.LENGTH_SHORT).show();
-                        lastPressedTime = event.getEventTime();
-                    }
-                    return true;
-            }
-        }
-        return false;
-    }
+
 
     private void HandelData() {
         if (AppUtill.isNetworkAvailable(this)) {
@@ -234,76 +217,5 @@ public class MainActivity extends AppCompatActivity implements AHBottomNavigatio
         }
     }
 
-    private void CheckUpdate() {
-        String st =  Preferences.with(this).appVariableInfo().configapp();
-        CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
-        if (mcr.AppVersion > BuildConfig.VERSION_CODE && BuildConfig.APPLICATION_ID.indexOf(".APPNTK") < 0) {
-            if (mcr.AppForceUpdate) {
-                UpdateFore();
-            } else {
-                Update();
-            }
-        }
-    }
-
-    private void Update() {
-        String st = Preferences.with(this).appVariableInfo().configapp();
-        CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(true);
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
-        dialog.setContentView(R.layout.dialog_permission);
-        ((TextView) dialog.findViewById(R.id.lbl1PernissionDialog)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        ((TextView) dialog.findViewById(R.id.lbl1PernissionDialog)).setText("توجه");
-        ((TextView) dialog.findViewById(R.id.lbl2PernissionDialog)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        ((TextView) dialog.findViewById(R.id.lbl2PernissionDialog)).setText("نسخه جدید اپلیکیشن اومده دوست داری آبدیت بشه؟؟");
-        Button Ok = dialog.findViewById(R.id.btnOkPermissionDialog);
-        Ok.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        Ok.setOnClickListener(view1 -> {
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(mcr.AppUrl));
-            startActivity(i);
-            dialog.dismiss();
-        });
-        Button Cancel = dialog.findViewById(R.id.btnCancelPermissionDialog);
-        Cancel.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        Cancel.setOnClickListener(view12 -> dialog.dismiss());
-        dialog.show();
-    }
-
-    private void UpdateFore() {
-        String st =  Preferences.with(this).appVariableInfo().configapp();
-        CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(false);
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
-        dialog.setContentView(R.layout.dialog_update);
-        ((TextView) dialog.findViewById(R.id.lbl1PernissionDialogUpdate)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        ((TextView) dialog.findViewById(R.id.lbl1PernissionDialogUpdate)).setText("توجه");
-        ((TextView) dialog.findViewById(R.id.lbl2PernissionDialogUpdate)).setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        ((TextView) dialog.findViewById(R.id.lbl2PernissionDialogUpdate)).setText("نسخه جدید اپلیکیشن اومده حتما باید آبدیت بشه");
-        Button Ok = dialog.findViewById(R.id.btnOkPermissionDialogUpdate);
-        Ok.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
-        Ok.setOnClickListener(view1 -> {
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(mcr.AppUrl));
-            startActivity(i);
-            dialog.dismiss();
-        });
-        dialog.setOnKeyListener((dialog1, keyCode, event) -> {
-            switch (event.getAction()) {
-                case KeyEvent.ACTION_DOWN:
-                    finish();
-            }
-            return true;
-        });
-        dialog.show();
-    }
 
 }

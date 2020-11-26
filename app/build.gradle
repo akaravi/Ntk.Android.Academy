@@ -101,10 +101,10 @@ dependencies {
     implementation 'com.google.zxing:core:3.3.0'
     implementation 'androidmads.library.qrgenearator:QRGenearator:1.0.3'
     implementation 'com.github.codekidX:storage-chooser:2.0.4.2'
-//for animation
+    //for animation
     implementation 'com.daimajia.easing:library:2.0@aar'
     implementation 'com.daimajia.androidanimations:library:2.3@aar'
-
+    //for functional codding
+    implementation 'net.sourceforge.streamsupport:android-retrostreams:1.7.2'
     implementation project(path: ':baseActivity')
-    implementation project(path: ':base')
 }

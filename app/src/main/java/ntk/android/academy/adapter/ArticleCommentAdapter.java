@@ -1,38 +1,43 @@
 package ntk.android.academy.adapter;
 
 import android.content.Context;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.base.config.NtkObserver;
-import ntk.android.base.entitymodel.base.ErrorException;
-import ntk.android.base.entitymodel.news.NewsCommentModel;
-import ntk.android.base.entitymodel.news.NewsContentModel;
-import ntk.android.base.services.news.NewsContentService;
+import ntk.android.base.config.ConfigRestHeader;
+import ntk.android.base.config.ConfigStaticValue;
+import ntk.android.base.config.RetrofitManager;
+import ntk.android.base.entitymodel.article.ArticleCommentModel;
 import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.FontManager;
+import ntk.android.base.api.article.interfase.IArticle;
+import ntk.android.base.api.article.model.ArticleCommentResponse;
+import ntk.android.base.api.article.model.ArticleCommentViewRequest;
+import ntk.android.base.api.utill.NTKClientAction;
 
-public class CommentNewsAdapter extends RecyclerView.Adapter<CommentNewsAdapter.ViewHolder> {
+public class ArticleCommentAdapter extends RecyclerView.Adapter<ArticleCommentAdapter.ViewHolder> {
 
-    private final List<NewsCommentModel> arrayList;
+    private final List<ArticleCommentModel> arrayList;
     private final Context context;
 
-    public CommentNewsAdapter(Context context, List<NewsCommentModel> arrayList) {
+    public ArticleCommentAdapter(Context context, List<ArticleCommentModel> arrayList) {
         this.arrayList = arrayList;
         this.context = context;
     }
@@ -56,50 +61,78 @@ public class CommentNewsAdapter extends RecyclerView.Adapter<CommentNewsAdapter.
         holder.Lbls.get(4).setText(String.valueOf(arrayList.get(position).Comment));
 
         holder.ImgLike.setOnClickListener(v -> {
-            long id = arrayList.get(position).Id;
-            new NewsContentService(context).getOne(id).observeOn(AndroidSchedulers.mainThread())
+            ArticleCommentViewRequest request = new ArticleCommentViewRequest();
+            request.Id = arrayList.get(position).Id;
+            request.ActionClientOrder = NTKClientAction.LikeClientAction;
+            RetrofitManager retro = new RetrofitManager(context);
+            IArticle iArticle = retro.getRetrofitUnCached(new ConfigStaticValue(context).GetApiBaseUrl()).create(IArticle.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(context);
+            Observable<ArticleCommentResponse> call = iArticle.GetCommentView(headers, request);
+            call.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new NtkObserver<ErrorException<NewsContentModel>>() {
+                    .subscribe(new Observer<ArticleCommentResponse>() {
                         @Override
-                        public void onNext(@NonNull ErrorException<NewsContentModel> model) {
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(ArticleCommentResponse model) {
                             if (model.IsSuccess) {
                                 arrayList.get(position).SumLikeClick = arrayList.get(position).SumLikeClick + 1;
                                 notifyDataSetChanged();
                             } else {
-                                Toasty.warning(context, model.ErrorMessage, Toasty.LENGTH_LONG, true).show();
+                                Toasty.warning(context, "قبلا در به این محتوا رای داده اید", Toasty.LENGTH_LONG, true).show();
                             }
                         }
 
                         @Override
-                        public void onError(@NonNull Throwable e) {
-                            Toasty.warning(context, "قبلا در این محتوا ثبت نطر ئاشته اید", Toasty.LENGTH_LONG, true).show();
+                        public void onError(Throwable e) {
+                            Toasty.warning(context, e.getMessage(), Toasty.LENGTH_LONG, true).show();
+                        }
+
+                        @Override
+                        public void onComplete() {
 
                         }
                     });
         });
 
         holder.ImgDisLike.setOnClickListener(v -> {
-            //todo replace with comment like dislike
-            long id = arrayList.get(position).Id;
-            new NewsContentService(context).getOne(id).observeOn(AndroidSchedulers.mainThread())
+            ArticleCommentViewRequest request = new ArticleCommentViewRequest();
+            request.Id = arrayList.get(position).Id;
+            request.ActionClientOrder = NTKClientAction.DisLikeClientAction;
+            RetrofitManager retro = new RetrofitManager(context);
+            IArticle iArticle = retro.getRetrofitUnCached(new ConfigStaticValue(context).GetApiBaseUrl()).create(IArticle.class);
+            Map<String, String> headers = new ConfigRestHeader().GetHeaders(context);
+            Observable<ArticleCommentResponse> call = iArticle.GetCommentView(headers, request);
+            call.observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new NtkObserver<ErrorException<NewsContentModel>>() {
+                    .subscribe(new Observer<ArticleCommentResponse>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
 
                         @Override
-                        public void onNext(ErrorException<NewsContentModel> model) {
+                        public void onNext(ArticleCommentResponse model) {
                             if (model.IsSuccess) {
                                 arrayList.get(position).SumDisLikeClick = arrayList.get(position).SumDisLikeClick - 1;
                                 notifyDataSetChanged();
                             } else {
-                                Toasty.warning(context, model.ErrorMessage, Toasty.LENGTH_LONG, true).show();
+                                Toasty.warning(context, "قبلا در به این محتوا رای داده اید", Toasty.LENGTH_LONG, true).show();
                             }
                         }
 
                         @Override
                         public void onError(Throwable e) {
-                            Toasty.warning(context, "قبلا در این محتوا ثبت نطر ئاشته اید", Toasty.LENGTH_LONG, true).show();
+                            Toasty.warning(context, e.getMessage(), Toasty.LENGTH_LONG, true).show();
                         }
 
+                        @Override
+                        public void onComplete() {
+
+                        }
                     });
         });
     }

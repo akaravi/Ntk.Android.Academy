@@ -24,6 +24,7 @@ public class MyApplication extends NTKApplication {
 
     @Override
     public void onCreate() {
+        DEBUG = true;
         super.onCreate();
         if (!new File(getCacheDir(), "image").exists()) {
             new File(getCacheDir(), "image").mkdirs();
@@ -51,7 +52,7 @@ public class MyApplication extends NTKApplication {
     @Override
     protected ApplicationStaticParameter getConfig() {
 //        ApplicationStaticParameter.URL = "http://01ab9643fde5.ngrok.io";
-       return super.getConfig();
+        return super.getConfig();
     }
 
     @Override

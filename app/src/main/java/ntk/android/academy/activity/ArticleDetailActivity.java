@@ -35,33 +35,27 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import es.dmoral.toasty.Toasty;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.ArticleAdapter;
-import ntk.android.academy.adapter.CommentAdapter;
+import ntk.android.academy.adapter.ArticleCommentAdapter;
 import ntk.android.academy.adapter.TabAdapter;
 import ntk.android.academy.event.HtmlBodyEvent;
+import ntk.android.base.Extras;
 import ntk.android.base.api.core.entity.CoreMain;
-import ntk.android.base.config.ConfigRestHeader;
 import ntk.android.base.config.NtkObserver;
-import ntk.android.base.config.RetrofitManager;
 import ntk.android.base.dtomodel.core.ScoreClickDtoModel;
 import ntk.android.base.entitymodel.article.ArticleCommentModel;
 import ntk.android.base.entitymodel.article.ArticleContentModel;
 import ntk.android.base.entitymodel.article.ArticleContentOtherInfoModel;
-import ntk.android.base.entitymodel.article.ArticleContentSimilarModel;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.ErrorExceptionBase;
 import ntk.android.base.entitymodel.base.FilterDataModel;
@@ -69,7 +63,6 @@ import ntk.android.base.entitymodel.base.Filters;
 import ntk.android.base.services.article.ArticleCommentService;
 import ntk.android.base.services.article.ArticleContentOtherInfoService;
 import ntk.android.base.services.article.ArticleContentService;
-import ntk.android.base.services.article.ArticleContentSimilarService;
 import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.utill.prefrense.Preferences;
@@ -370,7 +363,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
                                 if (model.ListItems.size() == 0) {
                                     findViewById(R.id.RowCommentActDetail).setVisibility(View.GONE);
                                 } else {
-                                    CommentAdapter adapter = new CommentAdapter(ArticleDetailActivity.this, model.ListItems);
+                                    ArticleCommentAdapter adapter = new ArticleCommentAdapter(ArticleDetailActivity.this, model.ListItems);
                                     RvComment.setAdapter(adapter);
                                     adapter.notifyDataSetChanged();
                                     findViewById(R.id.RowCommentActDetail).setVisibility(View.VISIBLE);
@@ -521,7 +514,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
                 request = request + s;
             }
             Intent intent = new Intent(this, PhotoGalleryActivity.class);
-            intent.putExtra("Request", request);
+            intent.putExtra(Extras.EXTRA_FIRST_ARG, request);
             startActivity(intent);
         }
     }

@@ -22,7 +22,7 @@ import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.academy.adapter.CategoryAdapter;
+import ntk.android.academy.adapter.ArticleCategoryAdapter;
 import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.base.config.NtkObserver;
 import ntk.android.base.entitymodel.article.ArticleCategoryModel;
@@ -92,7 +92,7 @@ public class CommandFragment extends Fragment {
                 .subscribe(new NtkObserver<ErrorException<ArticleCategoryModel>>() {
                     @Override
                     public void onNext(@io.reactivex.annotations.NonNull ErrorException<ArticleCategoryModel> articleCategoryResponse) {
-                        CategoryAdapter adapter = new CategoryAdapter(getContext(), articleCategoryResponse.ListItems);
+                        ArticleCategoryAdapter adapter = new ArticleCategoryAdapter(getContext(), articleCategoryResponse.ListItems);
                         Rv.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
                         Loading.setVisibility(View.GONE);

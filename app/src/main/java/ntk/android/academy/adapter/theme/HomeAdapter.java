@@ -25,15 +25,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
-import ntk.android.academy.activity.ArticleContentListActivity;
+import ntk.android.academy.activity.ArticleContentGridListActivity;
 import ntk.android.academy.adapter.ArticleAdapter;
-import ntk.android.academy.adapter.TagAdapter;
+import ntk.android.academy.adapter.CoreTagAdapter;
 import ntk.android.academy.adapter.theme.holder.ArticleHolder;
 import ntk.android.academy.adapter.theme.holder.ButtonHolder;
 import ntk.android.academy.adapter.theme.holder.ImageHolder;
 import ntk.android.academy.adapter.theme.holder.SliderHolder;
 import ntk.android.academy.adapter.theme.holder.TagHolder;
 import ntk.android.academy.util.Constant;
+import ntk.android.base.Extras;
 import ntk.android.base.api.baseModel.theme.ThemeChild;
 import ntk.android.base.api.baseModel.theme.ThemeChildConfig;
 import ntk.android.base.config.ListOfJson;
@@ -55,7 +56,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final List<ThemeChild> themes;
     private final Context context;
     private final List<CoreModuleTagModel> tags = new ArrayList<CoreModuleTagModel>();
-    private final TagAdapter adTag;
+    private final CoreTagAdapter adTag;
     private final Map<Integer, List<ArticleContentModel>> map_articles = new HashMap<>();
     private final Map<Integer, ArticleAdapter> map_adapter = new HashMap<>();
 
@@ -64,7 +65,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public HomeAdapter(Context context, List<ThemeChild> list) {
         this.themes = list;
         this.context = context;
-        adTag = new TagAdapter(context, tags);
+        adTag = new CoreTagAdapter(context, tags);
         for (int i = 0; i < themes.size(); i++) {
             if (themes.get(i).LayoutName.equals("ArticleContentList")) {
                 List<ArticleContentModel> contents = new ArrayList<>();
@@ -239,8 +240,8 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
         hoArticle.Lbls.get(1).setOnClickListener(v -> {
-            Intent intent = new Intent(context, ArticleContentListActivity.class);
-            intent.putExtra("Request", themes.get(position).LayoutConfig.get(1).ActionRequest);
+            Intent intent = new Intent(context, ArticleContentGridListActivity.class);
+            intent.putExtra(Extras.EXTRA_FIRST_ARG, themes.get(position).LayoutConfig.get(1).ActionRequest);
             context.startActivity(intent);
         });
 
@@ -302,8 +303,8 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     i.setData(Uri.parse(themes.get(position).LayoutChildConfigs.get(p).ActionRequest));
                     context.startActivity(i);
                 } else if (themes.get(position).LayoutChildConfigs.get(p).ActionName.equals("ArticleContentList")) {
-                    Intent intent = new Intent(context, ArticleContentListActivity.class);
-                    intent.putExtra("Request", themes.get(position).LayoutChildConfigs.get(p).ActionRequest);
+                    Intent intent = new Intent(context, ArticleContentGridListActivity.class);
+                    intent.putExtra(Extras.EXTRA_FIRST_ARG, themes.get(position).LayoutChildConfigs.get(p).ActionRequest);
                     context.startActivity(intent);
                 }
             }

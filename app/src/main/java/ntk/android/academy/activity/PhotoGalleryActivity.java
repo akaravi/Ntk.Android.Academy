@@ -1,9 +1,9 @@
 package ntk.android.academy.activity;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,6 +15,7 @@ import ntk.android.academy.R;
 import ntk.android.academy.library.scrollgallery.MediaInfo;
 import ntk.android.academy.library.scrollgallery.ScrollGalleryView;
 import ntk.android.academy.library.scrollgallery.loader.DefaultImageLoader;
+import ntk.android.base.Extras;
 
 public class PhotoGalleryActivity extends AppCompatActivity {
 
@@ -30,7 +31,7 @@ public class PhotoGalleryActivity extends AppCompatActivity {
     }
 
     private void init() {
-        String Request = getIntent().getExtras().getString("Request");
+        String Request = getIntent().getExtras().getString(Extras.EXTRA_FIRST_ARG);
         String[] Links = Request.split("@");
         List<String> links = Arrays.asList(Links);
         List<MediaInfo> infos = new ArrayList<>(links.size());
