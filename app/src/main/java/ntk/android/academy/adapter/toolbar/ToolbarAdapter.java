@@ -1,26 +1,15 @@
 package ntk.android.academy.adapter.toolbar;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.recyclerview.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -28,21 +17,16 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
-import ntk.android.base.config.ConfigStaticValue;
-import ntk.android.academy.event.toolbar.EVHamberMenuClick;
-import ntk.android.academy.event.toolbar.EVSearchClick;
-
-import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.baseModel.theme.Toolbar;
+import ntk.android.base.dtomodel.theme.ToolbarDtoModel;
 
 //todo remove
 public class ToolbarAdapter extends RecyclerView.Adapter<ToolbarAdapter.ViewHolder> {
 
-    private final List<Toolbar> toolbars;
+    private final List<ToolbarDtoModel> toolbars;
     private final Context context;
     private int Click;
 
-    public ToolbarAdapter(Context context, List<Toolbar> toolbar) {
+    public ToolbarAdapter(Context context, List<ToolbarDtoModel> toolbar) {
         this.toolbars = toolbar;
         this.context = context;
     }

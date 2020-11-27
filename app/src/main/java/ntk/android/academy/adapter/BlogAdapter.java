@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -26,10 +27,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.BlogDetailActivity;
+
+import ntk.android.base.Extras;
 import ntk.android.base.entitymodel.blog.BlogContentModel;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.blog.entity.BlogContent;
-import ntk.android.base.api.blog.model.BlogContentViewRequest;
 
 public class BlogAdapter extends RecyclerView.Adapter<BlogAdapter.ViewHolder> {
 
@@ -102,9 +103,7 @@ public class BlogAdapter extends RecyclerView.Adapter<BlogAdapter.ViewHolder> {
         holder.Rate.setRating((float) rating);
         holder.Root.setOnClickListener(view -> {
             Intent intent = new Intent(context, BlogDetailActivity.class);
-            BlogContentViewRequest request = new BlogContentViewRequest();
-            request.Id = arrayList.get(position).Id;
-            intent.putExtra("Request", new Gson().toJson(request));
+            intent.putExtra(Extras.EXTRA_FIRST_ARG,arrayList.get(position).Id);
             context.startActivity(intent);
         });
     }

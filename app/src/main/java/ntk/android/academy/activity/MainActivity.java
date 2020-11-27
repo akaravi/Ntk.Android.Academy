@@ -1,23 +1,12 @@
 package ntk.android.academy.activity;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.flaviofaria.kenburnsview.KenBurnsView;
 import com.google.gson.Gson;
@@ -37,30 +26,28 @@ import es.dmoral.toasty.Toasty;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
-import ntk.android.academy.BuildConfig;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.FragmentAdapter;
 import ntk.android.academy.adapter.PagerAdapter;
 import ntk.android.academy.adapter.drawer.DrawerAdapter;
 import ntk.android.academy.adapter.toolbar.ToolbarAdapter;
+import ntk.android.academy.event.toolbar.EVHamberMenuClick;
+import ntk.android.academy.event.toolbar.EVSearchClick;
 import ntk.android.academy.fragment.BmiFragment;
 import ntk.android.academy.fragment.CommandFragment;
 import ntk.android.academy.fragment.FavoriteFragment;
-import ntk.android.academy.event.toolbar.EVHamberMenuClick;
-import ntk.android.academy.event.toolbar.EVSearchClick;
 import ntk.android.academy.fragment.HomeFragment;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigation;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigationItem;
 import ntk.android.base.activity.abstraction.AbstractMainActivity;
 import ntk.android.base.config.NtkObserver;
 import ntk.android.base.dtomodel.application.MainResponseDtoModel;
+import ntk.android.base.dtomodel.theme.ThemeDtoModel;
+import ntk.android.base.dtomodel.theme.ToolbarDtoModel;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.services.application.ApplicationAppService;
 import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.core.entity.CoreMain;
-import ntk.android.base.api.baseModel.theme.Theme;
-import ntk.android.base.api.baseModel.theme.Toolbar;
 import ntk.android.base.utill.prefrense.Preferences;
 
 public class MainActivity extends AbstractMainActivity implements AHBottomNavigation.OnTabSelectedListener {
@@ -138,21 +125,21 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
     }
 
     private void HandelToolbarDrawer() {
-        Theme theme = new Gson().fromJson(Preferences.with(this).UserInfo().theme(), Theme.class);
+        ThemeDtoModel theme = new Gson().fromJson(Preferences.with(this).UserInfo().theme(), ThemeDtoModel.class);
         if (theme == null) return;
         RvToolbar.setHasFixedSize(true);
         RvToolbar.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        List<Toolbar> toolbars = new ArrayList<>();
+        List<ToolbarDtoModel> toolbars = new ArrayList<>();
         toolbars.add(theme.Toolbar);
         ToolbarAdapter AdToobar = new ToolbarAdapter(this, toolbars);
         RvToolbar.setAdapter(AdToobar);
         AdToobar.notifyDataSetChanged();
 
-        ImageLoader.getInstance().displayImage(theme.Toolbar.Drawer.HeaderImage, Header);
+        ImageLoader.getInstance().displayImage(theme.Toolbar.DrawerThemeDtoModel.HeaderImage, Header);
 
         RvDrawer.setHasFixedSize(true);
         RvDrawer.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        DrawerAdapter AdDrawer = new DrawerAdapter(this, theme.Toolbar.Drawer.Child, drawer);
+        DrawerAdapter AdDrawer = new DrawerAdapter(this, theme.Toolbar.DrawerThemeDtoModel.Child, drawer);
         RvDrawer.setAdapter(AdDrawer);
         AdDrawer.notifyDataSetChanged();
     }

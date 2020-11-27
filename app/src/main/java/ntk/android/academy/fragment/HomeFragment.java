@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.theme.HomeAdapter;
 import ntk.android.academy.library.AnimatedRecyclerView;
-import ntk.android.base.api.baseModel.theme.Theme;
+import ntk.android.base.dtomodel.theme.ThemeDtoModel;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.utill.prefrense.Preferences;
 
@@ -72,7 +72,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void SetDataHome() {
-        Theme theme = new Gson().fromJson(Preferences.with(getContext()).UserInfo().theme(), Theme.class);
+        ThemeDtoModel theme = new Gson().fromJson(Preferences.with(getContext()).UserInfo().theme(), ThemeDtoModel.class);
         if (theme == null) return;
         HomeAdapter adapter = new HomeAdapter(getContext(), theme.Childs);
         RvHome.setAdapter(adapter);

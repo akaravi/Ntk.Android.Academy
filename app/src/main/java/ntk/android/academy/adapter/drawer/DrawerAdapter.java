@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,7 +25,6 @@ import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
-import java.util.Map;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
@@ -34,42 +32,30 @@ import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.AboutUsActivity;
 import ntk.android.academy.activity.BlogListActivity;
+import ntk.android.academy.activity.MainActivity;
 import ntk.android.academy.activity.NewsListActivity;
 import ntk.android.base.activity.common.IntroActivity;
 import ntk.android.base.activity.common.NotificationsActivity;
-import ntk.android.base.activity.poling.PoolingActivity;
+import ntk.android.base.activity.poling.PolingActivity;
 import ntk.android.base.activity.ticketing.FaqActivity;
 import ntk.android.base.activity.ticketing.TicketListActivity;
-import ntk.android.base.api.application.interfase.IApplication;
-import ntk.android.base.api.application.model.ApplicationScoreRequest;
-import ntk.android.base.api.application.model.ApplicationScoreResponse;
-import ntk.android.base.api.baseModel.theme.DrawerChild;
-import ntk.android.base.api.core.entity.CoreMain;
-import ntk.android.base.config.ConfigRestHeader;
-import ntk.android.base.config.ConfigStaticValue;
-import ntk.android.base.config.RetrofitManager;
+import ntk.android.base.dtomodel.application.MainResponseDtoModel;
+import ntk.android.base.dtomodel.theme.DrawerChildThemeDtoModel;
 import ntk.android.base.room.RoomDb;
-import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.utill.prefrense.Preferences;
 
 public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder> {
 
-    private final List<DrawerChild> childs;
+    private final List<DrawerChildThemeDtoModel> childs;
     private final Context context;
     private int Click;
     private final FlowingDrawer Drawer;
 
-    public DrawerAdapter(Context context, List<DrawerChild> children, FlowingDrawer drawer) {
+    public DrawerAdapter(Context context, List<DrawerChildThemeDtoModel> children, FlowingDrawer drawer) {
         this.childs = children;
         this.context = context;
         this.Drawer = drawer;
@@ -189,7 +175,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
     }
 
     private void ClickPooling() {
-        context.startActivity(new Intent(context, PoolingActivity.class));
+        context.startActivity(new Intent(context, PolingActivity.class));
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }
@@ -197,7 +183,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
 
     private void ClickShare() {
         String st = Preferences.with(context).appVariableInfo().configapp();
-        CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
+        MainResponseDtoModel mcr = new Gson().fromJson(st, MainResponseDtoModel.class);
 
         final Dialog dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -250,78 +236,10 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
     }
 
     private void ClickFeedBack() {
-        ApplicationScoreRequest request = new ApplicationScoreRequest();
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(true);
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
-        dialog.setContentView(R.layout.dialog_comment);
-        dialog.show();
-        TextView Lbl = dialog.findViewById(R.id.lblTitleDialogComment);
-        Lbl.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-        final EditText Txt = dialog.findViewById(R.id.txtDialogComment);
-        Txt.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-//        Txt.setText(EasyPreference.with(context).getString("RateMessage", ""));
-        final MaterialRatingBar Rate = dialog.findViewById(R.id.rateDialogComment);
-//        Rate.setRating(EasyPreference.with(context).getInt("Rate", 0));
-        Rate.setOnRatingChangeListener((ratingBar, rating) -> {
-            request.ScorePercent = (int) rating;
-            //برای تبدیل به درصد
-            request.ScorePercent = request.ScorePercent * 17;
-            if (request.ScorePercent > 100)
-                request.ScorePercent = 100;
-        });
-        Button Btn = dialog.findViewById(R.id.btnDialogComment);
-        Btn.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-        Btn.setOnClickListener(v -> {
-            if (Txt.getText().toString().isEmpty()) {
-                Toast.makeText(context, "لطفا نظر خود را وارد نمایید", Toast.LENGTH_SHORT).show();
-            } else {
-                if (AppUtill.isNetworkAvailable(context)) {
-                    request.ScoreComment = Txt.getText().toString();
-
-                    RetrofitManager manager = new RetrofitManager(context);
-                    IApplication iCore = manager.getCachedRetrofit(new ConfigStaticValue(context).GetApiBaseUrl()).create(IApplication.class);
-                    Map<String, String> headers = new ConfigRestHeader().GetHeaders(context);
-                    Observable<ApplicationScoreResponse> Call = iCore.SetScoreApplication(headers, request);
-                    Call.observeOn(AndroidSchedulers.mainThread())
-                            .subscribeOn(Schedulers.io())
-                            .subscribe(new Observer<ApplicationScoreResponse>() {
-                                @Override
-                                public void onSubscribe(Disposable d) {
-
-                                }
-
-                                @Override
-                                public void onNext(ApplicationScoreResponse applicationScoreResponse) {
-                                    if (applicationScoreResponse.IsSuccess) {
-                                        dialog.dismiss();
-                                        Toasty.success(context, "با موفقیت ثبت شد", Toast.LENGTH_LONG, true).show();
-                                    } else {
-                                        Toasty.warning(context, "مجددا تلاش کنید", Toast.LENGTH_LONG, true).show();
-                                    }
-                                }
-
-                                @Override
-                                public void onError(Throwable e) {
-                                    Toasty.error(context, "خظا در اتصال به مرکز", Toast.LENGTH_LONG, true).show();
-                                }
-
-                                @Override
-                                public void onComplete() {
-
-                                }
-                            });
-                } else {
-                    Toast.makeText(context, "عدم دسترسی به اینترنت", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        ((MainActivity) context).onFeedbackClick();
     }
 
     private void ClickQuestion() {

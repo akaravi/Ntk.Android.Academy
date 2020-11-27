@@ -1,4 +1,4 @@
-package ntk.android.academy.adapter;
+ package ntk.android.academy.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -54,7 +54,7 @@ public class ArticleCategoryAdapter extends RecyclerView.Adapter<ArticleCategory
         holder.LblName.setText(arrayList.get(position).Title);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true).build();
-        ImageLoader.getInstance().displayImage(arrayList.get(position).LinkMainImageSrc, holder.Img, options, new ImageLoadingListener() {
+        ImageLoader.getInstance().displayImage(arrayList.get(position).LinkMainImageIdSrc, holder.Img, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
 

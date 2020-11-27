@@ -3,12 +3,13 @@ package ntk.android.academy.adapter.theme;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -20,15 +21,15 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ArticleContentGridListActivity;
 import ntk.android.base.Extras;
+import ntk.android.base.dtomodel.theme.ThemeChildConfigDtoModel;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.baseModel.theme.ThemeChildConfig;
 
 public class CoreImageAdapter extends RecyclerView.Adapter<CoreImageAdapter.ViewHolder> {
 
-    private final List<ThemeChildConfig> childs;
+    private final List<ThemeChildConfigDtoModel> childs;
     private final Context context;
 
-    public CoreImageAdapter(Context context, List<ThemeChildConfig> list) {
+    public CoreImageAdapter(Context context, List<ThemeChildConfigDtoModel> list) {
         this.childs = list;
         this.context = context;
     }

@@ -50,8 +50,8 @@ import ntk.android.academy.adapter.ArticleCommentAdapter;
 import ntk.android.academy.adapter.TabAdapter;
 import ntk.android.academy.event.HtmlBodyEvent;
 import ntk.android.base.Extras;
-import ntk.android.base.api.core.entity.CoreMain;
 import ntk.android.base.config.NtkObserver;
+import ntk.android.base.dtomodel.application.MainResponseDtoModel;
 import ntk.android.base.dtomodel.core.ScoreClickDtoModel;
 import ntk.android.base.entitymodel.article.ArticleCommentModel;
 import ntk.android.base.entitymodel.article.ArticleContentModel;
@@ -707,7 +707,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
     @OnClick(R.id.imgShareActDetail)
     public void ClickShare() {
         String st = Preferences.with(this).appVariableInfo().configapp();
-        CoreMain mcr = new Gson().fromJson(st, CoreMain.class);
+        MainResponseDtoModel mcr = new Gson().fromJson(st, MainResponseDtoModel.class);
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         String message = model.Item.Title + "\n" + model.Item.Description + "\n";

@@ -35,10 +35,11 @@ import ntk.android.academy.adapter.theme.holder.SliderHolder;
 import ntk.android.academy.adapter.theme.holder.TagHolder;
 import ntk.android.academy.util.Constant;
 import ntk.android.base.Extras;
-import ntk.android.base.api.baseModel.theme.ThemeChild;
 import ntk.android.base.api.baseModel.theme.ThemeChildConfig;
 import ntk.android.base.config.ListOfJson;
 import ntk.android.base.config.NtkObserver;
+import ntk.android.base.dtomodel.theme.ThemeChildConfigDtoModel;
+import ntk.android.base.dtomodel.theme.ThemeChildDtoModel;
 import ntk.android.base.entitymodel.article.ArticleContentModel;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.FilterDataModel;
@@ -53,7 +54,7 @@ import ss.com.bannerslider.events.OnBannerClickListener;
 
 public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final List<ThemeChild> themes;
+    private final List<ThemeChildDtoModel> themes;
     private final Context context;
     private final List<CoreModuleTagModel> tags = new ArrayList<CoreModuleTagModel>();
     private final CoreTagAdapter adTag;
@@ -62,7 +63,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private int TotalTag = 0, TotalArticle = 0;
 
-    public HomeAdapter(Context context, List<ThemeChild> list) {
+    public HomeAdapter(Context context, List<ThemeChildDtoModel> list) {
         this.themes = list;
         this.context = context;
         adTag = new CoreTagAdapter(context, tags);
@@ -291,7 +292,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private void ConfigSlider(SliderHolder hoSlider, int position) {
         List<Banner> banners = new ArrayList<>();
-        for (ThemeChildConfig t : themes.get(position).LayoutChildConfigs) {
+        for (ThemeChildConfigDtoModel t : themes.get(position).LayoutChildConfigs) {
             banners.add(new RemoteBanner(t.Href));
         }
         hoSlider.Slider.setBanners(banners);

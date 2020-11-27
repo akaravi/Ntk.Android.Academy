@@ -1,12 +1,13 @@
 package ntk.android.academy.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 
@@ -17,7 +18,6 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.base.entitymodel.news.NewsContentOtherInfoModel;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.news.entity.NewsContentOtherInfo;
 
 public class TabNewsAdapter extends RecyclerView.Adapter<TabNewsAdapter.ViewHolder> {
 

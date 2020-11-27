@@ -1,14 +1,17 @@
 package ntk.android.academy.adapter;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.balysv.materialripple.MaterialRippleLayout;
+
 import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -17,7 +20,6 @@ import ntk.android.academy.R;
 import ntk.android.academy.event.HtmlBodyEvent;
 import ntk.android.base.entitymodel.article.ArticleContentOtherInfoModel;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.api.article.entity.ArticleContentOtherInfo;
 
 public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> {
 

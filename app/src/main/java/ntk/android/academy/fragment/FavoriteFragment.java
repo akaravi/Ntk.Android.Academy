@@ -22,20 +22,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.ArticleGridAdapter;
-import ntk.android.base.api.article.interfase.IArticle;
-import ntk.android.base.api.article.model.ArticleContentFavoriteListRequest;
-import ntk.android.base.api.article.model.ArticleContentFavoriteListResponse;
-import ntk.android.base.config.ConfigRestHeader;
-import ntk.android.base.config.ConfigStaticValue;
 import ntk.android.base.config.NtkObserver;
-import ntk.android.base.config.RetrofitManager;
 import ntk.android.base.entitymodel.article.ArticleContentModel;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.FilterDataModel;
@@ -112,9 +103,6 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void HandleCategory(int i) {
-        RetrofitManager manager = new RetrofitManager(getContext());
-        IArticle iArticle = manager.getRetrofitUnCached(new ConfigStaticValue(getContext()).GetApiBaseUrl()).create(IArticle.class);
-
         FilterDataModel request = new FilterDataModel();
         request.RowPerPage = 20;
         request.CurrentPageNumber = i;
