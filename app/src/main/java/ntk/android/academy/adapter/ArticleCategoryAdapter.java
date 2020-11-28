@@ -53,7 +53,7 @@ public class ArticleCategoryAdapter extends RecyclerView.Adapter<ArticleCategory
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.LblName.setText(arrayList.get(position).Title);
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .cacheOnDisk(true).build();
+                .showImageOnFail(R.mipmap.ic_launcher).cacheOnDisk(true).build();
         ImageLoader.getInstance().displayImage(arrayList.get(position).LinkMainImageIdSrc, holder.Img, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {

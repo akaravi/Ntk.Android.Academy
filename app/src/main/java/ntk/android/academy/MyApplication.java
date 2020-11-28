@@ -30,6 +30,7 @@ public class MyApplication extends NTKApplication {
             new File(getCacheDir(), "image").mkdirs();
         }
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+
                 .diskCache(new UnlimitedDiskCache(new File(getCacheDir(), "image")))
                 .diskCacheFileNameGenerator(imageUri -> {
                     String[] Url = imageUri.split("/");
