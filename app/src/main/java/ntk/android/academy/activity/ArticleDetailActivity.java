@@ -489,7 +489,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
             rating = 5.0;
         }
         Rate.setRating((float) rating);
-        ImageLoader.getInstance().displayImage(model.Item.MainImageSrc, ImgHeader);
+        ImageLoader.getInstance().displayImage(model.Item.LinkMainImageIdSrc, ImgHeader);
         Lbls.get(0).setText(model.Item.Title);
         Lbls.get(1).setText(model.Item.Title);
         Lbls.get(3).setText(String.valueOf(model.Item.ViewCount));
