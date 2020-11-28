@@ -33,6 +33,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
         <activity
+            android:name="ntk.android.base.activity.ticketing.NewTicketActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/NoActionBar" />
+        <activity
             android:name=".activity.ArticleDetailActivity"
             android:screenOrientation="portrait"
             android:theme="@style/NoActionBar" />
