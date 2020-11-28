@@ -145,7 +145,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
         webView.getSettings().setBuiltInZoomControls(true);
         RvTab.setHasFixedSize(true);
         RvTab.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-        Id = getIntent().getExtras().getLong("Request");
+        Id = getIntent().getExtras().getLong(Extras.EXTRA_FIRST_ARG);
         HandelDataContent();
         Loading.setVisibility(View.VISIBLE);
 

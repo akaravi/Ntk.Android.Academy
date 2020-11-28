@@ -150,11 +150,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
     }
 
     private void ClickIntro() {
-        Bundle bundle = new Bundle();
-        bundle.putInt("Help", 1);
-        Intent intent = new Intent(context, IntroActivity.class);
-        intent.putExtra("Help", bundle);
-        context.startActivity(intent);
+        ((MainActivity) context).onMainIntro();
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }
@@ -182,40 +178,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
     }
 
     private void ClickShare() {
-        String st = Preferences.with(context).appVariableInfo().configapp();
-        MainResponseDtoModel mcr = new Gson().fromJson(st, MainResponseDtoModel.class);
-
-        final Dialog dialog = new Dialog(context);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCanceledOnTouchOutside(true);
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayoutCompat.LayoutParams.WRAP_CONTENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
-        window.setGravity(Gravity.CENTER);
-        dialog.setContentView(R.layout.dialog_qrcode);
-        dialog.show();
-        TextView Lbl = dialog.findViewById(R.id.lblTitleDialogQRCode);
-        Lbl.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-
-        QRGEncoder qrgEncoder = new QRGEncoder(mcr.AppUrl, null, QRGContents.Type.TEXT, 300);
-        try {
-            Bitmap bitmap = qrgEncoder.encodeAsBitmap();
-            ImageView img = dialog.findViewById(R.id.qrCodeDialogQRCode);
-            img.setImageBitmap(bitmap);
-        } catch (WriterException e) {
-            Toasty.warning(context, e.getMessage(), Toast.LENGTH_LONG, true).show();
-        }
-
-        Button Btn = dialog.findViewById(R.id.btnDialogQRCode);
-        Btn.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-        Btn.setOnClickListener(v -> {
-            dialog.dismiss();
-            Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_TEXT, context.getString(R.string.app_name) + "\n" + "لینک دانلود:" + "\n" + mcr.AppUrl);
-            shareIntent.setType("text/txt");
-            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            context.startActivity(Intent.createChooser(shareIntent, "به اشتراک گزاری با...."));
-        });
+        ((MainActivity)context).onInviteMethod();
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }

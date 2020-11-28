@@ -47,6 +47,7 @@ import ntk.android.academy.R;
 import ntk.android.academy.adapter.BlogCommentAdapter;
 import ntk.android.academy.adapter.TabBlogAdapter;
 import ntk.android.academy.event.HtmlBodyBlogEvent;
+import ntk.android.base.Extras;
 import ntk.android.base.config.NtkObserver;
 import ntk.android.base.dtomodel.application.MainResponseDtoModel;
 import ntk.android.base.dtomodel.core.ScoreClickDtoModel;
@@ -124,7 +125,7 @@ public class BlogDetailActivity extends AppCompatActivity {
         webView.getSettings().setBuiltInZoomControls(true);
         RvTab.setHasFixedSize(true);
         RvTab.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true));
-        Id = getIntent().getExtras().getLong("Request");
+        Id = getIntent().getExtras().getLong(Extras.EXTRA_FIRST_ARG);
         HandelDataContent();
         Loading.setVisibility(View.VISIBLE);
 

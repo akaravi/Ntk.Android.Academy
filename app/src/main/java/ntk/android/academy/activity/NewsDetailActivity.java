@@ -104,7 +104,7 @@ public class NewsDetailActivity extends AbstractionDetailActivity<NewsContentMod
     @Override
     public void SetDataOtherinfo(ErrorException<NewsContentOtherInfoModel> model) {
         if (model.ListItems == null || model.ListItems.size() == 0) {
-            findViewById(R.id.RowTimeActDetail).setVisibility(View.GONE);
+            findViewById(R.id.RowTimeDetail).setVisibility(View.GONE);
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             p.weight = 3;
             return;

@@ -26,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ArticleDetailActivity;
+import ntk.android.base.Extras;
 import ntk.android.base.entitymodel.article.ArticleContentModel;
 import ntk.android.base.utill.FontManager;
 
@@ -102,7 +103,7 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.ViewHold
         holder.Img.setOnClickListener(view -> {
             Intent intent = new Intent(context, ArticleDetailActivity.class);
             long Id = arrayList.get(position).Id;
-            intent.putExtra("Request", Id);
+            intent.putExtra(Extras.EXTRA_FIRST_ARG, Id);
             context.startActivity(intent);
         });
     }
