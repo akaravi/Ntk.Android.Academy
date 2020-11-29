@@ -31,10 +31,8 @@ public class PhotoGalleryActivity extends AppCompatActivity {
     }
 
     private void init() {
-        String Request = getIntent().getExtras().getString(Extras.EXTRA_FIRST_ARG);
-        String[] Links = Request.split("@");
-        List<String> links = Arrays.asList(Links);
-        List<MediaInfo> infos = new ArrayList<>(links.size());
+        String[] links = getIntent().getExtras().getStringArray(Extras.EXTRA_FIRST_ARG);
+        List<MediaInfo> infos = new ArrayList<>(links.length);
         for (String url : links) infos.add(MediaInfo.mediaLoader(new DefaultImageLoader(url)));
         Gallery
                 .setThumbnailSize(250)

@@ -270,7 +270,7 @@ public class ScrollGalleryView extends LinearLayout {
     }
 
     private Bitmap getDefaultThumbnail() {
-        return ((BitmapDrawable) getContext().getResources().getDrawable(R.mipmap.ic_launcher)).getBitmap();
+        return ((BitmapDrawable) getContext().getResources().getDrawable(R.drawable.logo)).getBitmap();
     }
 
     private Point getDisplaySize() {

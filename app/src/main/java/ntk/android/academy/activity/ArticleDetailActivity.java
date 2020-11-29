@@ -124,7 +124,6 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
 
     private ErrorException<ArticleContentModel> model;
-    private ErrorException<ArticleContentOtherInfoModel> Info;
     long Id;
 
     @Override
@@ -283,10 +282,10 @@ public class ArticleDetailActivity extends AppCompatActivity {
             f.IntValue1 = Id;
             Request.addFilter(f);
 
-            new ArticleContentService(this).getAllWithSimilarsId(id,Request)
+            new ArticleContentService(this).getAllWithSimilarsId(id, Request)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
-                    .subscribe(new  NtkObserver<ErrorException<ArticleContentModel>>() {
+                    .subscribe(new NtkObserver<ErrorException<ArticleContentModel>>() {
                         @Override
                         public void onNext(@NonNull ErrorException<ArticleContentModel> response) {
                             if (response.ListItems.size() == 0) {
@@ -415,7 +414,6 @@ public class ArticleDetailActivity extends AppCompatActivity {
     }
 
     private void SetDataOtherinfo(ErrorException<ArticleContentOtherInfoModel> model) {
-        Info = model;
         if (model.ListItems == null || model.ListItems.size() == 0) {
             findViewById(R.id.RowTimeActDetail).setVisibility(View.GONE);
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -506,15 +504,13 @@ public class ArticleDetailActivity extends AppCompatActivity {
     @OnClick(R.id.RowGalleryActDetail)
     public void ClickGalley() {
         if (model.Item.LinkFileIdsSrc != null && model.Item.LinkFileIdsSrc.size() != 0) {
-            String request = "";
-            for (String s : model.Item.LinkFileIdsSrc) {
-                if (!request.equals("")) {
-                    request = request + "@";
-                }
-                request = request + s;
-            }
+            String[] array ;
+            if (model.Item.LinkFileIdsSrc != null)
+                array =  model.Item.LinkFileIdsSrc.toArray(new String[0]);
+            else
+                array= new String[0];
             Intent intent = new Intent(this, PhotoGalleryActivity.class);
-            intent.putExtra(Extras.EXTRA_FIRST_ARG, request);
+            intent.putExtra(Extras.EXTRA_FIRST_ARG,array);
             startActivity(intent);
         }
     }
@@ -574,7 +570,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
                         add.LinkContentId = Id;
 
 
-                       new ArticleCommentService(this).add(add).subscribeOn(Schedulers.io())
+                        new ArticleCommentService(this).add(add).subscribeOn(Schedulers.io())
                                 .observeOn(AndroidSchedulers.mainThread())
                                 .subscribe(new NtkObserver<ErrorException<ArticleCommentModel>>() {
                                     @Override
@@ -625,7 +621,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
         if (AppUtill.isNetworkAvailable(this)) {
 
 
-          new ArticleContentService(this).addFavorite(Id).subscribeOn(Schedulers.io())
+            new ArticleContentService(this).addFavorite(Id).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NtkObserver<ErrorExceptionBase>() {
                         @Override
@@ -665,7 +661,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
     private void UnFav() {
         if (AppUtill.isNetworkAvailable(this)) {
-           new ArticleContentService(this).removeFavorite(Id).subscribeOn(Schedulers.io())
+            new ArticleContentService(this).removeFavorite(Id).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new NtkObserver<ErrorExceptionBase>() {
                         @Override
