@@ -129,7 +129,7 @@ public class PrevArticleDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.base1_detai2_activity);
+        setContentView(R.layout.base2_detail_activity);
         ButterKnife.bind(this);
         init();
     }
