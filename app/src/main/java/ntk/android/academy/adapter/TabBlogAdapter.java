@@ -18,8 +18,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.event.HtmlBodyBlogEvent;
-import ntk.android.academy.event.HtmlBodyEvent;
 import ntk.android.base.entitymodel.blog.BlogContentOtherInfoModel;
+import ntk.android.base.event.HtmlBodyEvent;
 import ntk.android.base.utill.FontManager;
 
 public class TabBlogAdapter extends RecyclerView.Adapter<TabBlogAdapter.ViewHolder> {

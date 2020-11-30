@@ -17,8 +17,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
-import ntk.android.academy.event.HtmlBodyEvent;
 import ntk.android.base.entitymodel.article.ArticleContentOtherInfoModel;
+import ntk.android.base.event.HtmlBodyEvent;
 import ntk.android.base.utill.FontManager;
 
 public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> {
