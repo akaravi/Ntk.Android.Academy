@@ -7,11 +7,11 @@ import java.util.List;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.NewsCommentAdapter;
 import ntk.android.academy.adapter.TabNewsAdapter;
-import ntk.android.base.activity.news.BaseNewsDetailActivity;
+import ntk.android.base.activity.news.BaseNewsDetail_1_Activity;
 import ntk.android.base.entitymodel.news.NewsCommentModel;
 import ntk.android.base.entitymodel.news.NewsContentOtherInfoModel;
 
-public class NewsDetailActivity extends BaseNewsDetailActivity {
+public class NewsDetailActivity extends BaseNewsDetail_1_Activity {
 
 
     @Override

@@ -2,7 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mainLayoutActDetailBlog"
+    android:id="@+id/mainLayoutActDetailNew"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="ltr">
@@ -79,6 +79,7 @@
                     android:layout_height="match_parent">
 
                     <ImageView
+                        android:id="@+id/imgHeartActDetailBlog"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:layout_centerInParent="true"
@@ -143,7 +144,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -212,6 +213,13 @@
                         android:layout_marginRight="15dp"
                         android:background="@color/colorMenu" />
 
+                    <WebView
+                        android:id="@+id/WebViewBodyActDetailBlog"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layoutDirection="rtl"
+                        android:textDirection="rtl" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -223,18 +231,8 @@
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerTabActDetailBlog"
                             android:layout_width="match_parent"
-                            android:layout_height="45dp" />
+                            android:layout_height="wrap_content" />
                     </LinearLayout>
-
-                    <WebView
-                        android:id="@+id/WebViewActDetailBlog"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="15dp"
-                        android:layoutDirection="rtl"
-                        android:textDirection="rtl"
-                        tools:ignore="WebViewLayout" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -251,6 +249,7 @@
                             android:text="نظرات"
                             android:textColor="@android:color/black"
                             android:textSize="16sp"
+                            android:visibility="gone"
                             tools:ignore="HardcodedText" />
 
                     </RelativeLayout>
