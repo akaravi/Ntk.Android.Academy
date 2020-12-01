@@ -94,6 +94,19 @@
             </LinearLayout>
 
         </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/relativeLoading"
+            android:layout_width="wrap_content"
+            android:background="#43474747"
+            android:visibility="gone"
+            android:layout_alignRight="@+id/likeLinear"
+            android:layout_alignLeft="@+id/likeLinear"
+            android:layout_height="wrap_content">
+            <ProgressBar
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <androidx.cardview.widget.CardView

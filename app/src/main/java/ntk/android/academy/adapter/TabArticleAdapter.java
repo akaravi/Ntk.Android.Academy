@@ -17,17 +17,17 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ntk.android.academy.R;
+import ntk.android.base.adapter.BaseRecyclerAdapter;
 import ntk.android.base.entitymodel.article.ArticleContentOtherInfoModel;
 import ntk.android.base.event.HtmlBodyEvent;
 import ntk.android.base.utill.FontManager;
 
-public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> {
+public class TabArticleAdapter extends BaseRecyclerAdapter<ArticleContentOtherInfoModel, TabArticleAdapter.ViewHolder> {
 
-    private final List<ArticleContentOtherInfoModel> arrayList;
     private final Context context;
 
-    public TabAdapter(Context context, List<ArticleContentOtherInfoModel> arrayList) {
-        this.arrayList = arrayList;
+    public TabArticleAdapter(Context context, List<ArticleContentOtherInfoModel> arrayList) {
+        super(arrayList);
         this.context = context;
     }
 
@@ -39,17 +39,14 @@ public class TabAdapter extends RecyclerView.Adapter<TabAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.Btn.setText(arrayList.get(position).Title);
-        if (arrayList.get(position).TypeId == 0) {
-            EventBus.getDefault().post(new HtmlBodyEvent(arrayList.get(position).HtmlBody));
+        ArticleContentOtherInfoModel item = list.get(position);
+        holder.Btn.setText(item.Title);
+        if (item.TypeId == 0) {
+            EventBus.getDefault().post(new HtmlBodyEvent(item.HtmlBody));
         }
-        holder.Ripple.setOnClickListener(v -> EventBus.getDefault().post(new HtmlBodyEvent(arrayList.get(position).HtmlBody)));
+        holder.Ripple.setOnClickListener(v -> EventBus.getDefault().post(new HtmlBodyEvent(item.HtmlBody)));
     }
 
-    @Override
-    public int getItemCount() {
-        return arrayList.size();
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

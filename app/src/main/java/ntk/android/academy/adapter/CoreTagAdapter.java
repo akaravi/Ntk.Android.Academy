@@ -20,45 +20,43 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ArticleContentGridListActivity;
 import ntk.android.base.Extras;
+import ntk.android.base.adapter.BaseRecyclerAdapter;
 import ntk.android.base.entitymodel.base.FilterDataModel;
 import ntk.android.base.entitymodel.coremodulemain.CoreModuleTagModel;
 import ntk.android.base.utill.FontManager;
 
-public class CoreTagAdapter extends RecyclerView.Adapter<CoreTagAdapter.ViewHolder> {
+public class CoreTagAdapter extends BaseRecyclerAdapter<CoreModuleTagModel,CoreTagAdapter.ViewHolder> {
 
-    private final List<CoreModuleTagModel> arrayList;
-    private final Context context;
+     private final Context context;
 
     public CoreTagAdapter(Context context, List<CoreModuleTagModel> arrayList) {
-        this.arrayList = arrayList;
+        super(arrayList);
         this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_recycler_circle, viewGroup, false);
+        View view = inflate(viewGroup,R.layout.row_recycler_circle);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        holder.Lbl.setText(arrayList.get(position).Title);
+        CoreModuleTagModel item = list.get(position);
+        holder.Lbl.setText(item.Title);
         holder.Lbl.setOnClickListener(view -> {
             Intent intent = new Intent(context, ArticleContentGridListActivity.class);
             FilterDataModel request = new FilterDataModel();
             List<Long> Tags = new ArrayList<>();
-            Tags.add(arrayList.get(position).Id);
+            Tags.add(item.Id);
             //todo karavi Tag biad too filtermodel
             intent.putExtra(Extras.EXTRA_FIRST_ARG, new Gson().toJson(request));
             context.startActivity(intent);
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return arrayList.size();
-    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

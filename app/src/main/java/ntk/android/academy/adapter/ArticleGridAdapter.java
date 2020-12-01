@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -27,89 +26,44 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ArticleDetailActivity;
 import ntk.android.base.Extras;
+import ntk.android.base.adapter.BaseRecyclerAdapter;
 import ntk.android.base.entitymodel.article.ArticleContentModel;
+import ntk.android.base.services.base.CmsApiScoreApi;
 import ntk.android.base.utill.FontManager;
 
-public class ArticleGridAdapter extends RecyclerView.Adapter<ArticleGridAdapter.ViewHolder> {
+public class ArticleGridAdapter extends BaseRecyclerAdapter<ArticleContentModel, ArticleGridAdapter.ViewHolder> {
 
-    private final List<ArticleContentModel> arrayList;
     private final Context context;
 
     public ArticleGridAdapter(Context context, List<ArticleContentModel> arrayList) {
-        this.arrayList = arrayList;
+        super(arrayList);
         this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_recycler_article_grid, viewGroup, false);
+        View view = inflate(viewGroup, R.layout.row_recycler_article_grid);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.LblName.setText(arrayList.get(position).Title);
-        holder.LblLike.setText(String.valueOf(arrayList.get(position).ViewCount));
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnFail(R.mipmap.ic_launcher)  .cacheOnDisk(true).build();
-        ImageLoader.getInstance().displayImage(arrayList.get(position).LinkMainImageIdSrc, holder.Img, options, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
+        ArticleContentModel item = list.get(position);
+        holder.LblName.setText(item.Title);
+        holder.LblLike.setText(String.valueOf(item.ViewCount));
 
-            }
-
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                holder.Progress.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                holder.Progress.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
-
-            }
-        });
-        double rating = 0.0;
-        int sumClick = arrayList.get(position).ViewCount;
-        if (arrayList.get(position).ViewCount == 0) sumClick = 1;
-        if (arrayList.get(position).ScoreSumPercent / sumClick > 0 && arrayList.get(position).ScoreSumPercent / sumClick <= 10) {
-            rating = 0.5;
-        } else if (arrayList.get(position).ScoreSumPercent / sumClick > 10 && arrayList.get(position).ScoreSumPercent / sumClick <= 20) {
-            rating = 1.0;
-        } else if (arrayList.get(position).ScoreSumPercent / sumClick > 20 && arrayList.get(position).ScoreSumPercent / sumClick <= 30) {
-            rating = 1.5;
-        } else if (arrayList.get(position).ScoreSumPercent / sumClick > 30 && arrayList.get(position).ScoreSumPercent / sumClick <= 40) {
-            rating = 2.0;
-        } else if (arrayList.get(position).ScoreSumPercent / sumClick > 40 && arrayList.get(position).ScoreSumPercent / sumClick <= 50) {
-            rating = 2.5;
-        } else if (arrayList.get(position).ScoreSumPercent / sumClick > 50 && arrayList.get(position).ScoreSumPercent / sumClick <= 60) {
-            rating = 3.0;
-        } else if (arrayList.get(position).ScoreSumPercent / sumClick > 60 && arrayList.get(position).ScoreSumPercent / sumClick <= 70) {
-            rating = 3.5;
-        } else if (arrayList.get(position).ScoreSumPercent / sumClick > 70 && arrayList.get(position).ScoreSumPercent / sumClick <= 80) {
-            rating = 4.0;
-        } else if (arrayList.get(position).ScoreSumPercent / sumClick > 80 && arrayList.get(position).ScoreSumPercent / sumClick <= 90) {
-            rating = 4.5;
-        } else if (arrayList.get(position).ScoreSumPercent / sumClick > 90) {
-            rating = 5.0;
-        }
+        loadImage(item.LinkMainImageIdSrc, holder.Img, holder.Progress);
+        double rating = CmsApiScoreApi.CONVERT_TO_RATE(item.ViewCount, item.ScoreSumPercent);
         holder.Rate.setRating((float) rating);
         holder.Root.setOnClickListener(view -> {
             Intent intent = new Intent(context, ArticleDetailActivity.class);
-            Long Id = arrayList.get(position).Id;
-            intent.putExtra(Extras.EXTRA_FIRST_ARG,Id);
+            Long Id = item.Id;
+            intent.putExtra(Extras.EXTRA_FIRST_ARG, Id);
             context.startActivity(intent);
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return arrayList.size();
-    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

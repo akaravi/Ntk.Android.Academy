@@ -1,10 +1,9 @@
- package ntk.android.academy.adapter;
+package ntk.android.academy.adapter;
 
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -28,70 +27,51 @@ import butterknife.ButterKnife;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.ArticleContentGridListActivity;
 import ntk.android.base.Extras;
+import ntk.android.base.adapter.BaseRecyclerAdapter;
 import ntk.android.base.entitymodel.article.ArticleCategoryModel;
 import ntk.android.base.entitymodel.base.FilterDataModel;
 import ntk.android.base.entitymodel.base.Filters;
 import ntk.android.base.utill.FontManager;
 
-public class ArticleCategoryAdapter extends RecyclerView.Adapter<ArticleCategoryAdapter.ViewHolder> {
+public class ArticleCategoryAdapter extends BaseRecyclerAdapter<ArticleCategoryModel, ArticleCategoryAdapter.ViewHolder> {
 
-    private final List<ArticleCategoryModel> arrayList;
     private final Context context;
 
     public ArticleCategoryAdapter(Context context, List<ArticleCategoryModel> arrayList) {
-        this.arrayList = arrayList;
+        super(arrayList);
         this.context = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_recycler_category, viewGroup, false);
+        View view = inflate(viewGroup, R.layout.row_recycler_category);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.LblName.setText(arrayList.get(position).Title);
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnFail(R.mipmap.ic_launcher).cacheOnDisk(true).build();
-        ImageLoader.getInstance().displayImage(arrayList.get(position).LinkMainImageIdSrc, holder.Img, options, new ImageLoadingListener() {
-            @Override
-            public void onLoadingStarted(String imageUri, View view) {
+        ArticleCategoryModel item = list.get(position);
+        holder.LblName.setText(item.Title);
+        loadImage(item.LinkMainImageIdSrc, holder.Img,holder.Progress);
 
-            }
-
-            @Override
-            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                holder.Progress.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                holder.Progress.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onLoadingCancelled(String imageUri, View view) {
-
-            }
-        });
-        if (arrayList.get(position).Children.size() == 0) {
+        if (item.Children.size() == 0) {
             holder.ImgDrop.setVisibility(View.GONE);
         }
         holder.Img.setOnClickListener(view -> {
             FilterDataModel request = new FilterDataModel();
             Filters f = new Filters();
             f.PropertyName = "LinkCategoryId";
-            f.IntValue1 = arrayList.get(position).Id;
+            f.IntValue1 = item.Id;
             request.addFilter(f);
             Intent intent = new Intent(context, ArticleContentGridListActivity.class);
+            //todo get base on category
             intent.putExtra(Extras.EXTRA_FIRST_ARG, new Gson().toJson(request));
             context.startActivity(intent);
         });
         holder.ImgDrop.setOnClickListener(view -> {
             if (holder.Rv.getVisibility() == View.GONE) {
                 holder.ImgArrow.setRotation(180);
-                ArticleCategoryAdapter adapter = new ArticleCategoryAdapter(context, arrayList.get(position).Children);
+                ArticleCategoryAdapter adapter = new ArticleCategoryAdapter(context, item.Children);
                 holder.Rv.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 holder.Rv.setVisibility(View.VISIBLE);
@@ -103,10 +83,7 @@ public class ArticleCategoryAdapter extends RecyclerView.Adapter<ArticleCategory
         });
     }
 
-    @Override
-    public int getItemCount() {
-        return arrayList.size();
-    }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

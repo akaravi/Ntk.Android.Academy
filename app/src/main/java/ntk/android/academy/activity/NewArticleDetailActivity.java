@@ -10,7 +10,7 @@ import es.dmoral.toasty.Toasty;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.ArticleAdapter;
 import ntk.android.academy.adapter.ArticleCommentAdapter;
-import ntk.android.academy.adapter.TabAdapter;
+import ntk.android.academy.adapter.TabArticleAdapter;
 import ntk.android.base.Extras;
 import ntk.android.base.activity.article.BaseArticleDetail2_2_Activity;
 import ntk.android.base.entitymodel.article.ArticleCommentModel;
@@ -55,7 +55,7 @@ public class NewArticleDetailActivity extends BaseArticleDetail2_2_Activity {
 
     @Override
     protected RecyclerView.Adapter createOtherInfoAdapter(List<ArticleContentOtherInfoModel> info) {
-        return new TabAdapter(NewArticleDetailActivity.this, info);
+        return new TabArticleAdapter(NewArticleDetailActivity.this, info);
 
     }
 

@@ -47,7 +47,7 @@ import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.ArticleAdapter;
 import ntk.android.academy.adapter.ArticleCommentAdapter;
-import ntk.android.academy.adapter.TabAdapter;
+import ntk.android.academy.adapter.TabArticleAdapter;
 import ntk.android.base.Extras;
 import ntk.android.base.config.NtkObserver;
 import ntk.android.base.dtomodel.application.MainResponseDtoModel;
@@ -456,7 +456,7 @@ public class PrevArticleDetailActivity extends AppCompatActivity {
                     break;
             }
         }
-        TabAdapter adapter = new TabAdapter(PrevArticleDetailActivity.this, Info);
+        TabArticleAdapter adapter = new TabArticleAdapter(PrevArticleDetailActivity.this, Info);
         RvTab.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
