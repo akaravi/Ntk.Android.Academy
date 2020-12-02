@@ -2,22 +2,22 @@
 <resources>
     <array name="paranoid_theme">
         <!-- Overview -->
-        <item>#151515</item> <!--  Top Header bg -->
-        <item>#2c9633</item> <!-- header text   -->
-        <item>#252525</item> <!-- list bg  -->
-        <item>@android:color/white</item> <!--  storage list name text  -->
-        <item>#e1e1e1</item> <!-- free space text  -->
-        <item>#2C9633</item> <!-- memory bar -->
+<!--        <item>#151515</item> &lt;!&ndash;  Top Header bg &ndash;&gt;-->
+<!--        <item>#2c9633</item> &lt;!&ndash; header text   &ndash;&gt;-->
+<!--        <item>#252525</item> &lt;!&ndash; list bg  &ndash;&gt;-->
+<!--        <item>@android:color/white</item> &lt;!&ndash;  storage list name text  &ndash;&gt;-->
+<!--        <item>#e1e1e1</item> &lt;!&ndash; free space text  &ndash;&gt;-->
+<!--        <item>#2C9633</item> &lt;!&ndash; memory bar &ndash;&gt;-->
 
-        <!-- secondary dialog colors -->
-        <item>#151515</item> <!-- folder tint -->
-        <item>#252525</item> <!-- list bg -->
-        <item>@android:color/white</item> <!-- list text -->
-        <item>#151515</item> <!-- address bar tint -->
-        <item>@color/chevronBgColor</item> <!-- new folder hint tint -->
-        <item>#2c9633</item> <!-- select button color -->
-        <item>#da6c6c</item> <!-- new folder layour bg -->
-        <item>#2c9633</item> <!-- fab multiselect color -->
-        <item>#151515</item> <!-- address bar bg -->
+<!--        &lt;!&ndash; secondary dialog colors &ndash;&gt;-->
+<!--        <item>#151515</item> &lt;!&ndash; folder tint &ndash;&gt;-->
+<!--        <item>#252525</item> &lt;!&ndash; list bg &ndash;&gt;-->
+<!--        <item>@android:color/white</item> &lt;!&ndash; list text &ndash;&gt;-->
+<!--        <item>#151515</item> &lt;!&ndash; address bar tint &ndash;&gt;-->
+<!--        <item>@color/chevronBgColor</item> &lt;!&ndash; new folder hint tint &ndash;&gt;-->
+<!--        <item>#2c9633</item> &lt;!&ndash; select button color &ndash;&gt;-->
+<!--        <item>#da6c6c</item> &lt;!&ndash; new folder layour bg &ndash;&gt;-->
+<!--        <item>#2c9633</item> &lt;!&ndash; fab multiselect color &ndash;&gt;-->
+<!--        <item>#151515</item> &lt;!&ndash; address bar bg &ndash;&gt;-->
     </array>
 </resources>

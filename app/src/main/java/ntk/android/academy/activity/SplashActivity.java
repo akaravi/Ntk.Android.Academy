@@ -5,4 +5,5 @@ import ntk.android.base.activity.common.RegisterMobileActivity;
 
 public class SplashActivity extends BaseSplashActivity {
 
+
 }

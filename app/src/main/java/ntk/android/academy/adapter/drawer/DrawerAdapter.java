@@ -1,52 +1,36 @@
 package ntk.android.academy.adapter.drawer;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
-import com.google.zxing.WriterException;
 import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.List;
 
-import androidmads.library.qrgenearator.QRGContents;
-import androidmads.library.qrgenearator.QRGEncoder;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
-import es.dmoral.toasty.Toasty;
 import ntk.android.academy.R;
 import ntk.android.academy.activity.AboutUsActivity;
 import ntk.android.academy.activity.BlogListActivity;
 import ntk.android.academy.activity.MainActivity;
 import ntk.android.academy.activity.NewsListActivity;
-import ntk.android.base.activity.common.IntroActivity;
 import ntk.android.base.activity.common.NotificationsActivity;
 import ntk.android.base.activity.poling.PolingActivity;
 import ntk.android.base.activity.ticketing.FaqActivity;
 import ntk.android.base.activity.ticketing.TicketListActivity;
-import ntk.android.base.dtomodel.application.MainResponseDtoModel;
 import ntk.android.base.dtomodel.theme.DrawerChildThemeDtoModel;
-import ntk.android.base.room.RoomDb;
+import ntk.android.base.room.NotificationStorageService;
 import ntk.android.base.utill.FontManager;
-import ntk.android.base.utill.prefrense.Preferences;
 
 public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder> {
 
@@ -72,7 +56,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         ImageLoader.getInstance().displayImage(childs.get(position).Icon, holder.Img);
         if (childs.get(position).Type == 1) {
-            int n = RoomDb.getRoomDb(context).NotificationDoa().AllUnRead().size();
+            int n = new NotificationStorageService().getAllUnread(context).size();
             if (n != 0) {
                 holder.Lbls.get(1).setText(String.valueOf(n));
                 holder.Lbls.get(1).setVisibility(View.VISIBLE);
@@ -178,7 +162,7 @@ public class DrawerAdapter extends RecyclerView.Adapter<DrawerAdapter.ViewHolder
     }
 
     private void ClickShare() {
-        ((MainActivity)context).onInviteMethod();
+        ((MainActivity) context).onInviteMethod();
         if (Drawer != null) {
             Drawer.closeMenu(true);
         }
