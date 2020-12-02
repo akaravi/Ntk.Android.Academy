@@ -1,5 +1,6 @@
 package ntk.android.academy.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -54,6 +55,6 @@ public class BlogListActivity extends AbstractionListActivity<BlogContentModel> 
 
     @Override
     public void ClickSearch() {
-
+        startActivity(new Intent(this, BlogSearchActivity.class));
     }
 }
