@@ -9,13 +9,13 @@ import io.reactivex.Observable;
 import java9.util.function.Function;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.ArticleGridAdapter;
-import ntk.android.base.activity.abstraction.AbstractionListActivity;
+import ntk.android.base.activity.common.BaseFilterModelListActivity;
 import ntk.android.base.entitymodel.article.ArticleContentModel;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.FilterDataModel;
 import ntk.android.base.services.article.ArticleContentService;
 
-public class ArticleContentGridListActivity extends AbstractionListActivity<ArticleContentModel> {
+public class ArticleContentGridListActivity extends BaseFilterModelListActivity<ArticleContentModel> {
     @Override
     public void afterInit() {
         super.afterInit();
@@ -24,7 +24,7 @@ public class ArticleContentGridListActivity extends AbstractionListActivity<Arti
     }
 
     @Override
-    protected RecyclerView.LayoutManager getRvLayoutManager() {
+    public RecyclerView.LayoutManager getRvLayoutManager() {
         return new GridLayoutManager(this, 2);
     }
 
