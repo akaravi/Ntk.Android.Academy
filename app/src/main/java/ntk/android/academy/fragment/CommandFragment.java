@@ -28,6 +28,7 @@ import ntk.android.base.config.NtkObserver;
 import ntk.android.base.entitymodel.article.ArticleCategoryModel;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.base.FilterModel;
 import ntk.android.base.services.article.ArticleCategoryService;
 import ntk.android.base.utill.FontManager;
 
@@ -84,7 +85,7 @@ public class CommandFragment extends Fragment {
 
     private void HandelRest() {
 
-        FilterDataModel request = new FilterDataModel();
+        FilterModel request = new FilterModel();
         request.RowPerPage = 20;
         new ArticleCategoryService(getContext()).getAll(request)
                 .observeOn(AndroidSchedulers.mainThread())

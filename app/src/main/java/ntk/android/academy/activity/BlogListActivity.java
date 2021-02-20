@@ -12,6 +12,7 @@ import ntk.android.academy.adapter.BlogAdapter;
 import ntk.android.base.activity.common.BaseFilterModelListActivity;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.base.FilterModel;
 import ntk.android.base.entitymodel.blog.BlogContentModel;
 import ntk.android.base.services.blog.BlogContentService;
 
@@ -22,7 +23,7 @@ public class BlogListActivity extends BaseFilterModelListActivity<BlogContentMod
         LblTitle.setText("مجلات آموزشی دورهمی");
     }
     @Override
-    public Function<FilterDataModel, Observable<ErrorException<BlogContentModel>>> getService() {
+    public Function<FilterModel, Observable<ErrorException<BlogContentModel>>> getService() {
         return new BlogContentService(this)::getAll;
     }
 

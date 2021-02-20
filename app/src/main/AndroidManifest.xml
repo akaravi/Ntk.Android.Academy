@@ -31,23 +31,23 @@
         <activity
             android:name=".activity.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+          />
         <activity
             android:name="ntk.android.base.activity.ticketing.NewTicketActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+            />
         <activity
             android:name=".activity.ArticleDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+            />
         <activity
             android:name=".activity.ArticleContentGridListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+            />
         <activity
             android:name=".activity.ArticleSearchActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+            />
         <activity
             android:name=".activity.PhotoGalleryActivity"
             android:screenOrientation="portrait"
@@ -59,19 +59,19 @@
         <activity
             android:name=".activity.NewsListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+            />
         <activity
             android:name=".activity.BlogListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+            />
         <activity
             android:name=".activity.NewsDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+            />
         <activity
             android:name=".activity.BlogDetailActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/NoActionBar" />
+            />
 
         <provider
             android:name="androidx.core.content.FileProvider"

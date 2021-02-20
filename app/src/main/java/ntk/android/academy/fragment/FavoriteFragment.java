@@ -30,6 +30,7 @@ import ntk.android.base.config.NtkObserver;
 import ntk.android.base.entitymodel.article.ArticleContentModel;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.base.FilterModel;
 import ntk.android.base.services.article.ArticleContentService;
 import ntk.android.base.utill.EndlessRecyclerViewScrollListener;
 import ntk.android.base.utill.FontManager;
@@ -103,7 +104,7 @@ public class FavoriteFragment extends Fragment {
     }
 
     private void HandleCategory(int i) {
-        FilterDataModel request = new FilterDataModel();
+        FilterModel request = new FilterModel();
         request.RowPerPage = 20;
         request.CurrentPageNumber = i;
         new ArticleContentService(getContext()).getFavoriteList(request).observeOn(AndroidSchedulers.mainThread())

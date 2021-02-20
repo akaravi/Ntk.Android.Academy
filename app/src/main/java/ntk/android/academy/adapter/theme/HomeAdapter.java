@@ -43,6 +43,7 @@ import ntk.android.base.dtomodel.theme.ThemeChildDtoModel;
 import ntk.android.base.entitymodel.article.ArticleContentModel;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.base.FilterModel;
 import ntk.android.base.entitymodel.coremodulemain.CoreModuleTagModel;
 import ntk.android.base.services.article.ArticleContentService;
 import ntk.android.base.services.coremodulemain.CoreModuleTagService;
@@ -160,7 +161,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void RestCategory(int i, TagHolder hoTag, int position) {
-        FilterDataModel request = new Gson().fromJson(themes.get(position).LayoutRequest, FilterDataModel.class);
+        FilterModel request = new Gson().fromJson(themes.get(position).LayoutRequest, FilterModel.class);
         request.RowPerPage = 8;
         request.CurrentPageNumber = i;
         new CoreModuleTagService(context).getAll(request).
@@ -263,7 +264,7 @@ public class HomeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private void RestArticle(int i, ArticleHolder hoArticle, int position) {
         hoArticle.Progress.setVisibility(View.VISIBLE);
-        FilterDataModel request = new Gson().fromJson(themes.get(position).LayoutRequest, FilterDataModel.class);
+        FilterModel request = new Gson().fromJson(themes.get(position).LayoutRequest, FilterModel.class);
         request.RowPerPage = 20;
         request.CurrentPageNumber = i;
         new ArticleContentService(context).getAll(request).observeOn(AndroidSchedulers.mainThread())

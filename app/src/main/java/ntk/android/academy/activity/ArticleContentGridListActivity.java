@@ -13,6 +13,7 @@ import ntk.android.base.activity.common.BaseFilterModelListActivity;
 import ntk.android.base.entitymodel.article.ArticleContentModel;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.FilterDataModel;
+import ntk.android.base.entitymodel.base.FilterModel;
 import ntk.android.base.services.article.ArticleContentService;
 
 public class ArticleContentGridListActivity extends BaseFilterModelListActivity<ArticleContentModel> {
@@ -24,16 +25,17 @@ public class ArticleContentGridListActivity extends BaseFilterModelListActivity<
     }
 
     @Override
+    public Function<FilterModel, Observable<ErrorException<ArticleContentModel>>> getService() {
+        return new ArticleContentService(this)::getAll;
+    }
+
+    @Override
     public RecyclerView.LayoutManager getRvLayoutManager() {
         return new GridLayoutManager(this, 2);
     }
 
 
-    @Override
-    public Function<FilterDataModel, Observable<ErrorException<ArticleContentModel>>> getService() {
-        return new ArticleContentService(this)::getAll;
-    }
-
+   
     @Override
     public RecyclerView.Adapter createAdapter() {
         return new ArticleGridAdapter(this, models);

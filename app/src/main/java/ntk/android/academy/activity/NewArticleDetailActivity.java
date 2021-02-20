@@ -68,6 +68,11 @@ public class NewArticleDetailActivity extends BaseArticleDetail2_2_Activity {
     protected RecyclerView.Adapter createSimilarCategoryAdapter(List<ArticleContentModel> listItems) {
         return new ArticleAdapter(NewArticleDetailActivity.this, listItems);
     }
+
+    @Override
+    protected void showErrorDialog(String toString, Runnable onTryingAgain) {
+        
+    }
 }
 
 

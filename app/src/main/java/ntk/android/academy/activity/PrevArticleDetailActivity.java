@@ -58,7 +58,7 @@ import ntk.android.base.entitymodel.article.ArticleContentOtherInfoModel;
 import ntk.android.base.entitymodel.base.ErrorException;
 import ntk.android.base.entitymodel.base.ErrorExceptionBase;
 import ntk.android.base.entitymodel.base.FilterDataModel;
-import ntk.android.base.entitymodel.base.Filters;
+import ntk.android.base.entitymodel.base.FilterModel;
 import ntk.android.base.event.HtmlBodyEvent;
 import ntk.android.base.services.article.ArticleCommentService;
 import ntk.android.base.services.article.ArticleContentOtherInfoService;
@@ -276,10 +276,10 @@ public class PrevArticleDetailActivity extends AppCompatActivity {
 
     private void HandelSimilary(long id) {
         if (AppUtill.isNetworkAvailable(this)) {
-            FilterDataModel Request = new FilterDataModel();
-            Filters f = new Filters();
+            FilterModel Request = new FilterModel();
+            FilterDataModel f = new FilterDataModel();
             f.PropertyName = "LinkContentId";
-            f.IntValue1 = Id;
+            f.setIntValue(Id);
             Request.addFilter(f);
 
             new ArticleContentService(this).getAllWithSimilarsId(id, Request)
@@ -315,7 +315,7 @@ public class PrevArticleDetailActivity extends AppCompatActivity {
 
     private void HandelSimilaryCategory(long id) {
         if (AppUtill.isNetworkAvailable(this)) {
-            FilterDataModel request = new FilterDataModel();
+            FilterModel request = new FilterModel();
             new ArticleContentService(this).getAllWithCategoryUsedInContent(id, request).observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(new NtkObserver<ErrorException<ArticleContentModel>>() {
@@ -348,10 +348,10 @@ public class PrevArticleDetailActivity extends AppCompatActivity {
 
     private void HandelDataComment(long ContentId) {
         if (AppUtill.isNetworkAvailable(this)) {
-            FilterDataModel Request = new FilterDataModel();
-            Filters f = new Filters();
+            FilterModel Request = new FilterModel();
+            FilterDataModel f = new FilterDataModel();
             f.PropertyName = "LinkContentId";
-            f.IntValue1 = ContentId;
+            f.setIntValue(ContentId);
             Request.addFilter(f);
             new ArticleCommentService(this).getAll(Request).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -388,10 +388,10 @@ public class PrevArticleDetailActivity extends AppCompatActivity {
 
     private void HandelDataContentOtherInfo(long ContentId) {
 
-        FilterDataModel Request = new FilterDataModel();
-        Filters f = new Filters();
+        FilterModel Request = new FilterModel();
+        FilterDataModel f = new FilterDataModel();
         f.PropertyName = "LinkContentId";
-        f.IntValue1 = ContentId;
+        f.setIntValue(ContentId);
         Request.addFilter(f);
         new ArticleContentOtherInfoService(this).getAll(Request)
                 .observeOn(AndroidSchedulers.mainThread())
@@ -504,13 +504,13 @@ public class PrevArticleDetailActivity extends AppCompatActivity {
     @OnClick(R.id.RowGalleryDetail)
     public void ClickGalley() {
         if (model.Item.LinkFileIdsSrc != null && model.Item.LinkFileIdsSrc.size() != 0) {
-            String[] array ;
+            String[] array;
             if (model.Item.LinkFileIdsSrc != null)
-                array =  model.Item.LinkFileIdsSrc.toArray(new String[0]);
+                array = model.Item.LinkFileIdsSrc.toArray(new String[0]);
             else
-                array= new String[0];
+                array = new String[0];
             Intent intent = new Intent(this, PhotoGalleryActivity.class);
-            intent.putExtra(Extras.EXTRA_FIRST_ARG,array);
+            intent.putExtra(Extras.EXTRA_FIRST_ARG, array);
             startActivity(intent);
         }
     }
@@ -702,8 +702,8 @@ public class PrevArticleDetailActivity extends AppCompatActivity {
 
     @OnClick(R.id.imgShareDetail)
     public void ClickShare() {
-        String st = Preferences.with(this).appVariableInfo().configapp();
-        MainResponseDtoModel mcr = new Gson().fromJson(st, MainResponseDtoModel.class);
+//        String st = Preferences.with(this).appVariableInfo().configapp();
+        MainResponseDtoModel mcr = new Gson().fromJson("", MainResponseDtoModel.class);
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         String message = model.Item.Title + "\n" + model.Item.Description + "\n";

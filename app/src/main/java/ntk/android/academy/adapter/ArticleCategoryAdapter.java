@@ -2,7 +2,6 @@ package ntk.android.academy.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.google.gson.Gson;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import java.util.List;
 
@@ -30,7 +25,7 @@ import ntk.android.base.Extras;
 import ntk.android.base.adapter.BaseRecyclerAdapter;
 import ntk.android.base.entitymodel.article.ArticleCategoryModel;
 import ntk.android.base.entitymodel.base.FilterDataModel;
-import ntk.android.base.entitymodel.base.Filters;
+import ntk.android.base.entitymodel.base.FilterModel;
 import ntk.android.base.utill.FontManager;
 
 public class ArticleCategoryAdapter extends BaseRecyclerAdapter<ArticleCategoryModel, ArticleCategoryAdapter.ViewHolder> {
@@ -58,10 +53,10 @@ public class ArticleCategoryAdapter extends BaseRecyclerAdapter<ArticleCategoryM
             holder.ImgDrop.setVisibility(View.GONE);
         }
         holder.Img.setOnClickListener(view -> {
-            FilterDataModel request = new FilterDataModel();
-            Filters f = new Filters();
+            FilterModel request = new FilterModel();
+            FilterDataModel f = new FilterDataModel();
             f.PropertyName = "LinkCategoryId";
-            f.IntValue1 = item.Id;
+            f.setIntValue( item.Id) ;
             request.addFilter(f);
             Intent intent = new Intent(context, ArticleContentGridListActivity.class);
             //todo get base on category

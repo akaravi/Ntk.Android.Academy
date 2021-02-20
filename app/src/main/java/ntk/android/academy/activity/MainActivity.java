@@ -14,7 +14,6 @@ import com.mxn.soul.flowingdrawer_core.ElasticDrawer;
 import com.mxn.soul.flowingdrawer_core.FlowingDrawer;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -22,10 +21,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import es.dmoral.toasty.Toasty;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.schedulers.Schedulers;
 import ntk.android.academy.R;
 import ntk.android.academy.adapter.FragmentAdapter;
 import ntk.android.academy.adapter.PagerAdapter;
@@ -40,13 +35,8 @@ import ntk.android.academy.fragment.HomeFragment;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigation;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigationItem;
 import ntk.android.base.activity.abstraction.AbstractMainActivity;
-import ntk.android.base.config.NtkObserver;
-import ntk.android.base.dtomodel.application.MainResponseDtoModel;
 import ntk.android.base.dtomodel.theme.ThemeDtoModel;
 import ntk.android.base.dtomodel.theme.ToolbarDtoModel;
-import ntk.android.base.entitymodel.base.ErrorException;
-import ntk.android.base.services.application.ApplicationAppService;
-import ntk.android.base.utill.AppUtill;
 import ntk.android.base.utill.FontManager;
 import ntk.android.base.utill.prefrense.Preferences;
 
@@ -143,19 +133,7 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
         RvDrawer.setAdapter(AdDrawer);
         AdDrawer.notifyDataSetChanged();
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-        HandelData();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
+    
 
     @Override
     public boolean onTabSelected(int position, boolean wasSelected) {
@@ -172,37 +150,5 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
     public void EvClickMenu(EVHamberMenuClick click) {
         drawer.openMenu(false);
     }
-
-
-
-    private void HandelData() {
-        if (AppUtill.isNetworkAvailable(this)) {
-            new ApplicationAppService(this).getResponseMain().observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(new NtkObserver<ErrorException<MainResponseDtoModel>>() {
-                        @Override
-                        public void onNext(@NonNull ErrorException<MainResponseDtoModel> mainCoreResponse) {
-                            if(!mainCoreResponse.IsSuccess)
-                            {
-                                //BtnRefresh.setVisibility(View.VISIBLE);
-                                Toasty.warning(MainActivity.this, "خطای سامانه مجددا تلاش کنید"+mainCoreResponse.ErrorMessage, Toasty.LENGTH_LONG, true).show();
-                                return;
-                            }
-                            Preferences.with(MainActivity.this).appVariableInfo().setConfigapp(new Gson().toJson(mainCoreResponse.Item));
-                            CheckUpdate();
-                        }
-
-                        @Override
-                        public void onError(Throwable e) {
-
-                            Toasty.warning(MainActivity.this, "خطای سامانه مجددا تلاش کنید", Toasty.LENGTH_LONG, true).show();
-
-                        }
-                    });
-        } else {
-            CheckUpdate();
-        }
-    }
-
-
+    
 }
