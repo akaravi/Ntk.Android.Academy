@@ -32,6 +32,7 @@ public class CoreImageAdapter extends RecyclerView.Adapter<CoreImageAdapter.View
     public CoreImageAdapter(Context context, List<ThemeChildConfigDtoModel> list) {
         this.childs = list;
         this.context = context;
+//        drawable=R.drawable.news_placeholder;
     }
 
     @Override
