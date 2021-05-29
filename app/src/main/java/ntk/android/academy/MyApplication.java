@@ -41,7 +41,7 @@ public class MyApplication extends NTKApplication {
         ImageLoader.getInstance().init(config);
 
         Toasty.Config.getInstance()
-                .setToastTypeface(ntk.android.base.utill.FontManager.GetTypeface(getApplicationContext(), FontManager.IranSans))
+                .setToastTypeface(ntk.android.base.utill.FontManager.T1_Typeface(getApplicationContext()))
                 .setTextSize(14).apply();
         applicationStyle = new ApplicationStyle() {
             public ViewController getViewController() {

@@ -31,8 +31,8 @@ public class ArticleHolder extends RecyclerView.ViewHolder {
         super(view);
         ButterKnife.bind(this, view);
         RvMenu.setHasFixedSize(true);
-        Lbls.get(0).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-        Lbls.get(1).setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+        Lbls.get(0).setTypeface(FontManager.T1_Typeface(context));
+        Lbls.get(1).setTypeface(FontManager.T1_Typeface(context));
         Progress.getIndeterminateDrawable().setColorFilter(context.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
 
     }

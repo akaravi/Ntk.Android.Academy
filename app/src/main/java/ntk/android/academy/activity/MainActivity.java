@@ -83,7 +83,7 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
         });
         navigation.setDefaultBackgroundColor(Color.parseColor("#ffffff"));
         navigation.setBehaviorTranslationEnabled(false);
-        navigation.setTitleTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        navigation.setTitleTypeface(FontManager.T1_Typeface(this));
         AHBottomNavigationItem BMI = new AHBottomNavigationItem("BMI", R.drawable.ic_one, R.color.colorMenu);
         AHBottomNavigationItem Favorite = new AHBottomNavigationItem("علاقه مندی", R.drawable.ic_two, R.color.colorMenu);
         AHBottomNavigationItem Home = new AHBottomNavigationItem("خانه", R.drawable.ic_three, R.color.colorMenu);
@@ -96,7 +96,7 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
         navigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
         navigation.setCurrentItem(1);
         navigation.setTitleTextSize(20, 18);
-        navigation.setTitleTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+        navigation.setTitleTypeface(FontManager.T1_Typeface(this));
         navigation.setAccentColor(Color.parseColor("#f04d4d"));
         navigation.setInactiveColor(Color.parseColor("#030303"));
         navigation.setOnTabSelectedListener(this);

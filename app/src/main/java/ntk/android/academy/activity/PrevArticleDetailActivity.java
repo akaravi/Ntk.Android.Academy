@@ -137,7 +137,7 @@ public class PrevArticleDetailActivity extends AppCompatActivity {
     @SuppressLint("SetJavaScriptEnabled")
     private void init() {
         for (TextView tv : Lbls) {
-            tv.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            tv.setTypeface(FontManager.T1_Typeface(this));
         }
         Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         webView.getSettings().setJavaScriptEnabled(true);
@@ -544,18 +544,18 @@ public class PrevArticleDetailActivity extends AppCompatActivity {
             dialog.setContentView(R.layout.dialog_comment_add);
 
             TextView Lbl = dialog.findViewById(R.id.lblTitleDialogAddComment);
-            Lbl.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Lbl.setTypeface(FontManager.T1_Typeface(this));
 
             EditText[] Txt = new EditText[2];
 
             Txt[0] = dialog.findViewById(R.id.txtNameDialogAddComment);
-            Txt[0].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Txt[0].setTypeface(FontManager.T1_Typeface(this));
 
             Txt[1] = dialog.findViewById(R.id.txtContentDialogAddComment);
-            Txt[1].setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Txt[1].setTypeface(FontManager.T1_Typeface(this));
 
             Button Btn = dialog.findViewById(R.id.btnSubmitDialogCommentAdd);
-            Btn.setTypeface(FontManager.GetTypeface(this, FontManager.IranSans));
+            Btn.setTypeface(FontManager.T1_Typeface(this));
 
             Btn.setOnClickListener(v -> {
                 if (Txt[0].getText().toString().isEmpty()) {

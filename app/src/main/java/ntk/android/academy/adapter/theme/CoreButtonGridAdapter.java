@@ -88,7 +88,7 @@ public class CoreButtonGridAdapter extends RecyclerView.Adapter<CoreButtonGridAd
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            txt.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+            txt.setTypeface(FontManager.T1_Typeface(context));
         }
     }
 }

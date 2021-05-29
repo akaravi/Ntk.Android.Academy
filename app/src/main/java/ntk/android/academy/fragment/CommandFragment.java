@@ -62,7 +62,7 @@ public class CommandFragment extends Fragment {
     private ConfigStaticValue configStaticValue;
 
     private void init() {
-        LblProgress.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+        LblProgress.setTypeface(FontManager.T1_Typeface(getContext()));
         Progress.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
 
         Rv.setHasFixedSize(true);

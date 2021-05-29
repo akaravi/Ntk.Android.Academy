@@ -55,7 +55,7 @@ public class HomeFragment extends Fragment {
     private void init() {
         Loading.setVisibility(View.VISIBLE);
         RvHome.setVisibility(View.GONE);
-        LblProgress.setTypeface(FontManager.GetTypeface(getContext(), FontManager.IranSans));
+        LblProgress.setTypeface(FontManager.T1_Typeface(getContext()));
         Refresh.setColorSchemeResources(
                 R.color.colorAccent,
                 R.color.colorAccent,
