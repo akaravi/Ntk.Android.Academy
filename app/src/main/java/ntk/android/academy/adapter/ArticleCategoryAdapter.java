@@ -52,6 +52,8 @@ public class ArticleCategoryAdapter extends BaseRecyclerAdapter<ArticleCategoryM
 
         if (item.Children.size() == 0) {
             holder.ImgDrop.setVisibility(View.GONE);
+        }else {
+            holder.ImgDrop.setVisibility(View.VISIBLE);
         }
         holder.Img.setOnClickListener(view -> {
             FilterModel request = new FilterModel();

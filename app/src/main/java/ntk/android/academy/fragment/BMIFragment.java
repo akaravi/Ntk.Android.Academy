@@ -27,7 +27,7 @@ import butterknife.OnClick;
 import ntk.android.academy.R;
 import ntk.android.base.utill.FontManager;
 
-public class BmiFragment extends Fragment {
+public class BMIFragment extends Fragment {
 
     @BindView(R.id.LblResultFrBmi)
     TextView Lbl;

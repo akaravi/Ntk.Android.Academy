@@ -28,9 +28,9 @@ import ntk.android.academy.adapter.drawer.DrawerAdapter;
 import ntk.android.academy.adapter.toolbar.ToolbarAdapter;
 import ntk.android.academy.event.toolbar.EVHamberMenuClick;
 import ntk.android.academy.event.toolbar.EVSearchClick;
-import ntk.android.academy.fragment.BmiFragment;
-import ntk.android.academy.fragment.CommandFragment;
-import ntk.android.academy.fragment.FavoriteFragment;
+import ntk.android.academy.fragment.BMIFragment;
+import ntk.android.academy.fragment.ArticleCategoryFragment;
+import ntk.android.academy.fragment.ArticleFavoriteFragment;
 import ntk.android.academy.fragment.HomeFragment;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigation;
 import ntk.android.academy.library.ahbottomnavigation.AHBottomNavigationItem;
@@ -103,10 +103,10 @@ public class MainActivity extends AbstractMainActivity implements AHBottomNaviga
         navigation.setColored(false);
 
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
-        adapter.addFragment(new CommandFragment());
+        adapter.addFragment(new ArticleCategoryFragment());
         adapter.addFragment(new HomeFragment());
-        adapter.addFragment(new FavoriteFragment());
-        adapter.addFragment(new BmiFragment());
+        adapter.addFragment(new ArticleFavoriteFragment());
+        adapter.addFragment(new BMIFragment());
         pager.setAdapter(adapter);
         pager.setOffscreenPageLimit(2);
         pager.setCurrentItem(1, false);
