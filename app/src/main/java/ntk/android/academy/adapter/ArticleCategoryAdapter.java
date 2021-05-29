@@ -103,7 +103,7 @@ public class ArticleCategoryAdapter extends BaseRecyclerAdapter<ArticleCategoryM
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            LblName.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+            LblName.setTypeface(FontManager.T1_Typeface(context));
             Rv.setHasFixedSize(true);
             RecyclerView.LayoutManager manager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true);
             Rv.setLayoutManager(manager);

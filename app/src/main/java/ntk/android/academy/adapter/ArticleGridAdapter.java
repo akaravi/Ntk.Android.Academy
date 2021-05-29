@@ -89,8 +89,8 @@ public class ArticleGridAdapter extends BaseRecyclerAdapter<ArticleContentModel,
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            LblName.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
-            LblLike.setTypeface(FontManager.GetTypeface(context, FontManager.IranSans));
+            LblName.setTypeface(FontManager.T1_Typeface(context));
+            LblLike.setTypeface(FontManager.T1_Typeface(context));
             Progress.getIndeterminateDrawable().setColorFilter(context.getResources().getColor(R.color.colorAccent), PorterDuff.Mode.SRC_IN);
         }
     }

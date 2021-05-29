@@ -3,9 +3,6 @@ package ntk.android.academy.fragment;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -50,10 +51,10 @@ public class BmiFragment extends Fragment {
     }
 
     private void init() {
-        Lbl.setTypeface(FontManager.GetTypeface(getContext() , FontManager.IranSansBold));
-        Btn.setTypeface(FontManager.GetTypeface(getContext() , FontManager.IranSans));
-        Txts.get(0).setTypeface(FontManager.GetTypeface(getContext() , FontManager.IranSans));
-        Txts.get(1).setTypeface(FontManager.GetTypeface(getContext() , FontManager.IranSans));
+        Lbl.setTypeface(FontManager.T1_BOLD_Typeface(getContext()));
+        Btn.setTypeface(FontManager.T1_Typeface(getContext()));
+        Txts.get(0).setTypeface(FontManager.T1_Typeface(getContext()));
+        Txts.get(1).setTypeface(FontManager.T1_Typeface(getContext()));
     }
 
     @Override
@@ -68,34 +69,34 @@ public class BmiFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     @OnClick(R.id.BtnBmiFrBmi)
     public void ClickBtn() {
-        if(Txts.get(0).getText().toString().isEmpty()) {
+        if (Txts.get(0).getText().toString().isEmpty()) {
             YoYo.with(Techniques.Tada).duration(700).playOn(Txts.get(0));
-        }else if(Txts.get(1).getText().toString().isEmpty()) {
+        } else if (Txts.get(1).getText().toString().isEmpty()) {
             YoYo.with(Techniques.Tada).duration(700).playOn(Txts.get(1));
-        }else{
+        } else {
             double L = Double.parseDouble(Txts.get(0).getText().toString());
             double W = Double.parseDouble(Txts.get(1).getText().toString());
-            double LM = ((L/100) * (L/100));
+            double LM = ((L / 100) * (L / 100));
 
-            double BMI = (W)/((LM));
-            if (BMI<18.5) {
-                Lbl.setText("کمبود وزن " + "حداقل وزن شما: " + ((int)(LM * 18.5)) + " حداکثر وزن شما: " + ((int)(LM * 24.9)));
+            double BMI = (W) / ((LM));
+            if (BMI < 18.5) {
+                Lbl.setText("کمبود وزن " + "حداقل وزن شما: " + ((int) (LM * 18.5)) + " حداکثر وزن شما: " + ((int) (LM * 24.9)));
                 Lbl.setTextColor(Color.parseColor("#93b4d7"));
                 Img.setImageResource(R.drawable.bmi_1);
-            }else if (BMI>=18.5 && BMI<=24.9) {
-                Lbl.setText( "وزن نرمال " + "حداقل وزن شما: " + ((int)(LM * 18.5)) + " حداکثر وزن شما: " + ((int)(LM * 24.9)));
+            } else if (BMI >= 18.5 && BMI <= 24.9) {
+                Lbl.setText("وزن نرمال " + "حداقل وزن شما: " + ((int) (LM * 18.5)) + " حداکثر وزن شما: " + ((int) (LM * 24.9)));
                 Lbl.setTextColor(Color.parseColor("#8fc69f"));
                 Img.setImageResource(R.drawable.bmi_2);
-            }else if (BMI>=25 && BMI<=29.9) {
-                Lbl.setText("اضافه وزن " + "حداقل وزن شما: " + ((int)(LM * 18.5)) + " حداکثر وزن شما: " + ((int)(LM * 24.9)));
+            } else if (BMI >= 25 && BMI <= 29.9) {
+                Lbl.setText("اضافه وزن " + "حداقل وزن شما: " + ((int) (LM * 18.5)) + " حداکثر وزن شما: " + ((int) (LM * 24.9)));
                 Lbl.setTextColor(Color.parseColor("#f9d648"));
                 Img.setImageResource(R.drawable.bmi_3);
-            }else if (BMI>=30 && BMI<=34.9) {
-                Lbl.setText("چاق " + "حداقل وزن شما: " + ((int)(LM * 18.5)) + " حداکثر وزن شما: " + ((int)(LM * 24.9)));
+            } else if (BMI >= 30 && BMI <= 34.9) {
+                Lbl.setText("چاق " + "حداقل وزن شما: " + ((int) (LM * 18.5)) + " حداکثر وزن شما: " + ((int) (LM * 24.9)));
                 Lbl.setTextColor(Color.parseColor("#e4985e"));
                 Img.setImageResource(R.drawable.bmi_4);
-            }else if (BMI>=35) {
-                Lbl.setText("خیلی چاق " + "حداقل وزن شما: " + ((int)(LM * 18.5)) + " حداکثر وزن شما: " + ((int)(LM * 24.9)));
+            } else if (BMI >= 35) {
+                Lbl.setText("خیلی چاق " + "حداقل وزن شما: " + ((int) (LM * 18.5)) + " حداکثر وزن شما: " + ((int) (LM * 24.9)));
                 Lbl.setTextColor(Color.parseColor("#d65c5b"));
                 Img.setImageResource(R.drawable.bmi_5);
             }
