@@ -1,15 +1,17 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
+def BaseVersion='1.4.138'
+def incrementalVersion='1'
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
     defaultConfig {
         applicationId "ntk.android.academy.APPNTK"//change for packagename for api
         minSdkVersion 17
-        targetSdkVersion 28
+        targetSdkVersion 30
         multiDexEnabled true
         versionCode 1  //Build Version NTK
-        versionName "1.0"//Splash Version Lable
+        versionName "${BaseVersion}${incrementalVersion}"//Splash Version Label
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         vectorDrawables {
             useSupportLibrary = true
@@ -105,5 +107,7 @@ dependencies {
     implementation 'com.daimajia.androidanimations:library:2.3@aar'
     //for functional codding
     implementation 'net.sourceforge.streamsupport:android-retrostreams:1.7.2'
-    implementation project(path: ':baseActivity')
+
+    //base of project
+    api "com.github.akaravi:Ntk.Android.BaseActivity:${BaseVersion}"
 }
