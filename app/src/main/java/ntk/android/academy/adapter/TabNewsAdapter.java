@@ -27,6 +27,7 @@ public class TabNewsAdapter extends BaseRecyclerAdapter<NewsContentOtherInfoMode
     public TabNewsAdapter(Context context, List<NewsContentOtherInfoModel> arrayList) {
         super(arrayList);
         this.context = context;
+        //no need to drawable
     }
 
     @Override

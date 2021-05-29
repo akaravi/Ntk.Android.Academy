@@ -29,6 +29,7 @@ public class TabArticleAdapter extends BaseRecyclerAdapter<ArticleContentOtherIn
     public TabArticleAdapter(Context context, List<ArticleContentOtherInfoModel> arrayList) {
         super(arrayList);
         this.context = context;
+        //no need to drawable
     }
 
     @Override

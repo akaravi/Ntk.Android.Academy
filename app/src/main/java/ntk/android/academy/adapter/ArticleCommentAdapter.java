@@ -35,6 +35,7 @@ public class ArticleCommentAdapter extends BaseRecyclerAdapter<ArticleCommentMod
     public ArticleCommentAdapter(Context context, List<ArticleCommentModel> arrayList) {
         super(arrayList);
         this.context = context;
+        //no need to drawable
     }
 
     @Override

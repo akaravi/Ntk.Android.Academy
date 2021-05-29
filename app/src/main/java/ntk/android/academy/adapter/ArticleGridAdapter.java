@@ -38,12 +38,14 @@ public class ArticleGridAdapter extends BaseRecyclerAdapter<ArticleContentModel,
     public ArticleGridAdapter(Context context, List<ArticleContentModel> arrayList) {
         super(arrayList);
         this.context = context;
+        drawable=R.drawable.article_place_holder;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View view = inflate(viewGroup, R.layout.row_recycler_article_grid);
         return new ViewHolder(view);
+       
     }
 
     @Override

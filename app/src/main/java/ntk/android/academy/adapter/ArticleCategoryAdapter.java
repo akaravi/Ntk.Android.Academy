@@ -35,6 +35,7 @@ public class ArticleCategoryAdapter extends BaseRecyclerAdapter<ArticleCategoryM
     public ArticleCategoryAdapter(Context context, List<ArticleCategoryModel> arrayList) {
         super(arrayList);
         this.context = context;
+        drawable = R.drawable.article_place_holder;
     }
 
     @Override
@@ -47,7 +48,7 @@ public class ArticleCategoryAdapter extends BaseRecyclerAdapter<ArticleCategoryM
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         ArticleCategoryModel item = list.get(position);
         holder.LblName.setText(item.Title);
-        loadImage(item.LinkMainImageIdSrc, holder.Img,holder.Progress);
+        loadImage(item.LinkMainImageIdSrc, holder.Img, holder.Progress);
 
         if (item.Children.size() == 0) {
             holder.ImgDrop.setVisibility(View.GONE);
@@ -56,7 +57,7 @@ public class ArticleCategoryAdapter extends BaseRecyclerAdapter<ArticleCategoryM
             FilterModel request = new FilterModel();
             FilterDataModel f = new FilterDataModel();
             f.PropertyName = "LinkCategoryId";
-            f.setIntValue( item.Id) ;
+            f.setIntValue(item.Id);
             request.addFilter(f);
             Intent intent = new Intent(context, ArticleContentGridListActivity.class);
             //todo get base on category
@@ -77,7 +78,6 @@ public class ArticleCategoryAdapter extends BaseRecyclerAdapter<ArticleCategoryM
             }
         });
     }
-
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {

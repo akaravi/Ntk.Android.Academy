@@ -38,6 +38,7 @@ public class ArticleAdapter extends BaseRecyclerAdapter<ArticleContentModel, Art
     public ArticleAdapter(Context context, List<ArticleContentModel> arrayList) {
         super(arrayList);
         this.context = context;
+        drawable=R.drawable.article_place_holder;
     }
 
     @Override

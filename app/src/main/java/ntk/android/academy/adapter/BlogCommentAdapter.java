@@ -35,6 +35,7 @@ public class BlogCommentAdapter extends BaseRecyclerAdapter<BlogCommentModel, Bl
     public BlogCommentAdapter(Context context, List<BlogCommentModel> arrayList) {
         super(arrayList);
         this.context = context;
+        //no need to drawable
     }
 
     @Override

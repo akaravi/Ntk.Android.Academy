@@ -31,6 +31,7 @@ public class TabBlogAdapter extends BaseRecyclerAdapter<BlogContentOtherInfoMode
     public TabBlogAdapter(Context context, List<BlogContentOtherInfoModel> arrayList) {
         super(arrayList);
         this.context = context;
+        //no need to drawable
     }
 
     @Override

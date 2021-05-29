@@ -32,6 +32,7 @@ public class CoreTagAdapter extends BaseRecyclerAdapter<CoreModuleTagModel,CoreT
     public CoreTagAdapter(Context context, List<CoreModuleTagModel> arrayList) {
         super(arrayList);
         this.context = context;
+        //no need to drawable
     }
 
     @Override
